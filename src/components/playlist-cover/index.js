@@ -5,12 +5,12 @@ export default memo(function PlaylistCover(props) {
   return (
     <div className='playlist-cover w-1200'>
       {playlist.map((item, index) => {
-        const { imgurl, dissname, listennum } = item
+        const { coverImgUrl, name, playCount } = item
         return (
-          <div key={item.dissid}>
-            <img src={imgurl} alt='' />
-            <p className='text-nowrap'>{dissname}</p>
-            <p className='playNum'>播放量: {listennum}</p>
+          <div key={item.id}>
+            <img src={coverImgUrl} alt='' />
+            <p className='text-nowrap'>{name}</p>
+            <p className='playNum'>播放量: {playCount}</p>
           </div>
         )
       })}

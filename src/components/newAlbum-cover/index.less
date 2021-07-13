@@ -1,0 +1,24 @@
+@theme-color: #31c27c;
+.album-cover {
+  width: 18%;
+  p:hover {
+    color: @theme-color;
+    cursor: pointer;
+  }
+  img {
+    width: 100%;
+    height: 100%;
+    border-radius: 2px;
+    transition: all 0.3s;
+    overflow: hidden;
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+  .text-nowrap {
+    margin-top: 10px;
+  }
+  .singer {
+    color: #999;
+  }
+}

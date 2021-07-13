@@ -1,0 +1,36 @@
+.song-container {
+  padding: 20px;
+  display: flex;
+  width: 33.33%;
+  align-items: center;
+  cursor: pointer;
+}
+.song-container img {
+  width: 86px;
+  height: 86px;
+  border-radius: 2px;
+  transition: all 0.3s;
+  overflow: hidden;
+}
+.song-container img:hover {
+  transform: scale(1.1);
+}
+.song-container .song-info {
+  margin-left: 10px;
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+}
+.song-container .song-info div:first-child p:hover {
+  color: #31c27c;
+}
+.song-container .song-info div:first-child p:last-child {
+  color: #999;
+}
+.song-container .song-info div:first-child p:last-child:hover {
+  color: #31c27c;
+}
+.song-container .song-info .song-duration {
+  margin-left: 40px;
+  color: #999;
+}

@@ -5,14 +5,25 @@
   div {
     width: 200px;
     height: 200px;
-   
+
     img {
       width: 100%;
       height: 100%;
       margin-bottom: 10px;
+      transition: all 0.3s;
+      overflow: hidden;
+      &:hover {
+        transform: scale(1.1);
+      }
     }
     .playNum {
       color: #999;
+    }
+    .text-nowrap {
+      cursor: pointer;
+      &:hover {
+        color: @theme-color;
+      }
     }
   }
 }

@@ -1,10 +1,14 @@
 import React, { memo } from 'react'
-import PlaylistRec from './cpn/playlist-rec'
+import PlaylistRec from './playlist-rec'
+import NewSongRec from './newsong-rec'
+import NewAlbumRec from './newalbum-rec'
 
 export default memo(function Home() {
   return (
     <div>
       <PlaylistRec />
+      <NewSongRec />
+      <NewAlbumRec />
     </div>
   )
 })

@@ -10,7 +10,18 @@
   width: 100%;
   height: 100%;
   margin-bottom: 10px;
+  transition: all 0.3s;
+  overflow: hidden;
+}
+.playlist-cover div img:hover {
+  transform: scale(1.1);
 }
 .playlist-cover div .playNum {
   color: #999;
+}
+.playlist-cover div .text-nowrap {
+  cursor: pointer;
+}
+.playlist-cover div .text-nowrap:hover {
+  color: #31c27c;
 }
