@@ -1,0 +1,5 @@
+const SET_PLAYLIST_REC = 'SET_PLAYLIST_REC'
+
+export {
+  SET_PLAYLIST_REC
+}

@@ -1,0 +1,19 @@
+.musichall-container {
+  width: 100%;
+  background: #fff;
+  height: 52px;
+}
+.musichall-container .musichall {
+  height: 100%;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  padding: 0 185px;
+  justify-content: space-around;
+}
+.musichall-container .musichall a:hover {
+  color: #31c27c;
+}
+.musichall-container .musichall .active {
+  color: #31c27c;
+}

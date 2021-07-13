@@ -1,0 +1,93 @@
+.header {
+  height: 90px;
+  background: #fff;
+}
+.header .header-container {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+.header .header-container .logo {
+  width: 170px;
+  margin-right: 20px;
+}
+.header .header-container .header-left {
+  display: flex;
+  align-items: center;
+}
+.header .header-container .header-left a {
+  font-size: 18px;
+  padding: 0 20px;
+  height: 90px;
+  line-height: 90px;
+}
+.header .header-container .header-left .active {
+  color: #fff;
+  background: #31c27c;
+}
+.header .header-container .header-left .privilege {
+  position: relative;
+}
+.header .header-container .header-left .privilege::after {
+  content: '';
+  position: absolute;
+  top: 18px;
+  right: 0;
+  height: 14px;
+  width: 37px;
+  background: url('../../assets//img//mark_1.png') no-repeat;
+  background-size: contain;
+}
+.header .header-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  height: 90px;
+}
+.header .header-right .login {
+  font-size: 16px;
+  background: #fff;
+  margin: 0 20px;
+}
+.header .header-right .login:hover {
+  color: #31c27c;
+  cursor: pointer;
+}
+.header .header-right .select-container {
+  position: relative;
+}
+.header .header-right .select-container .vip {
+  background: #31c27c;
+  height: 40px;
+  line-height: 40px;
+  padding: 0 30px 0 25px;
+  color: #fff;
+  border-radius: 2px;
+}
+.header .header-right .select-container .icon {
+  position: absolute;
+  content: '';
+  right: 8px;
+  top: 16px;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+}
+.header .header-right .select-container .white {
+  border-top: 6px solid #fff;
+}
+.header .header-right .select-container .black {
+  border-top: 6px solid #000;
+  top: 17px;
+}
+.header .header-right .select-container .recharge {
+  margin-left: 10px;
+  background: #fff;
+  height: 40px;
+  line-height: 40px;
+  padding: 0 25px;
+  color: #000;
+  border-radius: 2px;
+  border: 1px solid #c9c9c9;
+}

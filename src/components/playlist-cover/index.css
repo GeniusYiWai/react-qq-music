@@ -1,0 +1,16 @@
+.playlist-cover {
+  display: flex;
+  justify-content: space-around;
+}
+.playlist-cover div {
+  width: 200px;
+  height: 200px;
+}
+.playlist-cover div img {
+  width: 100%;
+  height: 100%;
+  margin-bottom: 10px;
+}
+.playlist-cover div .playNum {
+  color: #999;
+}
