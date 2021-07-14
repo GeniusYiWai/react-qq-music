@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import './index.css'
+import './index.less'
 export default memo(function PlaylistCover(props) {
   const { playlist } = props
   return (

@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
 import { renderRoutes } from 'react-router-config'
 import { NavLink } from 'react-router-dom'
-import './index.css'
+import './index.less'
 export default memo(function MusicHall(props) {
   const { route } = props
   const routes = [

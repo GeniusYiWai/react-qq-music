@@ -1,12 +1,12 @@
 import React, { memo, useState, useEffect } from 'react'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import { setNewAlbumRec } from '../store/actionCreators'
-import NewAlbumCover from '../../../../../components/newAlbum-cover'
+import NewAlbumCover from 'components/newAlbum-cover'
 import BigTitle from '../cpn/big-title'
 import DotsContainer from '../cpn/dots-container'
 import Category from '../cpn/category'
 import SwitchPage from '../cpn/SwitchPage'
-import './index.css'
+import './index.less'
 //新碟上架选项卡
 const Tabs = [
   { categoryName: '华语', area: 'ZH' },

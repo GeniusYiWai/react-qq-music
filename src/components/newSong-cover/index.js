@@ -1,6 +1,6 @@
 import React, { memo } from 'react'
-import './index.css'
-import { handleSinger,handleSongDuration } from '../../utils/tools'
+import './index.less'
+import { handleSinger,handleSongDuration } from '@/utils/tools'
 
 export default memo(function NewSongCover(props) {
   const { song } = props

@@ -3,12 +3,12 @@ import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 // import { Spin } from 'antd'
 // import { Carousel } from 'antd'
 import { setNewSongRec } from '../store/actionCreators'
-import NewSongCover from '../../../../../components/newSong-cover'
+import NewSongCover from 'components/newSong-cover'
 import BigTitle from '../cpn/big-title'
 import DotsContainer from '../cpn/dots-container'
 import Category from '../cpn/category'
 import SwitchPage from '../cpn/SwitchPage'
-import './index.css'
+import './index.less'
 //新歌首发选项卡
 const Tabs = [
   { categoryName: '华语', id: '7' },

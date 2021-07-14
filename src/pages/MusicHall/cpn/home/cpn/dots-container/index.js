@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import './index.css'
+import './index.less'
 export default memo(function DotsContainer(props) {
   const { length, PAGESIZE, currentPage, switchPage } = props
   //获取总页数

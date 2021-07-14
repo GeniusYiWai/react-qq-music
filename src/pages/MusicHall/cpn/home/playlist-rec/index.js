@@ -3,12 +3,12 @@ import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 // import { Spin } from 'antd'
 // import { Carousel } from 'antd'
 import { setPlaylistRec } from '../store/actionCreators'
-import PlaylistCover from '../../../../../components/playlist-cover'
+import PlaylistCover from 'components/playlist-cover'
 import BigTitle from '../cpn/big-title'
 import DotsContainer from '../cpn/dots-container'
 import Category from '../cpn/category'
 import SwitchPage from '../cpn/SwitchPage'
-import './index.css'
+import './index.less'
 //歌单推荐选项卡
 const Tabs = [
   { categoryName: '为你推荐', name: '流行' },

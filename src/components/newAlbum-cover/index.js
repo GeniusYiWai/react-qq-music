@@ -1,6 +1,6 @@
 import React, { memo } from 'react'
-import './index.css'
-import { handleSinger } from '../../utils/tools'
+import './index.less'
+import { handleSinger } from '@/utils/tools'
 export default memo(function PlaylistCover(props) {
   const {
     album: { id, picUrl, artists, name }

@@ -1,8 +1,8 @@
 import React, { memo } from 'react'
 import { NavLink } from 'react-router-dom'
 
-import './index.css'
-import logo from '../../assets/img/logo.png'
+import './index.less'
+import logo from '@/assets/img/logo.png'
 
 // antd
 import { Input } from 'antd'
