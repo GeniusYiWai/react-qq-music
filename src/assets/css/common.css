@@ -27,18 +27,15 @@ ins {
   margin: 0;
   box-sizing: border-box;
 }
-
 ul,
 ol,
 li {
   list-style: none;
 }
-
 a {
   text-decoration: none;
   color: #666;
 }
-
 a:hover {
   color: #666;
   text-decoration: none;
@@ -47,7 +44,6 @@ i,
 em {
   font-style: normal;
 }
-
 input,
 textarea,
 button,
@@ -60,7 +56,6 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
-
 img {
   border: none;
   vertical-align: middle;
@@ -90,5 +85,4 @@ button {
 .loading {
   margin: 0 auto;
   text-align: center;
-  
 }

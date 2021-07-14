@@ -1,0 +1,35 @@
+@theme-color: #31c27c;
+.singer-cate-container {
+  .singer-cate-content {
+    background: #fafafa;
+    .singer-cate-select {
+      background: @theme-color;
+      color: #fff !important;
+    }
+    .singer-cate-area,
+    .singer-cate-type,
+    .singer-cate-initial {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+      span {
+        cursor: pointer;
+        padding: 2px 10px;
+        margin-left: 10px;
+        &:hover {
+          color: @theme-color;
+        }
+      }
+      span:first-child {
+        margin-right: 10px;
+        margin-left: 0;
+      }
+    }
+    .singer-cate-initial {
+    }
+    .singer-cate-area {
+    }
+    .singer-cate-type {
+    }
+  }
+}

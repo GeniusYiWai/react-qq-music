@@ -1,0 +1,3 @@
+const SET_SINGER_REC = 'SET_SINGER_REC'
+
+export { SET_SINGER_REC }
