@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState, useCallback } from 'react'
+import React, { memo, useEffect, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import BgImage from '@/assets/img/bg_singer.jpg'
 import SingerCategory from './cpn/singer-category'
@@ -67,7 +67,7 @@ const Type = [
   },
   {
     categoryName: '男歌手',
-    type: ''
+    type: '1'
   },
   {
     categoryName: '女歌手',
@@ -78,44 +78,50 @@ const Type = [
     type: '3'
   }
 ]
+const combineCondition = {
+  initial: '',
+  area: '',
+  type: ''
+}
 export default memo(function Singer() {
-  const [currentInitial, setInitial] = useState(Initials[0].initial)
-  const [currentArea, setArea] = useState(Area[0].area)
-  const [currentType, setType] = useState(Type[0].type)
   const dispatch = useDispatch()
   const { singer } = useSelector(state => {
     return {
       singer: state.singer.singerList
     }
   })
+
   const switchInitials = useCallback(
     initial => {
-      setInitial(initial)
+      combineCondition.initial = initial
+
       //useState是异步更改 这里不能立即拿到initial
       // console.log(currentInitial)
-      dispatch(setSinger({ initial, area: currentArea, type: currentType }))
+      dispatch(setSinger(combineCondition))
     },
-    [dispatch, setInitial, currentArea, currentType]
+    [dispatch]
   )
-
   const switchArea = useCallback(
     area => {
-      setArea(area)
+      combineCondition.area = area
       //useState是异步更改 这里不能立即拿到initial
       // console.log(currentArea)
-      dispatch(setSinger({ area, initial: currentInitial, type: currentType }))
+      dispatch(setSinger(combineCondition))
     },
-    [dispatch, setArea, currentInitial, currentType]
-  )
+    [dispatch]
 
+    // [dispatch, setArea, currentInitial, currentType]
+  )
   const switchType = useCallback(
     type => {
-      setType(type)
+      combineCondition.type = type
       //useState是异步更改 这里不能立即拿到initial
       // console.log(currentType)
-      dispatch(setSinger({ area: currentArea, initial: currentInitial, type }))
+      dispatch(setSinger(combineCondition))
     },
-    [dispatch, currentInitial, currentArea]
+    [dispatch]
+
+    // [dispatch, currentInitial, currentArea]
   )
   useEffect(() => {
     dispatch(setSinger({}))
@@ -128,16 +134,24 @@ export default memo(function Singer() {
         <input type='button' value='立即登录' className='login-btn' />
       </div>
       <SingerCategory
-        Initials={Initials}
-        Area={Area}
-        Type={Type}
-        currentInitial={currentInitial}
-        switchInitials={switchInitials}
-        currentArea={currentArea}
-        switchArea={switchArea}
-        switchType={switchType}
-        currentType={currentType}
+        condition='initial'
+        categoryName='categoryName'
+        Category={Initials}
+        switchCondition={switchInitials}
       />
+      <SingerCategory
+        condition='area'
+        categoryName='categoryName'
+        Category={Area}
+        switchCondition={switchArea}
+      />
+      <SingerCategory
+        condition='type'
+        categoryName='categoryName'
+        Category={Type}
+        switchCondition={switchType}
+      />
+
       <div className='singer-list w-1200'>
         {singer.map(item => {
           return <SingerCover singer={item} key={item.accountId} />

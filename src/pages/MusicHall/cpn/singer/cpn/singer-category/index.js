@@ -1,38 +1,33 @@
-import React, { memo } from 'react'
+import React, { memo, useState } from 'react'
 import './index.less'
 
 export default memo(function SingerCategory(props) {
-  const {
-    Initials,
-    Area,
-    Type,
-    currentInitial,
-    switchInitials,
-    currentArea,
-    switchType,
-    switchArea,
-    currentType
-  } = props
-
+  const { condition, Category, categoryName, switchCondition } = props
+  const [currentCondition, setCondition] = useState(Category[0][condition])
   return (
     <div className='singer-cate-container'>
       <div className='singer-cate-content w-1200'>
         <div className='singer-cate-initial'>
-          {Initials.map((item, index) => {
+          {Category.map((item, index) => {
             return (
               <span
                 className={
-                  item.initial === currentInitial ? 'singer-cate-select' : ''
+                  item[condition] === currentCondition
+                    ? 'singer-cate-select'
+                    : ''
                 }
-                onClick={() => switchInitials(item.initial)}
+                onClick={() => {
+                  setCondition(item[condition])
+                  switchCondition(item[condition])
+                }}
                 key={index}
               >
-                {item.categoryName}
+                {item[categoryName]}
               </span>
             )
           })}
         </div>
-        <div className='singer-cate-area'>
+        {/* <div className='singer-cate-area'>
           {Area.map((item, index) => {
             return (
               <span
@@ -61,7 +56,7 @@ export default memo(function SingerCategory(props) {
               </span>
             )
           })}
-        </div>
+        </div> */}
       </div>
     </div>
   )
