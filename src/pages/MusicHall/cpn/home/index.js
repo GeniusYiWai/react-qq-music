@@ -3,14 +3,16 @@ import PlaylistRec from './playlist-rec'
 import NewSongRec from './newsong-rec'
 import NewAlbumRec from './newalbum-rec'
 import RankRec from './rank-rec'
+import MVRec from './mv-rec'
 
 export default memo(function Home() {
   return (
     <div>
-      <PlaylistRec />
-      <NewSongRec />
-      <NewAlbumRec />
-      <RankRec />
+      {/* <PlaylistRec /> */}
+      {/* <NewSongRec /> */}
+      {/* <NewAlbumRec /> */}
+      {/* <RankRec /> */}
+      {/* <MVRec /> */}
     </div>
   )
 })

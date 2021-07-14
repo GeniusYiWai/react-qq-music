@@ -1,0 +1,14 @@
+.mv-container {
+  padding-top: 20px;
+  background: #f8f8f8;
+  margin-top: 20px;
+  position: relative;
+}
+.mv-container .mv-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-top: 10px;
+  position: relative;
+  padding-bottom: 30px;
+}

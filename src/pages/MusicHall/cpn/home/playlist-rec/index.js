@@ -65,21 +65,19 @@ export default memo(function PlaylistRec() {
           currentIndex={currentIndex}
           type={'name'}
         />
-
         <div className='playlist-content'>
-          <PlaylistCover
-            playlist={playlist.slice(
-              currentPage * PAGESIZE,
-              currentPage * PAGESIZE + PAGESIZE
-            )}
-          />
-          <DotsContainer
-            length={playlist.length}
-            PAGESIZE={PAGESIZE}
-            currentPage={currentPage}
-            switchPage={switchPage}
-          />
+          {playlist
+            .slice(currentPage * PAGESIZE, currentPage * PAGESIZE + PAGESIZE)
+            .map((item, index) => {
+              return <PlaylistCover playlist={item} key={item.id}/>
+            })}
         </div>
+        <DotsContainer
+          length={playlist.length}
+          PAGESIZE={PAGESIZE}
+          currentPage={currentPage}
+          switchPage={switchPage}
+        />
       </div>
     </div>
   )

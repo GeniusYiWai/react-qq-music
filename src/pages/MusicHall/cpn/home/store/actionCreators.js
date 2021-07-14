@@ -1,9 +1,17 @@
-import { SET_PLAYLIST_REC, SET_NEWSONG_REC, SET_NEWALBUM_REC } from './constant'
+import {
+  SET_PLAYLIST_REC,
+  SET_NEWSONG_REC,
+  SET_NEWALBUM_REC,
+  SET_NEWRANK_REC,
+  SET_NEWMV_REC
+} from './constant'
 import {
   getRecommendPlaylist,
   getRecommendNewSong,
-  getRecommendNewAlbum
-} from '../../../../../api/home'
+  getRecommendNewAlbum,
+  getRecommendRank,
+  getRecommendMV
+} from '@/api/home'
 
 //歌单推荐action
 const setPlaylistRecAction = list => {
@@ -32,6 +40,26 @@ const setNewAlbumRecAction = album => {
     }
   }
 }
+//排行榜 action
+const setNewRankRecAction = rank => {
+  return {
+    type: SET_NEWRANK_REC,
+    rank: {
+      newRankRec: rank
+    }
+  }
+}
+
+//MV action
+const setNewMVRecAction = mv => {
+  return {
+    type: SET_NEWMV_REC,
+    mv: {
+      newMVRec: mv
+    }
+  }
+}
+
 //歌单推荐dispatch
 export const setPlaylistRec = categoryId => {
   return dispatch => {
@@ -53,6 +81,24 @@ export const setNewAlbumRec = area => {
   return dispatch => {
     getRecommendNewAlbum(area).then(({ data }) => {
       dispatch(setNewAlbumRecAction(data.monthData.splice(0, 20)))
+    })
+  }
+}
+//排行榜dispatch
+export const setNewRankRec = () => {
+  return dispatch => {
+    getRecommendRank().then(({ data }) => {
+      let arr = data.list.slice(0, 4)
+      arr.push(data.list[0])
+      dispatch(setNewRankRecAction(arr))
+    })
+  }
+}
+//mv dispatch
+export const setNewMVRec = area => {
+  return dispatch => {
+    getRecommendMV(area).then(({ data: { data } }) => {
+      dispatch(setNewMVRecAction(data))
     })
   }
 }

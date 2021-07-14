@@ -1,0 +1,8 @@
+.rank-container {
+  padding-top: 20px;
+}
+.rank-container .rank-content {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}

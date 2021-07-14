@@ -1,0 +1,38 @@
+@theme-color: #31c27c;
+.mv-cover-container {
+  width: 18%;
+  margin-top: 10px;
+  .mv-img-cover {
+    position: relative;
+    height: 126px;
+    overflow: hidden;
+    img {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 2px;
+      transition: all 0.3s;
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+  }
+  .mv-info {
+    p {
+      cursor: pointer;
+    }
+    p:hover {
+      color: @theme-color;
+    }
+    .mv-name {
+      margin-top: 10px;
+    }
+    .mv-artist,
+    .mv-playnum {
+      color: #999;
+    }
+  }
+}
