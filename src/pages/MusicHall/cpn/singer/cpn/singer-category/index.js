@@ -18,7 +18,7 @@ export default memo(function SingerCategory(props) {
                 }
                 onClick={() => {
                   setCondition(item[condition])
-                  switchCondition(item[condition])
+                  switchCondition(condition, item[condition])
                 }}
                 key={index}
               >

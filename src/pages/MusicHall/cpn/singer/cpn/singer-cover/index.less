@@ -1,3 +1,4 @@
+@theme-color: #31c27c;
 .singer-cover-container {
   display: flex;
   flex-direction: column;
@@ -5,11 +6,21 @@
   justify-content: center;
   width: 20%;
   margin-top: 50px;
+  cursor: pointer;
   img {
     width: 150px;
     height: 150px;
     object-fit: cover;
     border-radius: 50%;
     margin-bottom: 10px;
+    transition: all 0.5s;
+    &:hover {
+      transform: rotateZ(360deg) scale(1.1);
+    }
+  }
+  p {
+    &:hover {
+      color: @theme-color;
+    }
   }
 }

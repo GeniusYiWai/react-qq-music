@@ -1,9 +1,10 @@
-import React, { memo, useEffect, useCallback } from 'react'
+import React, { memo, useEffect, useCallback, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import BgImage from '@/assets/img/bg_singer.jpg'
 import SingerCategory from './cpn/singer-category'
 import SingerCover from './cpn/singer-cover'
-import { setSinger } from './store/actionCreators'
+import SingerItem from './cpn/singer-item'
+import { setSinger, setHotSinger } from './store/actionCreators'
 import './index.less'
 const Initials = [
   { categoryName: '热门', initial: '' },
@@ -78,6 +79,7 @@ const Type = [
     type: '3'
   }
 ]
+//混合查询条件
 const combineCondition = {
   initial: '',
   area: '',
@@ -85,47 +87,64 @@ const combineCondition = {
 }
 export default memo(function Singer() {
   const dispatch = useDispatch()
-  const { singer } = useSelector(state => {
+  // const [load, setLoad] = useState(true)
+  //获取singer state
+  const { singer, hotSinger } = useSelector(state => {
     return {
-      singer: state.singer.singerList
+      singer: state.singer.singerList,
+      hotSinger: state.singer.hotSingerList
     }
   })
+  //切换首字母查询条件
+  // const switchInitials = useCallback(
+  //   initial => {
+  //     combineCondition.initial = initial
 
-  const switchInitials = useCallback(
-    initial => {
-      combineCondition.initial = initial
+  //     //useState是异步更改 这里不能立即拿到initial
+  //     // console.log(currentInitial)
+  //     dispatch(setSinger(combineCondition))
+  //   },
+  //   [dispatch]
+  // )
+  //切换地区查询条件
+  // const switchArea = useCallback(
+  //   area => {
+  //     combineCondition.area = area
+  //     //useState是异步更改 这里不能立即拿到initial
+  //     // console.log(currentArea)
+  //     dispatch(setSinger(combineCondition))
+  //   },
+  //   [dispatch]
 
-      //useState是异步更改 这里不能立即拿到initial
-      // console.log(currentInitial)
+  //   // [dispatch, setArea, currentInitial, currentType]
+  // )
+  //切换类型查询条件
+  // const switchType = useCallback(
+  //   type => {
+  //     combineCondition.type = type
+  //     //useState是异步更改 这里不能立即拿到initial
+  //     // console.log(currentType)
+  //     dispatch(setSinger(combineCondition))
+  //   },
+  //   [dispatch]
+
+  //   // [dispatch, currentInitial, currentArea]
+  // )
+  //合并查询条件 调用dispatch
+  //condition 查询类型 取值为 type area initial
+  //value 查询条件
+  const switchCondition = useCallback(
+    (condition, value) => {
+      combineCondition[condition] = value
       dispatch(setSinger(combineCondition))
     },
     [dispatch]
-  )
-  const switchArea = useCallback(
-    area => {
-      combineCondition.area = area
-      //useState是异步更改 这里不能立即拿到initial
-      // console.log(currentArea)
-      dispatch(setSinger(combineCondition))
-    },
-    [dispatch]
-
-    // [dispatch, setArea, currentInitial, currentType]
-  )
-  const switchType = useCallback(
-    type => {
-      combineCondition.type = type
-      //useState是异步更改 这里不能立即拿到initial
-      // console.log(currentType)
-      dispatch(setSinger(combineCondition))
-    },
-    [dispatch]
-
-    // [dispatch, currentInitial, currentArea]
   )
   useEffect(() => {
     dispatch(setSinger({}))
+    dispatch(setHotSinger({}))
   }, [dispatch])
+
   return (
     <div className='singer-container'>
       <div className='singer-bg' style={{ backgroundImage: `url(${BgImage})` }}>
@@ -137,24 +156,29 @@ export default memo(function Singer() {
         condition='initial'
         categoryName='categoryName'
         Category={Initials}
-        switchCondition={switchInitials}
+        switchCondition={switchCondition}
       />
       <SingerCategory
         condition='area'
         categoryName='categoryName'
         Category={Area}
-        switchCondition={switchArea}
+        switchCondition={switchCondition}
       />
       <SingerCategory
         condition='type'
         categoryName='categoryName'
         Category={Type}
-        switchCondition={switchType}
+        switchCondition={switchCondition}
       />
-
-      <div className='singer-list w-1200'>
+      <div className='singer-hot-list w-1200'>
         {singer.map(item => {
-          return <SingerCover singer={item} key={item.accountId} />
+          return <SingerCover singer={item} key={item.id} />
+        })}
+      </div>
+
+      <div className='w-1200 singer-list'>
+        {hotSinger.map((item, index) => {
+          return <SingerItem singer={item} key={index} />
         })}
       </div>
     </div>

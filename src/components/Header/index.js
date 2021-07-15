@@ -6,7 +6,7 @@ import logo from '@/assets/img/logo.png'
 
 // antd
 import { Input } from 'antd'
-import { SearchOutlined } from '@ant-design/icons'
+
 const { Search } = Input
 
 export default memo(function Header() {
@@ -47,7 +47,7 @@ export default memo(function Header() {
                 key={index}
                 target='_blank'
                 rel='noreferrer'
-                className={`link ${index == 2 ? 'privilege' : ''}`}
+                className={`link ${index === 2 ? 'privilege' : ''}`}
               >
                 {item.title}
               </a>
