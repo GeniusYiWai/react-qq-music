@@ -16,4 +16,12 @@ export const handleSongDuration = time => {
   return '0' + minutes + ':' + seconds
 }
 
-
+export const handleDate = date => {
+  let time = new Date(date)
+  let M =
+    (time.getMonth() + 1 < 10
+      ? '0' + (time.getMonth() + 1)
+      : time.getMonth() + 1) + '-'
+  let D = (time.getDate() < 10 ? '0' + time.getDate() : time.getDate()) + ''
+  return M + D
+}

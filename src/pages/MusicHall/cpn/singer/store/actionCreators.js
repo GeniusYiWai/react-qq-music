@@ -29,7 +29,7 @@ export const setSinger = (area, initial, type) => {
 }
 //获取热门歌手 dispatch
 export const setHotSinger = ({limit, offset}) => {
-  return dispatch => {
+  return dispatch => { 
     getHotSinger(limit, offset).then(({ data }) => {
       dispatch(setHotSingerAction(data.artists))
     })

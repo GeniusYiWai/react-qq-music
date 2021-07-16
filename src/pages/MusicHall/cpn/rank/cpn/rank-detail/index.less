@@ -1,0 +1,39 @@
+@theme-color: #31c27c;
+
+.rank-detail-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: #fff;
+  p,
+  span {
+    cursor: pointer;
+    &:hover {
+      color: @theme-color;
+    }
+  }
+  .rank-detail-cover {
+    img {
+      width: 60px;
+      height: 60px;
+      margin-right: 10px;
+    }
+  }
+  .rank-detail-info {
+    span {
+      margin-right: 10px;
+    }
+    i {
+      color: #999;
+    }
+    span {
+      &:hover {
+        color: @theme-color;
+      }
+    }
+  }
+}
+.zebra {
+  background: #fafafa;
+}

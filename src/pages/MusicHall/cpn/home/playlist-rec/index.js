@@ -6,7 +6,7 @@ import { setPlaylistRec } from '../store/actionCreators'
 import PlaylistCover from 'components/playlist-cover'
 import BigTitle from '../cpn/big-title'
 import DotsContainer from '../cpn/dots-container'
-import Category from '../cpn/category'
+import Category from 'components/category'
 import SwitchPage from '../cpn/SwitchPage'
 import './index.less'
 //歌单推荐选项卡

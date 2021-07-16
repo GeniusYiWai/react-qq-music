@@ -4,7 +4,7 @@ import { setNewAlbumRec } from '../store/actionCreators'
 import NewAlbumCover from 'components/newAlbum-cover'
 import BigTitle from '../cpn/big-title'
 import DotsContainer from '../cpn/dots-container'
-import Category from '../cpn/category'
+import Category from 'components/category'
 import SwitchPage from '../cpn/SwitchPage'
 import './index.less'
 //新碟上架选项卡

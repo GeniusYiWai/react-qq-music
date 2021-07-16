@@ -1,0 +1,64 @@
+@theme-color: #31c27c;
+.rank-container {
+  padding-top: 20px;
+  background: #fafafa;
+  .rank-content {
+    display: flex;
+    .rank-left {
+      border: 1px solid hsla(0, 0%, 60%, 0.2);
+    }
+    .rank-right {
+      background: #fff;
+      flex: 1;
+      .rank-right-info {
+        display: flex;
+        padding: 10px;
+        .rank-right-left {
+          img {
+            width: 150px;
+            height: 150px;
+            border-radius: 5px;
+          }
+        }
+        .rank-right-right {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+          margin-left: 20px;
+          .name {
+            font-size: 28px;
+          }
+          .updateTime {
+          }
+          .rank-right-info {
+            button {
+              margin-right: 10px;
+              border-radius: 5px;
+            }
+          }
+        }
+      }
+    }
+    .rank-list-container {
+      .rank-list-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+        .trackCount {
+          margin-left: 20px;
+          span {
+            font-size: 20px;
+          }
+          p {
+            font-size: 16px;
+          }
+        }
+        .playCount {
+          margin-right: 20px;
+        }
+        border-bottom: 2px solid @theme-color;
+      }
+    }
+  }
+}

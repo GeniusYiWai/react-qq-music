@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useCallback, useRef } from 'react'
+import React, { memo, useEffect, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import BgImage from '@/assets/img/bg_singer.jpg'
 import SingerCategory from './cpn/singer-category'
@@ -175,7 +175,6 @@ export default memo(function Singer() {
           return <SingerCover singer={item} key={item.id} />
         })}
       </div>
-
       <div className='w-1200 singer-list'>
         {hotSinger.map((item, index) => {
           return <SingerItem singer={item} key={index} />

@@ -6,7 +6,7 @@ import { setNewSongRec } from '../store/actionCreators'
 import NewSongCover from 'components/newSong-cover'
 import BigTitle from '../cpn/big-title'
 import DotsContainer from '../cpn/dots-container'
-import Category from '../cpn/category'
+import Category from 'components/category'
 import SwitchPage from '../cpn/SwitchPage'
 import './index.less'
 //新歌首发选项卡
