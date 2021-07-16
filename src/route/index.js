@@ -19,7 +19,7 @@ const routes = [
     path: '/musichall',
     exact: true,
     render: () => {
-      return <Redirect to='/musichall/disc' />
+      return <Redirect to='/musichall/playlist' />
     }
   },
   {
