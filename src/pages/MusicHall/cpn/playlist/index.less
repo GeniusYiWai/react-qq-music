@@ -2,14 +2,31 @@
 .playlist-conatiner {
   .playlist-content {
     display: flex;
-    .cate-menu {
-      width: 250px;
-      border: none;
-      border-radius: 3px;
-      background: #fafafa;
-      margin-top: 20px;
+    .playlist-cate {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      .cate-menu {
+        width: 250px;
+        border: none;
+        border-radius: 3px;
+        background: #fafafa;
+        margin-top: 20px;
+      }
+      .current-cate {
+        margin-top: 20px;
+        border: 1px solid #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 5px;
+        padding: 10px;
+        background: #fafafa;
+        flex: 1;
+      }
     }
   }
+
   .playlist-list {
     flex: 1;
     display: flex;

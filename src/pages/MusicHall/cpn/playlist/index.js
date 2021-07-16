@@ -29,6 +29,7 @@ const Category = [
 ]
 export default memo(function Playlist() {
   const [openKeys, setOpenKeys] = useState(['全部'])
+  const [key, setKey] = useState('全部')
   const onOpenChange = keys => {
     const latestOpenKey = keys.find(key => openKeys.indexOf(key) === -1)
     if (Category.indexOf(latestOpenKey) === -1) {
@@ -49,6 +50,7 @@ export default memo(function Playlist() {
     }
   })
   const handleMenuClick = ({ key }) => {
+    setKey(key)
     dispatch(setPlaylistByCate({ cate: key }))
   }
 
@@ -58,23 +60,27 @@ export default memo(function Playlist() {
   return (
     <div className='playlist-conatiner'>
       <div className='playlist-content w-1200'>
-        <Menu
-          mode='vertical'
-          openKeys={openKeys}
-          onOpenChange={onOpenChange}
-          className='cate-menu'
-          onClick={handleMenuClick}
-        >
-          {Category.map((cate, index) => {
-            return (
-              <SubMenu key={cate.categoryName} title={cate.categoryName}>
-                {getCateByNum(index).map(item => {
-                  return <Menu.Item key={item.name}>{item.name}</Menu.Item>
-                })}
-              </SubMenu>
-            )
-          })}
-        </Menu>
+        <div className='playlist-cate'>
+          <Menu
+            mode='vertical'
+            openKeys={openKeys}
+            onOpenChange={onOpenChange}
+            className='cate-menu'
+            onClick={handleMenuClick}
+          >
+            {Category.map((cate, index) => {
+              return (
+                <SubMenu key={cate.categoryName} title={cate.categoryName}>
+                  {getCateByNum(index).map(item => {
+                    return <Menu.Item key={item.name}>{item.name}</Menu.Item>
+                  })}
+                </SubMenu>
+              )
+            })}
+          </Menu>
+          <div className='current-cate'>{key}</div>
+        </div>
+
         <div className='playlist-list'>
           {playlist.map((item, index) => {
             return <PlaylistCover playlist={item} key={item.id} />
