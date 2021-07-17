@@ -7,6 +7,7 @@ import Mv from '../pages/MusicHall/cpn/mv'
 import Playlist from '../pages/MusicHall/cpn/playlist'
 import Rank from '../pages/MusicHall/cpn/rank'
 import Singer from '../pages/MusicHall/cpn/singer'
+import Player from '../pages/Player'
 const routes = [
   {
     path: '/',
@@ -55,6 +56,10 @@ const routes = [
   {
     path: '/mine',
     component: Mine
+  },
+  {
+    path: '/player',
+    component: Player
   }
 ]
 

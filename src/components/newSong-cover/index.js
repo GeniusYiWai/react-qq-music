@@ -1,10 +1,18 @@
-import React, { memo } from 'react'
+import React, { memo, useState } from 'react'
 import './index.less'
-import { handleSinger,handleSongDuration } from '@/utils/tools'
-
+import { handleSinger, handleSongDuration } from '@/utils/tools'
+import { useHistory } from 'react-router-dom'
+import playImg from '@/assets/img/play.png'
 export default memo(function NewSongCover(props) {
-  const { song } = props
-
+  const {
+    song: {
+      album: { picUrl },
+      name,
+      artists,
+      duration,
+      id
+    }
+  } = props
   // album: {songs: Array(0), paid: false, onSale: false, blurPicUrl: "http://p3.music.126.net/Nl4mFBPeN4Lqtqn3KOAvXQ==/109951166171044898.jpg", companyId: 0, …}
   // alias: []
   // artists: (2) [{…}, {…}]
@@ -42,16 +50,47 @@ export default memo(function NewSongCover(props) {
   // starred: false
   // starredNum: 0
   // status: 0
+  const [imgShow, setImgShow] = useState(false)
+  const handleCoverMove = () => {
+    setImgShow(true)
+  }
+  const handleCoverLeave = () => {
+    setImgShow(false)
+  }
+  const history = useHistory()
+
+  const handlePlay = () => {
+    console.log(history)
+    history.push('/player', {
+      id
+    })
+  }
+
   return (
     <div className='song-container'>
-      <img src={song.album.picUrl} alt='' />
+      <div
+        onMouseMove={() => handleCoverMove()}
+        onMouseLeave={() => handleCoverLeave()}
+        className='img-container'
+      >
+        <img src={picUrl} alt='' className='song-cover' />
+        <div className='play-img'>
+          <img
+            src={playImg}
+            alt=''
+            className={imgShow ? 'play-img-block' : 'play-img-none'}
+            onClick={() => handlePlay()}
+          />
+        </div>
+      </div>
+
       <div className='song-info'>
         <div>
-          <p>{song.name}</p>
-          <p>{handleSinger(song.artists)}</p>
+          <p>{name}</p>
+          <p>{handleSinger(artists)}</p>
         </div>
         <div className='song-duration'>
-          <p>{handleSongDuration(song.duration)}</p>
+          <p>{handleSongDuration(duration)}</p>
         </div>
       </div>
     </div>
