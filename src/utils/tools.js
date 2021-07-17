@@ -7,14 +7,6 @@ export const handleSinger = artists => {
     }
   }, '')
 }
-export const handleSongDuration = time => {
-  let minutes = parseInt((time % (1000 * 60 * 60)) / (1000 * 60))
-
-  let seconds = Math.round((time % (1000 * 60)) / 1000)
-  seconds = seconds.toString().length === 2 ? seconds : seconds + '0'
-
-  return '0' + minutes + ':' + seconds
-}
 
 export const handleDate = date => {
   let time = new Date(date)

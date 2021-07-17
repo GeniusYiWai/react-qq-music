@@ -22,7 +22,7 @@ export default memo(function Player() {
     }
   })
   //设置音乐播放状态
-  const [isPlaying, setIsPlaying] = useState(false)
+  const [isPlaying, setIsPlaying] = useState(true)
   //设置音乐播放条的初始值
   const [progress, setProgress] = useState(0)
   //设置音乐当前播放的时间

@@ -8,11 +8,11 @@ import MVRec from './mv-rec'
 export default memo(function Home() {
   return (
     <div>
-      {/* <PlaylistRec /> */}
+      <PlaylistRec />
       <NewSongRec />
-      {/* <NewAlbumRec /> */}
-      {/* <RankRec /> */}
-      {/* <MVRec /> */}
+      <NewAlbumRec />
+      <RankRec />
+      <MVRec />
     </div>
   )
 })

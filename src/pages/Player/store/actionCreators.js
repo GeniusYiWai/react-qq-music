@@ -1,7 +1,7 @@
 import { SET_CURRENTMUSIC } from './constant'
 import { getMusicById } from '@/api/player'
 
-//获取全部排行榜类型 action
+//设置当前播放音乐的信息 action
 const setCurrentPlayMusicAction = music => {
   return {
     type: SET_CURRENTMUSIC,
@@ -11,11 +11,10 @@ const setCurrentPlayMusicAction = music => {
   }
 }
 
-//获取全部排行榜类型 dispatch
+//设置当前播放音乐的信息 dispatch
 export const setCurrentPlayMusic = id => {
   return dispatch => {
     getMusicById(id).then(({ data }) => {
-
       dispatch(setCurrentPlayMusicAction(data.songs[0]))
     })
   }

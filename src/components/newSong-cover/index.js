@@ -1,6 +1,6 @@
 import React, { memo, useState } from 'react'
 import './index.less'
-import { handleSinger, handleSongDuration } from '@/utils/tools'
+import { handleSinger, formatMinuteSecond } from '@/utils/tools'
 import { useHistory } from 'react-router-dom'
 import playImg from '@/assets/img/play.png'
 export default memo(function NewSongCover(props) {
@@ -60,14 +60,13 @@ export default memo(function NewSongCover(props) {
   const history = useHistory()
 
   const handlePlay = () => {
-    console.log(history)
     history.push('/player', {
       id
     })
   }
 
   return (
-    <div className='song-container'>
+    <div className='song-container text-nowrap'>
       <div
         onMouseMove={() => handleCoverMove()}
         onMouseLeave={() => handleCoverLeave()}
@@ -90,7 +89,7 @@ export default memo(function NewSongCover(props) {
           <p>{handleSinger(artists)}</p>
         </div>
         <div className='song-duration'>
-          <p>{handleSongDuration(duration)}</p>
+          <p>{formatMinuteSecond(duration)}</p>
         </div>
       </div>
     </div>

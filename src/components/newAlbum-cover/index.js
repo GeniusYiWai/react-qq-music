@@ -39,7 +39,7 @@ export default memo(function PlaylistCover(props) {
       <div key={id}>
         <img src={picUrl} alt='' />
         <p className='text-nowrap'>{name}</p>
-        <p className='singer'>{handleSinger(artists)}</p>
+        <p className='singer text-nowrap'>{handleSinger(artists)}</p>
       </div>
     </div>
   )

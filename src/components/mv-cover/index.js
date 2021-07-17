@@ -9,7 +9,7 @@ export default memo(function MVCover(props) {
       </div>
       <div className='mv-info'>
         <p className='mv-name text-nowrap'>{mv.name}</p>
-        <p className='mv-artist '>{mv.artistName}</p>
+        <p className='mv-artist text-nowrap'>{mv.artistName}</p>
         <span className='mv-playnum'>{mv.playCount}</span>
       </div>
     </div>

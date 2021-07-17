@@ -1,6 +1,6 @@
 import React, { memo } from 'react'
 import './index.less'
-import { handleSinger, handleSongDuration } from '@/utils/tools'
+import { handleSinger, formatMinuteSecond } from '@/utils/tools'
 export default memo(function RankDetail(props) {
   const {
     name,
@@ -18,7 +18,7 @@ export default memo(function RankDetail(props) {
       </div>
       <div className='rank-detail-info'>
         <span>{handleSinger(ar)}</span>
-        <i>{handleSongDuration(dt)}</i>
+        <i>{formatMinuteSecond(dt)}</i>
       </div>
     </div>
   )

@@ -69,7 +69,7 @@ export default memo(function PlaylistRec() {
           {playlist
             .slice(currentPage * PAGESIZE, currentPage * PAGESIZE + PAGESIZE)
             .map((item, index) => {
-              return <PlaylistCover playlist={item} key={item.id}/>
+              return <PlaylistCover playlist={item} key={Math.random()+item.id}/>
             })}
         </div>
         <DotsContainer
