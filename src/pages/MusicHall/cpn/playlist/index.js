@@ -28,7 +28,7 @@ const Category = [
   }
 ]
 export default memo(function Playlist() {
-  const [openKeys, setOpenKeys] = useState(['全部'])
+  const [openKeys, setOpenKeys] = useState([])
   const [key, setKey] = useState('全部')
   const onOpenChange = keys => {
     const latestOpenKey = keys.find(key => openKeys.indexOf(key) === -1)
