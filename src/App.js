@@ -6,12 +6,14 @@ import routes from './route'
 import store from './store'
 import Header from './components/Header'
 import '@/assets/css/common.less'
+
 export default memo(function App() {
   return (
     <Provider store={store}>
       <Router>
         {/* 头部 */}
-        <Header />
+        {window.location.pathname === '/player' ? null : <Header />}
+
         {renderRoutes(routes)}
       </Router>
     </Provider>
