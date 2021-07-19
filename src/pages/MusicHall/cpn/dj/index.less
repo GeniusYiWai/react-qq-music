@@ -1,0 +1,35 @@
+@theme-color: #31c27c;
+.dj-container {
+  display: flex;
+  .left {
+    width: 20%;
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    li {
+      color: #000;
+      cursor: pointer;
+      margin: 20px;
+      transition: all 0.3s;
+      &:hover {
+        color: @theme-color;
+      }
+    }
+    .active {
+      color: @theme-color;
+    }
+  }
+  .right {
+    flex: 1;
+    padding-left: 20%;
+    .dj-list {
+      display: flex;
+      flex-wrap: wrap;
+      div {
+        width: 20%;
+        height: 230px;
+        margin: 20px;
+      }
+    }
+  }
+}

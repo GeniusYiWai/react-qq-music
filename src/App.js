@@ -13,7 +13,6 @@ export default memo(function App() {
       <Router>
         {/* 头部 */}
         {window.location.pathname === '/player' ? null : <Header />}
-
         {renderRoutes(routes)}
       </Router>
     </Provider>

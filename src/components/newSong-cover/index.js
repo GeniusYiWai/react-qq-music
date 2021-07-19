@@ -50,7 +50,7 @@ export default memo(function NewSongCover(props) {
         window.open('/player', 'alwaysRaised=yes')
       },
       () => {
-        message.warning('抱歉，这首歌曲暂时不能播放')
+        message.warning('抱歉，这首歌曲暂时不能播放。')
       }
     )
   }
