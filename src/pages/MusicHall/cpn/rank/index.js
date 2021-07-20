@@ -22,17 +22,21 @@ export default memo(function Rank() {
     },
     [dispatch]
   )
-  useEffect(() => {
-    dispatch(setAllRank())
-    dispatch(setRankById(19723756))
-  }, [dispatch])
-  const [currentIndex, setcurrentIndex] = useState(0)
   const { rankList, rankDetail } = useSelector(state => {
     return {
       rankList: state.rank.rankList,
       rankDetail: state.rank.rankDetail
     }
   })
+  useEffect(() => {
+    if (rankList.length !== 0) {
+      return
+    }
+    dispatch(setAllRank())
+    dispatch(setRankById(19723756))
+  }, [dispatch, rankList])
+  const [currentIndex, setcurrentIndex] = useState(0)
+
   console.log(rankDetail)
   return (
     <div className='rank-container'>
@@ -82,14 +86,13 @@ export default memo(function Rank() {
               <p className='trackCount'>
                 <span>歌曲列表 </span>
                 {rankDetail.trackCount}首歌
-                
-                </p>
+              </p>
               <p className='playCount'>播放:{rankDetail.playCount}次</p>
             </div>
             <div className='rank-list-content'>
               {rankDetail.tracks &&
                 rankDetail.tracks.map((item, index) => {
-                  return <RankDetail item={item} key={item.id} index={index}/>
+                  return <RankDetail item={item} key={item.id} index={index} />
                 })}
             </div>
           </div>

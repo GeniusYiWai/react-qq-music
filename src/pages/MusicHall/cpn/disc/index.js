@@ -33,9 +33,12 @@ export default memo(function NewAlbumRec() {
     setCurrentIndex(index)
   }
   useEffect(() => {
+    if (newAlbum.length !== 0) {
+      return
+    }
     //调用dispatch 请求歌单数据 存入home state
     dispatch(setNewAlbumRec(Tabs[0].area))
-  }, [dispatch])
+  }, [dispatch, newAlbum])
   return (
     <div className='newalbum-container'>
       <div className='w-1200'>
@@ -46,7 +49,7 @@ export default memo(function NewAlbumRec() {
           type={'area'}
         />
         <div className='newalbum-content'>
-          {newAlbum.slice(0, PAGESIZE ).map((item, index) => {
+          {newAlbum.slice(0, PAGESIZE).map((item, index) => {
             return <NewAlbumCover album={item} key={index} />
           })}
         </div>

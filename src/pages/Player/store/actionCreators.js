@@ -1,5 +1,9 @@
-import { SET_CURRENTMUSIC } from './constant'
-import { getMusicById } from '@/api/player'
+import {
+  SET_CURRENTMUSIC,
+  SET_MUSIC_STATUS,
+  SET_CURRENTMUSICLYRIC
+} from './constant'
+import { getMusicById, getLyric } from '@/api/player'
 
 //设置当前播放音乐的信息 action
 const setCurrentPlayMusicAction = music => {
@@ -11,11 +15,39 @@ const setCurrentPlayMusicAction = music => {
   }
 }
 
+//设置当前播放音乐的歌词 action
+const setCurrentPlayMusicLyricAction = lyric => {
+  return {
+    type: SET_CURRENTMUSICLYRIC,
+    lyric: {
+      currentPlayMusicLyric: lyric
+    }
+  }
+}
+
 //设置当前播放音乐的信息 dispatch
 export const setCurrentPlayMusic = id => {
   return dispatch => {
     getMusicById(id).then(({ data }) => {
       dispatch(setCurrentPlayMusicAction(data.songs[0]))
+    })
+  }
+}
+
+//设置当前播放音乐的状态
+export const setCurrentPlayMusicStatus = status => {
+  return dispatch => {
+    dispatch({
+      type: SET_MUSIC_STATUS,
+      status
+    })
+  }
+}
+//设置当前播放音乐的歌词 dispatch
+export const setCurrentPlayMusicLyric = id => {
+  return dispatch => {
+    getLyric(id).then(({ data }) => {
+      dispatch(setCurrentPlayMusicLyricAction(data.lrc.lyric))
     })
   }
 }

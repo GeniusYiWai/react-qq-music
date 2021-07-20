@@ -6,8 +6,12 @@ import {
   PlayCircleOutlined,
   PauseCircleOutlined
 } from '@ant-design/icons'
-import { setCurrentPlayMusic } from '../../store/actionCreators'
+import {
+  setCurrentPlayMusic,
+  setCurrentPlayMusicStatus
+} from '../../store/actionCreators'
 import { useSelector, useDispatch } from 'react-redux'
+
 import { formatMinuteSecond, handleSinger, getPlaySong } from '@/utils/tools'
 import { getItem } from '@/utils/storage'
 import player from '@/assets/img/player.png'
@@ -34,21 +38,17 @@ export default memo(function Progress(props) {
   const { currentPlayMusicId, setCurrentPlayMusicId } = props
   // redux hooks
   const dispatch = useDispatch()
-  // const currentPlayMusicId = getItem('currentPlayMusicId')
-  // console.log(currentPlayMusicId);
-  // const [currentPlayMusicId, setCurrentPlayMusicId] = useState(
-  //   getItem('currentPlayMusicId')
-  // )
-  const { currentPlayMusic } = useSelector(state => {
+  const { currentPlayMusic, isPlaying } = useSelector(state => {
     return {
-      currentPlayMusic: state.player.currentPlayMusic
+      currentPlayMusic: state.player.currentPlayMusic,
+      isPlaying: state.player.isPlaying
     }
   })
   // react hooks
   //设置当前播放方式 默认是0 列表循坏 1单曲循环 2随机播放
   const [playModeNum, setPlayModeNum] = useState(0)
-  //设置音乐播放状态
-  const [isPlaying, setIsPlaying] = useState(false)
+  // //设置音乐播放状态
+  // const [isPlaying, setIsPlaying] = useState(false)
   //设置音乐播放条的初始值
   const [progress, setProgress] = useState(0)
   //设置音乐当前播放的时间
@@ -65,10 +65,10 @@ export default memo(function Progress(props) {
   //处理点击图标音乐播放暂停
   const changePlayStatus = useCallback(
     status => {
-      setIsPlaying(status)
+      dispatch(setCurrentPlayMusicStatus(status))
       status ? audioRef.current.play() : audioRef.current.pause()
     },
-    [audioRef]
+    [audioRef,dispatch]
   )
 
   //处理进度条点击完成修改音乐播放进度
@@ -190,7 +190,7 @@ export default memo(function Progress(props) {
     dispatch(setCurrentPlayMusic(currentPlayMusicId))
     // //请求数据获取当前播放音乐的url地址
     audioRef.current.src = getPlaySong(currentPlayMusicId)
-    setIsPlaying(true)
+    dispatch(setCurrentPlayMusicStatus(true))
   }, [audioRef, currentPlayMusicId, dispatch])
   return (
     <div className='progress-container'>

@@ -1,27 +1,51 @@
 .player-playlist-container {
-  width: 70%;
-  border: 1px solid;
-  padding: 20px;
-  .player-playlist-title {
-    display: flex;
-    justify-content: space-between;
-    p {
-      flex: 1;
-      margin-top: 20px;
-
+  padding: 40px;
+  padding-left: 100px;
+  display: flex;
+  .player-playlist-left {
+    width: 70%;
+    .player-playlist-title {
+      display: flex;
+      justify-content: center;
+      p {
+        flex: 1;
+        margin-top: 30px;
+      }
+    }
+    .player-playlist-item {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      .wave-container {
+        width: 12px;
+        height: 12px;
+        background-color: gray;
+        background-repeat: no-repeat;
+        position: absolute;
+        left: -12px;
+        display: none;
+      }
+      .isPlaying {
+        display: block;
+      }
+      div {
+        margin-top: 30px;
+      }
+      p {
+        flex: 1;
+        margin-top: 30px;
+        cursor: pointer;
+      }
     }
   }
-  .player-playlist-item {
+  .player-playlist-right {
+    flex: 1;
     display: flex;
-    justify-content: space-between;
-    p {
-      flex: 1;
-      margin-top: 20px;
+    flex-direction: column;
+    align-items: center;
+    img {
+      width: 50%;
     }
   }
-  .isPlaying{
-    background: #fafafa;
-  }
-
-  
 }

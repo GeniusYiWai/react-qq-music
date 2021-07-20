@@ -9,3 +9,8 @@ export const getMusicById = id => {
 export const CheckCanPlay = id => {
   return request.get(`/check/music?id=${id}`)
 }
+//获取歌词
+//ld 歌曲id
+export const getLyric = id => {
+  return request.get(`/lyric?id=${id}`)
+}

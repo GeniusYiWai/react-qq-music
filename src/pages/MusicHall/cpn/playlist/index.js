@@ -39,16 +39,20 @@ export default memo(function Playlist() {
     }
   }
   const dispatch = useDispatch()
-  useEffect(() => {
-    dispatch(setPlaylistCate())
-    dispatch(setPlaylistByCate({}))
-  }, [dispatch])
   const { playlistCate, playlist } = useSelector(state => {
     return {
       playlistCate: state.playlist.playlistCate,
       playlist: state.playlist.playlist
     }
   })
+  useEffect(() => {
+    if (playlistCate.length !== 0) {
+      return
+    }
+    dispatch(setPlaylistCate())
+    dispatch(setPlaylistByCate({}))
+  }, [dispatch, playlistCate])
+
   const handleMenuClick = ({ key }) => {
     setKey(key)
     dispatch(setPlaylistByCate({ cate: key }))

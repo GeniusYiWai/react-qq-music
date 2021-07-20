@@ -141,9 +141,12 @@ export default memo(function Singer() {
     [dispatch]
   )
   useEffect(() => {
+    if (singer.length !== 0) {
+      return
+    }
     dispatch(setSinger({}))
     dispatch(setHotSinger({}))
-  }, [dispatch])
+  }, [dispatch, singer])
 
   return (
     <div className='singer-container'>
