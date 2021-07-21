@@ -11,15 +11,18 @@ import {
   setCurrentPlayMusicStatus
 } from '../../store/actionCreators'
 import { useSelector, useDispatch } from 'react-redux'
-
-import { formatMinuteSecond, handleSinger, getPlaySong } from '@/utils/tools'
+import {
+  formatMinuteSecond,
+  handleSinger,
+  getPlaySong,
+  getRandomIndex
+} from '@/utils/tools'
 import { getItem } from '@/utils/storage'
 import player from '@/assets/img/player.png'
 import './index.less'
 //0 -205px 列表循坏
 //0 -232px 单曲循环
 //0 -96px 随机播放
-
 const mode = [
   // 列表循坏
   { title: '列表循坏', mode: 'ListCycle', backPosition: '-205px' },
@@ -33,22 +36,20 @@ const mode = [
   }
 ]
 export default memo(function Progress(props) {
-  //other function
+  //获取缓存中的播放列表 用于切换歌曲
   const playlist = getItem('playlist')
-  const { currentPlayMusicId, setCurrentPlayMusicId } = props
-  // redux hooks
+  //获取音乐播放状态 当前播放的音乐id
+  const { isPlaying, setIsPlaying, currentPlayMusicId, setCurrentPlayMusicId } =
+    props
   const dispatch = useDispatch()
-  const { currentPlayMusic, isPlaying } = useSelector(state => {
+  //从store中获取当前正在播放的音乐信息
+  const { currentPlayMusic } = useSelector(state => {
     return {
-      currentPlayMusic: state.player.currentPlayMusic,
-      isPlaying: state.player.isPlaying
+      currentPlayMusic: state.player.currentPlayMusic
     }
   })
-  // react hooks
   //设置当前播放方式 默认是0 列表循坏 1单曲循环 2随机播放
   const [playModeNum, setPlayModeNum] = useState(0)
-  // //设置音乐播放状态
-  // const [isPlaying, setIsPlaying] = useState(false)
   //设置音乐播放条的初始值
   const [progress, setProgress] = useState(0)
   //设置音乐当前播放的时间
@@ -61,14 +62,13 @@ export default memo(function Progress(props) {
   //获取当前audio的ref引用
   const audioRef = useRef()
 
-  //functions
-  //处理点击图标音乐播放暂停
+  //处理点击播放暂停图标 调用父元素的更新播放状态方法 音乐同步播放暂停
   const changePlayStatus = useCallback(
     status => {
-      dispatch(setCurrentPlayMusicStatus(status))
+      setIsPlaying(status)
       status ? audioRef.current.play() : audioRef.current.pause()
     },
-    [audioRef,dispatch]
+    [audioRef, setIsPlaying]
   )
 
   //处理进度条点击完成修改音乐播放进度
@@ -94,35 +94,24 @@ export default memo(function Progress(props) {
     },
     [duration, audioRef]
   )
-  //音乐正在播放
+
+  //这个方法会在音乐播放时一直调用 从而可以实现修改进度条的值
   const onMusicPlay = useCallback(() => {
-    //判断是否已经在通过进度条改变播放进度
-    //如果是就不执行这个方法
-    //设置当前播放时间
+    //设置展示的当前播放时间
     setCurrentTime(audioRef.current.currentTime * 1000)
     //设置进度条的值
     setProgress((currentTime / duration) * 100)
   }, [currentTime, duration, audioRef])
-  //随机播放获取随机数
-  const getRandomIndex = useCallback((index, length) => {
-    let newIndex
-    let randomIndex = Math.ceil(Math.random() * (length - 1))
-    if (randomIndex !== index) {
-      newIndex = randomIndex
-    } else {
-      getRandomIndex()
-    }
-    return newIndex
-  }, [])
 
   //处理播放上一首或者下一首
   const switchSong = useCallback(
     type => {
+      //获取当前正在播放的音乐在播放列表中的索引
       const index = playlist.findIndex(item => item.id === currentPlayMusicId)
       let newIndex
       let { length } = playlist
       switch (type) {
-        //上一首
+        //上一首 如果已经是第一首 就播放最后一首
         case 'prev':
           if (index === 0) {
             newIndex = length - 1
@@ -130,7 +119,7 @@ export default memo(function Progress(props) {
             newIndex = index - 1
           }
           break
-        //下一首
+        //下一首 如果已经是最后一首 就播放第一首
         case 'next':
           if (index === length - 1) {
             newIndex = 0
@@ -146,34 +135,34 @@ export default memo(function Progress(props) {
           break
         //随机播放 继续播放当前这一首
         case 'random':
+          //获取随机数
           newIndex = getRandomIndex(index, length)
-          console.log(newIndex)
           break
         default:
           break
       }
       setCurrentPlayMusicId(playlist[newIndex].id)
     },
-    [setCurrentPlayMusicId, playlist, currentPlayMusicId, getRandomIndex]
+    [setCurrentPlayMusicId, playlist, currentPlayMusicId]
   )
 
   //当音乐播放完成后触发该函数 自动播放下一首
   const onMusicEnded = useCallback(() => {
     switch (playModeNum) {
-      //列表循坏
+      //列表循坏 播放下一首
       case 0:
         switchSong('next')
         break
-      //单曲循环
+      //单曲循环 播放当前这一首
       case 1:
         switchSong('circle')
         break
       //随机播放
       case 2:
         switchSong('random')
-
         break
       default:
+        //默认 继续播放下一首
         switchSong('next')
         break
     }
@@ -181,17 +170,22 @@ export default memo(function Progress(props) {
 
   //切换播放模式
   const changePlayMode = useCallback(() => {
+    // 1是默认 2是单曲循环 3是随机播放
+    //因为索引从0开始 所以需要加1
     playModeNum + 1 === mode.length
       ? setPlayModeNum(0)
       : setPlayModeNum(playModeNum + 1)
   }, [playModeNum])
 
   useEffect(() => {
+    //currentPlayMusicId发生变化就重新加载当前播放的音乐信息
     dispatch(setCurrentPlayMusic(currentPlayMusicId))
-    // //请求数据获取当前播放音乐的url地址
+    //请求数据获取当前播放音乐的url地址
     audioRef.current.src = getPlaySong(currentPlayMusicId)
-    dispatch(setCurrentPlayMusicStatus(true))
-  }, [audioRef, currentPlayMusicId, dispatch])
+    //更改音乐播放状态
+    // setIsPlaying(true)
+    // audioRef.current.play()
+  }, [audioRef, currentPlayMusicId, setIsPlaying, dispatch])
   return (
     <div className='progress-container'>
       <audio

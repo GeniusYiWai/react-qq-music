@@ -56,3 +56,15 @@ export function formatMinuteSecond(time) {
 export function getPlaySong(id) {
   return `https://music.163.com/song/media/outer/url?id=${id}.mp3`
 }
+
+//随机播放获取随机数
+export const getRandomIndex = (index, length) => {
+  let newIndex
+  let randomIndex = Math.ceil(Math.random() * (length - 1))
+  if (randomIndex !== index) {
+    newIndex = randomIndex
+  } else {
+    getRandomIndex()
+  }
+  return newIndex
+}
