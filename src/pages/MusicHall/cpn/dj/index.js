@@ -1,17 +1,14 @@
-import React, {
-  memo,
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-  useMemo
-} from 'react'
+import React, { memo, useState, useEffect, useCallback } from 'react'
 import { BackTop } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
-import { setDjCate, setDjByCate } from './store/actionCreators'
-import './index.less'
+import { setDjByCate } from './store/actionCreators'
 import DjCover from 'components/dj-cover'
-const djCateList = [
+import { ScrollTop, getScrollTop } from '@/utils/tools'
+import './index.less'
+//dj的所有分类 写死
+//name 是展示的分类名称
+//id 用于传参
+let djCateList = [
   {
     name: '情感',
     id: 3
@@ -51,26 +48,23 @@ const djCateList = [
 ]
 export default memo(function Dj() {
   const dispatch = useDispatch()
+  //切换当前选中dj分类
   const [curretnIndex, setcurretnIndex] = useState(0)
-  const { djCate, djList } = useSelector(state => {
-    return { djCate: state.dj.djCate, djList: state.dj.djList }
+  //获取dj store中的djList state 用于展示
+  const { djList } = useSelector(state => {
+    return { djList: state.dj.djList }
   })
-  useEffect(() => {
-    if (djList.length !== 0) {
-      return
-    }
-    dispatch(setDjCate())
-    djCateList.forEach(e => {
-      dispatch(setDjByCate(e.id))
-    })
-  }, [dispatch, djList])
-  const handleSelectCate = index => {
+
+  //选择分类 歌单页面到分类下的列表
+  const handleSelectCate = useCallback(index => {
     setcurretnIndex(index)
-    let offsetTop = document.querySelector('.dj-list' + index).offsetTop - 10
+    //获取点击的分类距离顶部的距离
+    const offsetTop = document.querySelector('.dj-list' + index).offsetTop - 10
     ScrollTop(offsetTop, 600)
-  }
+  }, [])
 
   useEffect(() => {
+    //监听页面滚动
     const handleScroll = () => {
       let scrollTop = getScrollTop()
       djCateList.forEach((item, index) => {
@@ -84,43 +78,27 @@ export default memo(function Dj() {
       })
     }
     window.addEventListener('scroll', handleScroll)
+    //取消监听页面滚动
     return () => {
       window.removeEventListener('scroll', handleScroll)
     }
   }, [])
-  const ScrollTop = (number = 0, time) => {
-    if (!time) {
-      document.body.scrollTop = document.documentElement.scrollTop = number
-      return number
+  useEffect(() => {
+    //如果已经有djList就不再请求
+    if (djList.length !== 0) {
+      return
     }
-    const spacingTime = 20 // 设置循环的间隔时间  值越小消耗性能越高
-    let spacingInex = time / spacingTime // 计算循环的次数
-    let nowTop = document.body.scrollTop + document.documentElement.scrollTop // 获取当前滚动条位置
-    let everTop = (number - nowTop) / spacingInex // 计算每次滑动的距离
-    let scrollTimer = setInterval(() => {
-      if (spacingInex > 0) {
-        spacingInex--
-        ScrollTop((nowTop += everTop))
-      } else {
-        clearInterval(scrollTimer) // 清除计时器
-      }
-    }, spacingTime)
-  }
+    //循环遍历dj分类 发送请求 存入到state中
+    djCateList.forEach(e => {
+      dispatch(setDjByCate(e.id))
+    })
+  }, [])
 
-  const getScrollTop = () => {
-    let scrollTop = 0
-    if (document.documentElement && document.documentElement.scrollTop) {
-      scrollTop = document.documentElement.scrollTop
-    } else if (document.body) {
-      scrollTop = document.body.scrollTop
-    }
-    return scrollTop
-  }
   return (
     <div className='w-1200 dj-container'>
       <div className='left'>
         <ul>
-          {djCate.map((item, index) => {
+          {djCateList.map((item, index) => {
             return (
               <li
                 onClick={() => handleSelectCate(index)}
@@ -142,7 +120,7 @@ export default memo(function Dj() {
                   index === curretnIndex ? 'dj-title-active' : ''
                 } `}
               >
-                {djCate[index] && djCate[index].name}
+                {djCateList[index] && djCateList[index].name}
               </div>
               {item.map(dj => {
                 return <DjCover dj={dj} key={dj.id} />

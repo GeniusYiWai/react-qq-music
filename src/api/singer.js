@@ -11,7 +11,6 @@ export const getSinger = ({ area = '', initial = '', type = '' }) => {
 //获取歌手热门歌手
 //limit 数量
 //offset 偏移数量
-
 export const getHotSinger = (limit = '', offset = 1) => {
   return request.get(`/top/artists?limit=${limit}&offset=${offset}`)
 }

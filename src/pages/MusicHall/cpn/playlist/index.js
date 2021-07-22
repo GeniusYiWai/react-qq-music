@@ -1,10 +1,11 @@
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useEffect, useState, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { setPlaylistCate, setPlaylistByCate } from './store/actionCreators'
 import './index.less'
 import PlaylistCover from 'components/playlist-cover'
 import { Menu } from 'antd'
 const { SubMenu } = Menu
+//歌单分类 写死
 const Category = [
   {
     categoryName: '语种',
@@ -28,7 +29,9 @@ const Category = [
   }
 ]
 export default memo(function Playlist() {
+  //鼠标悬浮显示分类详情
   const [openKeys, setOpenKeys] = useState([])
+  //切换歌单分类
   const [key, setKey] = useState('全部')
   const onOpenChange = keys => {
     const latestOpenKey = keys.find(key => openKeys.indexOf(key) === -1)
@@ -39,28 +42,29 @@ export default memo(function Playlist() {
     }
   }
   const dispatch = useDispatch()
+  //获取playlist store中的歌单分类 和当前选中的歌单详情
   const { playlistCate, playlist } = useSelector(state => {
     return {
       playlistCate: state.playlist.playlistCate,
       playlist: state.playlist.playlist
     }
   })
-  useEffect(() => {
-    if (playlistCate.length !== 0) {
-      return
-    }
-    dispatch(setPlaylistCate())
-    dispatch(setPlaylistByCate({}))
-  }, [dispatch, playlistCate])
-
-  const handleMenuClick = ({ key }) => {
+  //处理分类点击 查询加载数据
+  const handleMenuClick = useCallback(({ key }) => {
     setKey(key)
+  }, [])
+  const getCateByNum = useCallback(
+    num => {
+      return playlistCate.filter(item => item.category === num)
+    },
+    [playlistCate]
+  )
+  //监听 key值 一旦发生变化就重新加载数据
+  useEffect(() => {
+    dispatch(setPlaylistCate())
     dispatch(setPlaylistByCate({ cate: key }))
-  }
+  }, [key])
 
-  const getCateByNum = num => {
-    return playlistCate.filter(item => item.category === num)
-  }
   return (
     <div className='playlist-conatiner'>
       <div className='playlist-content w-1200'>

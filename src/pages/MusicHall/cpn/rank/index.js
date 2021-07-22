@@ -10,34 +10,31 @@ import {
   DownloadOutlined,
   CommentOutlined
 } from '@ant-design/icons'
-import './index.less'
+
 import { handleDate } from '@/utils/tools'
 import RankDetail from './cpn/rank-detail'
+import './index.less'
 export default memo(function Rank() {
   const dispatch = useDispatch()
+  //切换排行榜
+  const [currentIndex, setcurrentIndex] = useState(0)
 
-  const getRanlDetailByID = useCallback(
-    id => {
-      dispatch(setRankById(id))
-    },
-    [dispatch]
-  )
+  //通过排行榜id获取详情
+  const getRanlDetailByID = useCallback(id => {
+    dispatch(setRankById(id))
+  }, [])
+  //从rank store中获取排行榜分类和排行榜详情
   const { rankList, rankDetail } = useSelector(state => {
     return {
       rankList: state.rank.rankList,
       rankDetail: state.rank.rankDetail
     }
   })
+  //第一次加载页面 手动加载第一个排行榜分类下的数据
   useEffect(() => {
-    if (rankList.length !== 0) {
-      return
-    }
     dispatch(setAllRank())
     dispatch(setRankById(19723756))
-  }, [dispatch, rankList])
-  const [currentIndex, setcurrentIndex] = useState(0)
-
-  console.log(rankDetail)
+  }, [])
   return (
     <div className='rank-container'>
       <div className='rank-content w-1200'>

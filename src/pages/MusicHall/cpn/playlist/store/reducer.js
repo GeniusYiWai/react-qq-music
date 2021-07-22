@@ -1,4 +1,4 @@
-import { SET_PLAYLISTCATE, SET_PLAYLISTBYCATE } from './constant'
+import { SET_PLAYLIST_CATE, SET_PLAYLIST_BY_CATE } from './constant'
 
 const initState = {
   //所有歌单分类 state
@@ -9,9 +9,9 @@ const initState = {
 
 function reducer(state = initState, action) {
   switch (action.type) {
-    case SET_PLAYLISTCATE:
+    case SET_PLAYLIST_CATE:
       return { ...state, ...action.playlist }
-    case SET_PLAYLISTBYCATE:
+    case SET_PLAYLIST_BY_CATE:
       return { ...state, ...action.playlist }
     default:
       return state

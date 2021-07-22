@@ -1,7 +1,7 @@
 import React, { memo, useState } from 'react'
 import './index.less'
 
-export default memo(function SingerCategory(props) {
+export default memo(function ConditionQuery(props) {
   const { condition, Category, categoryName, switchCondition } = props
   const [currentCondition, setCondition] = useState(Category[0][condition])
   return (

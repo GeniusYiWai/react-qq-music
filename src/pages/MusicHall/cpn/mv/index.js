@@ -1,13 +1,14 @@
-import React, { memo, useEffect, useCallback } from 'react'
+import React, { memo, useEffect, useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import SingerCategory from '../singer/cpn/singer-category'
+import ConditionQuery from 'components/condition-query'
 import MvCover from 'components/mv-cover'
 import { setMv } from './store/actionCreators'
 import './index.less'
+//地区筛选条件
 const Area = [
   {
     categoryName: '全部',
-    area: '全部'
+    area: ''
   },
   {
     categoryName: '内地',
@@ -30,10 +31,11 @@ const Area = [
     area: '港台'
   }
 ]
+//类型筛选条件
 const Type = [
   {
     categoryName: '全部',
-    type: '全部'
+    type: ''
   },
   {
     categoryName: '官方版',
@@ -52,7 +54,12 @@ const Type = [
     type: '原生'
   }
 ]
+// 排序筛选条件
 const Order = [
+  {
+    categoryName: '全部',
+    order: ''
+  },
   {
     categoryName: '最快',
     order: '最快'
@@ -66,57 +73,53 @@ const Order = [
     order: '最新'
   }
 ]
-//混合查询条件
-const combineCondition = {
-  initial: '',
-  area: '',
-  type: ''
-}
+
 export default memo(function Singer() {
+  //混合查询条件 因为可以多个参数一起查询
+  const [combineCondition, setCombineCondition] = useState({
+    order: '',
+    area: '',
+    type: ''
+  })
   const dispatch = useDispatch()
-  //获取singer state
-  const { mv } = useSelector(state => {
+  //获取mv store中的 mvList state
+  const { mvList } = useSelector(state => {
     return {
-      mv: state.mv.mvList
+      mvList: state.mv.mvList
     }
   })
-  console.log(mv)
-  const switchCondition = useCallback(
-    (condition, value) => {
-      combineCondition[condition] = value
-      dispatch(setMv(combineCondition))
-    },
-    [dispatch]
-  )
+  //切换查询条件会重新加载数据
+  const switchCondition = useCallback((condition, value) => {
+    setCombineCondition(combineCondition => ({
+      ...combineCondition,
+      [condition]: value
+    }))
+  }, [])
   useEffect(() => {
-    if (mv.length !== 0) {
-      return
-    }
-    dispatch(setMv({}))
-  }, [dispatch, mv])
-
+    dispatch(setMv(combineCondition))
+  }, [combineCondition])
   return (
     <div className='mv-container'>
-      <SingerCategory
+      <ConditionQuery
         condition='order'
         categoryName='categoryName'
         Category={Order}
         switchCondition={switchCondition}
       />
-      <SingerCategory
+      <ConditionQuery
         condition='area'
         categoryName='categoryName'
         Category={Area}
         switchCondition={switchCondition}
       />
-      <SingerCategory
+      <ConditionQuery
         condition='type'
         categoryName='categoryName'
         Category={Type}
         switchCondition={switchCondition}
       />
       <div className='mv-list-container w-1200'>
-        {mv.map(item => {
+        {mvList.map(item => {
           return <MvCover mv={item} key={item.id} />
         })}
       </div>

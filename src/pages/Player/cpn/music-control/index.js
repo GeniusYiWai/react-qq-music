@@ -7,8 +7,7 @@ import {
   PauseCircleOutlined
 } from '@ant-design/icons'
 import {
-  setCurrentPlayMusic,
-  setCurrentPlayMusicStatus
+  setCurrentPlayMusic
 } from '../../store/actionCreators'
 import { useSelector, useDispatch } from 'react-redux'
 import {
@@ -183,14 +182,14 @@ export default memo(function Progress(props) {
     //请求数据获取当前播放音乐的url地址
     audioRef.current.src = getPlaySong(currentPlayMusicId)
     //更改音乐播放状态
-    // setIsPlaying(true)
-    // audioRef.current.play()
+    setIsPlaying(true)
+    audioRef.current.play()
   }, [audioRef, currentPlayMusicId, setIsPlaying, dispatch])
   return (
     <div className='progress-container'>
       <audio
-        controls
         autoPlay
+        controls
         ref={audioRef}
         onTimeUpdate={() => onMusicPlay()}
         onEnded={() => onMusicEnded()}

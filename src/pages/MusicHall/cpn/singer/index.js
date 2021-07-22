@@ -1,11 +1,12 @@
 import React, { memo, useEffect, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import BgImage from '@/assets/img/bg_singer.jpg'
-import SingerCategory from './cpn/singer-category'
+import ConditionQuery from 'components/condition-query'
 import SingerCover from './cpn/singer-cover'
 import SingerItem from './cpn/singer-item'
 import { setSinger, setHotSinger } from './store/actionCreators'
 import './index.less'
+//首字母查询
 const Initials = [
   { categoryName: '热门', initial: '' },
   { categoryName: 'A', initial: 'A' },
@@ -35,6 +36,7 @@ const Initials = [
   { categoryName: 'Y', initial: 'Y' },
   { categoryName: 'Z', initial: 'Z' }
 ]
+//地区查询
 const Area = [
   {
     categoryName: '全部',
@@ -61,6 +63,7 @@ const Area = [
     area: '0'
   }
 ]
+//类型查询
 const Type = [
   {
     categoryName: '全部',
@@ -95,59 +98,14 @@ export default memo(function Singer() {
       hotSinger: state.singer.hotSingerList
     }
   })
-  //切换首字母查询条件
-  // const switchInitials = useCallback(
-  //   initial => {
-  //     combineCondition.initial = initial
-
-  //     //useState是异步更改 这里不能立即拿到initial
-  //     // console.log(currentInitial)
-  //     dispatch(setSinger(combineCondition))
-  //   },
-  //   [dispatch]
-  // )
-  //切换地区查询条件
-  // const switchArea = useCallback(
-  //   area => {
-  //     combineCondition.area = area
-  //     //useState是异步更改 这里不能立即拿到initial
-  //     // console.log(currentArea)
-  //     dispatch(setSinger(combineCondition))
-  //   },
-  //   [dispatch]
-
-  //   // [dispatch, setArea, currentInitial, currentType]
-  // )
-  //切换类型查询条件
-  // const switchType = useCallback(
-  //   type => {
-  //     combineCondition.type = type
-  //     //useState是异步更改 这里不能立即拿到initial
-  //     // console.log(currentType)
-  //     dispatch(setSinger(combineCondition))
-  //   },
-  //   [dispatch]
-
-  //   // [dispatch, currentInitial, currentArea]
-  // )
-  //合并查询条件 调用dispatch
-  //condition 查询类型 取值为 type area initial
-  //value 查询条件
-  const switchCondition = useCallback(
-    (condition, value) => {
-      combineCondition[condition] = value
-      dispatch(setSinger(combineCondition))
-    },
-    [dispatch]
-  )
+  const switchCondition = useCallback((condition, value) => {
+    combineCondition[condition] = value
+    dispatch(setSinger(combineCondition))
+  }, [])
   useEffect(() => {
-    if (singer.length !== 0) {
-      return
-    }
     dispatch(setSinger({}))
     dispatch(setHotSinger({}))
-  }, [dispatch, singer])
-
+  }, [])
   return (
     <div className='singer-container'>
       <div className='singer-bg' style={{ backgroundImage: `url(${BgImage})` }}>
@@ -155,19 +113,19 @@ export default memo(function Singer() {
         <h3>登录查看你的关注歌手</h3>
         <input type='button' value='立即登录' className='login-btn' />
       </div>
-      <SingerCategory
+      <ConditionQuery
         condition='initial'
         categoryName='categoryName'
         Category={Initials}
         switchCondition={switchCondition}
       />
-      <SingerCategory
+      <ConditionQuery
         condition='area'
         categoryName='categoryName'
         Category={Area}
         switchCondition={switchCondition}
       />
-      <SingerCategory
+      <ConditionQuery
         condition='type'
         categoryName='categoryName'
         Category={Type}

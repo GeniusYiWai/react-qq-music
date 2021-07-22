@@ -1,10 +1,10 @@
-import { SET_PLAYLISTCATE, SET_PLAYLISTBYCATE } from './constant'
+import { SET_PLAYLIST_CATE, SET_PLAYLIST_BY_CATE } from './constant'
 import { getAllPlaylistCate, getHighQualityByCate } from '@/api/playlist'
 
 //获取所有歌单分类 action
 const setPlaylistCateAction = playlist => {
   return {
-    type: SET_PLAYLISTCATE,
+    type: SET_PLAYLIST_CATE,
     playlist: {
       playlistCate: playlist
     }
@@ -13,7 +13,7 @@ const setPlaylistCateAction = playlist => {
 //获取精品歌单通过分类 action
 const setPlaylistByCateAction = playlist => {
   return {
-    type: SET_PLAYLISTBYCATE,
+    type: SET_PLAYLIST_BY_CATE,
     playlist: {
       playlist
     }

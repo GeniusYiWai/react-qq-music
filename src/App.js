@@ -5,12 +5,26 @@ import { Provider } from 'react-redux'
 import routes from './route'
 import store from './store'
 import Header from './components/Header'
+import { Skeleton } from 'antd'
 import '@/assets/css/common.less'
 export default memo(function App() {
   return (
     <Provider store={store}>
       <Router>
-        <Suspense fallback={<span>loading...</span>}>
+        <Suspense
+          fallback={
+            <>
+              <Skeleton />
+              <Skeleton />
+              <Skeleton />
+              <Skeleton />
+              <Skeleton />
+              <Skeleton />
+              <Skeleton />
+            
+            </>
+          }
+        >
           {/* 头部 */}
           {window.location.pathname === '/player' ? null : <Header />}
           {renderRoutes(routes)}

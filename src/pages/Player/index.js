@@ -19,6 +19,7 @@ export default memo(function Player() {
       currentPlayMusic: state.player.currentPlayMusic
     }
   })
+
   return (
     <div className='player-container'>
       <div
@@ -43,10 +44,10 @@ export default memo(function Player() {
           isPlaying={isPlaying}
           setIsPlaying={setIsPlaying}
         />
-        <MusicLyric
+        {/* <MusicLyric
           currentPlayMusic={currentPlayMusic}
           currentPlayMusicId={currentPlayMusicId}
-        />
+        /> */}
       </div>
     </div>
   )

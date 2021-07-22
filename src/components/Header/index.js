@@ -1,14 +1,11 @@
 import React, { memo } from 'react'
 import { NavLink } from 'react-router-dom'
-
 import './index.less'
 import logo from '@/assets/img/logo.png'
-
 // antd
 import { Input } from 'antd'
-
 const { Search } = Input
-
+//通用头部
 export default memo(function Header() {
   const routes = [
     {

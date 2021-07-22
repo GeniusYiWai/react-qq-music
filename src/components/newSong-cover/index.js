@@ -1,10 +1,15 @@
 import React, { memo, useState } from 'react'
 import './index.less'
-import { handleSinger, formatMinuteSecond } from '@/utils/tools'
+import { handleSinger, formatMinuteSecond, clipImgSize } from '@/utils/tools'
 import { message } from 'antd'
 import { getItem, setItem, getMusicById } from '@/utils/storage'
 import { CheckCanPlay } from '@/api/player'
 import playImg from '@/assets/img/play.png'
+//通用新歌封面
+//name 歌曲名称
+//artists 歌曲作者
+//duration 歌曲时长
+//id 歌曲id
 export default memo(function NewSongCover(props) {
   const {
     song: {
@@ -15,7 +20,7 @@ export default memo(function NewSongCover(props) {
       id
     }
   } = props
-
+  //控制鼠标移入显示播放图片
   const [imgShow, setImgShow] = useState(false)
   const handleCoverMove = () => {
     setImgShow(true)
@@ -24,9 +29,12 @@ export default memo(function NewSongCover(props) {
     setImgShow(false)
   }
   const handlePlay = () => {
+    //先判断歌曲是否可以播放
     CheckCanPlay(id).then(
       () => {
+        //可以播放 将歌曲id存入缓存
         setItem('currentPlayMusicId', id)
+        //从缓存中获取歌曲列表
         let playlist = getItem('playlist')
         const songInfo = {
           id,
@@ -34,19 +42,19 @@ export default memo(function NewSongCover(props) {
           artists: handleSinger(artists),
           duration: formatMinuteSecond(duration)
         }
+        //如果是第一次播放歌曲 初始化播放列表
         if (!playlist) {
           playlist = []
           playlist.push(songInfo)
         } else {
+          //判断歌曲是否已经存在于播放列表
           const isHas = getMusicById(id)
           if (!isHas) {
             playlist.push(songInfo)
           }
         }
         setItem('playlist', playlist)
-        // history.push('/player', {
-        //   id
-        // })
+        //跳转到歌曲播放页面
         window.open('/player', 'alwaysRaised=yes')
       },
       () => {
@@ -62,7 +70,11 @@ export default memo(function NewSongCover(props) {
         onMouseLeave={() => handleCoverLeave()}
         className='img-container'
       >
-        <img src={picUrl} alt='' className='song-cover' />
+        <img
+          src={`${picUrl}${clipImgSize(86, 86)}`}
+          alt=''
+          className='song-cover'
+        />
         <div className='play-img'>
           <img
             src={playImg}
