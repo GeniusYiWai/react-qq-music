@@ -21,7 +21,6 @@ export default memo(function App() {
               <Skeleton />
               <Skeleton />
               <Skeleton />
-            
             </>
           }
         >

@@ -1,3 +1,4 @@
+//处理歌手
 export const handleSinger = artists => {
   return artists.reduce((initVal, val, index) => {
     if (index === artists.length - 1) {
@@ -7,7 +8,7 @@ export const handleSinger = artists => {
     }
   }, '')
 }
-
+//处理日期
 export const handleDate = date => {
   let time = new Date(date)
   let M =
@@ -17,11 +18,11 @@ export const handleDate = date => {
   let D = (time.getDate() < 10 ? '0' + time.getDate() : time.getDate()) + ''
   return M + D
 }
-
+//补零
 function padLeftZero(str) {
   return ('00' + str).substr(str.length)
 }
-
+//格式化日期
 export function formatDate(time, fmt) {
   let date = new Date(time)
   if (/(y+)/.test(fmt)) {
@@ -49,15 +50,15 @@ export function formatDate(time, fmt) {
 
   return fmt
 }
+//时分秒
 export function formatMinuteSecond(time) {
   return formatDate(time, 'mm:ss')
 }
-
+//获取音乐播放地址
 export function getPlaySong(id) {
   return `https://music.163.com/song/media/outer/url?id=${id}.mp3`
 }
-
-//随机播放获取随机数
+//随机播放 获取随机数
 export const getRandomIndex = (index, length) => {
   let newIndex
   let randomIndex = Math.ceil(Math.random() * (length - 1))
@@ -68,7 +69,6 @@ export const getRandomIndex = (index, length) => {
   }
   return newIndex
 }
-
 // 裁剪图片
 export const clipImgSize = (x, y) => {
   return `?param=${x}y${y}`

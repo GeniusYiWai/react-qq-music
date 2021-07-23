@@ -1,5 +1,4 @@
 import React, { memo } from 'react'
-
 import { clipImgSize } from '@/utils/tools'
 import './index.less'
 //通用歌单封面’

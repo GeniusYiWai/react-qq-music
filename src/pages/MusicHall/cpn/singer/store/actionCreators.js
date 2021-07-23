@@ -20,7 +20,7 @@ const setHotSingerAction = singer => {
   }
 }
 //获取歌手 dispatch
-export const setSinger = (area, initial, type) => {
+export const setSinger = ({area, initial, type}) => {
   return dispatch => {
     getSinger(area, initial, type).then(({ data }) => {
       dispatch(setSingerAction(data.artists.slice(0, 10)))

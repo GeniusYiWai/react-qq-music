@@ -1,5 +1,4 @@
 import React, { memo } from 'react'
-
 import { handleSinger, clipImgSize } from '@/utils/tools'
 import './index.less'
 //通用专辑封面

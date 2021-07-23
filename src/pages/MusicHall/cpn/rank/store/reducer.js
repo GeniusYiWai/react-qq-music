@@ -3,6 +3,7 @@ import { SET_ALLRANK_REC, SET_RANKBYID_REC } from './constant'
 const initState = {
   //排行榜类型 state
   rankList: [],
+  //排行榜详情 state
   rankDetail: {}
 }
 

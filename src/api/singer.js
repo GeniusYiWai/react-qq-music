@@ -3,7 +3,7 @@ import request from '../utils/request'
 //type 性别
 //area 地区
 //initial 姓名首字母
-export const getSinger = ({ area = '', initial = '', type = '' }) => {
+export const getSinger = ( area = '', initial = '', type = '' ) => {
   return request.get(
     `/artist/list?type=${type}&area=${area}&initial=${initial}`
   )

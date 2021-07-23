@@ -1,6 +1,7 @@
 import React, { memo } from 'react'
-import './index.less'
 import { clipImgSize } from '@/utils/tools'
+import './index.less'
+//歌手详情封面
 export default memo(function SingerCover(props) {
   const { singer } = props
   return (

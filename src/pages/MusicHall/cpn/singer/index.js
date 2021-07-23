@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useCallback } from 'react'
+import React, { memo, useEffect, useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import BgImage from '@/assets/img/bg_singer.jpg'
 import ConditionQuery from 'components/condition-query'
@@ -82,15 +82,14 @@ const Type = [
     type: '3'
   }
 ]
-//混合查询条件
-const combineCondition = {
-  initial: '',
-  area: '',
-  type: ''
-}
 export default memo(function Singer() {
   const dispatch = useDispatch()
-  // const [load, setLoad] = useState(true)
+  //混合查询条件 因为可以多个参数一起查询
+  const [combineCondition, setCombineCondition] = useState({
+    initial: '',
+    area: '',
+    type: ''
+  })
   //获取singer state
   const { singer, hotSinger } = useSelector(state => {
     return {
@@ -98,14 +97,19 @@ export default memo(function Singer() {
       hotSinger: state.singer.hotSingerList
     }
   })
+  //切换查询条件
   const switchCondition = useCallback((condition, value) => {
-    combineCondition[condition] = value
-    dispatch(setSinger(combineCondition))
+    setCombineCondition(combineCondition => ({
+      ...combineCondition,
+      [condition]: value
+    }))
   }, [])
+  //切换查询条件 重新触发加载
   useEffect(() => {
-    dispatch(setSinger({}))
+    console.log(combineCondition)
+    dispatch(setSinger(combineCondition))
     dispatch(setHotSinger({}))
-  }, [])
+  }, [combineCondition])
   return (
     <div className='singer-container'>
       <div className='singer-bg' style={{ backgroundImage: `url(${BgImage})` }}>

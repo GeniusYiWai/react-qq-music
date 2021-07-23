@@ -122,6 +122,7 @@ export default memo(function Dj() {
               >
                 {djCateList[index] && djCateList[index].name}
               </div>
+
               {item.map(dj => {
                 return <DjCover dj={dj} key={dj.id} />
               })}

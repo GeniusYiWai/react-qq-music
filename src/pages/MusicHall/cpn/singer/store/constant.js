@@ -1,4 +1,6 @@
+//设置推荐歌手
 const SET_SINGER_REC = 'SET_SINGER_REC'
+//设置热门歌手
 const SET_HOTSINGER_REC = 'SET_HOTSINGER_REC'
 
 export { SET_SINGER_REC,SET_HOTSINGER_REC }

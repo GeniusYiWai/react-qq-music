@@ -1,9 +1,11 @@
-import React, { memo } from 'react'
+import React, { memo, Suspense } from 'react'
 import { renderRoutes } from 'react-router-config'
 import { NavLink } from 'react-router-dom'
+import { Skeleton } from 'antd'
 import './index.less'
 export default memo(function MusicHall(props) {
   const { route } = props
+  //首页路由表
   const routes = [
     {
       path: '/musichall/home',
@@ -45,7 +47,22 @@ export default memo(function MusicHall(props) {
           )
         })}
       </div>
-      {renderRoutes(route.routes)}
+      <Suspense
+        fallback={
+          <>
+            <Skeleton />
+            <Skeleton />
+            <Skeleton />
+            <Skeleton />
+            <Skeleton />
+            <Skeleton />
+            <Skeleton />
+          </>
+        }
+      >
+        {/* 渲染路由 */}
+        {renderRoutes(route.routes)}
+      </Suspense>
     </div>
   )
 })
