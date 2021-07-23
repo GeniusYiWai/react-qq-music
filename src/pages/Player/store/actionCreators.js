@@ -56,13 +56,8 @@ export const setCurrentPlayMusicStatus = status => {
 }
 //设置当前播放音乐的歌词 dispatch
 export const setCurrentPlayMusicLyric = id => {
-  return dispatch => {
-    getLyric(id).then(({ data }) => {
-      dispatch(setCurrentPlayMusicLyricAction(data.lrc.lyric))
-    })
-  }
+  return getLyric(id)
 }
-
 //设置当前播放音乐的id
 export const setCurrentPlayMusicId = id => {
   return dispatch => {

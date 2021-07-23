@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import { getItem } from '@/utils/storage'
+import { getItem, setItem } from '@/utils/storage'
 import './index.less'
 import Wave from '@/assets/img/wave.gif'
 export default memo(function Playlist(props) {
@@ -10,6 +10,7 @@ export default memo(function Playlist(props) {
   //点击播放列表中的歌曲 修改当前播放的音乐id 存入store中
   const changePlayMusicID = id => {
     setCurrentPlayMusicId(id)
+    setItem('currentPlayMusicId', id)
   }
   return (
     <div className='player-playlist-container'>

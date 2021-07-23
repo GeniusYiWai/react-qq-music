@@ -1,102 +1,67 @@
-import React, { memo, useRef, useEffect, useState } from 'react'
+import React, { memo, useRef, useEffect, useState, useCallback } from 'react'
 import './index.less'
 import { handleSinger } from '@/utils/tools'
 import LyricParser from 'lyric-parser'
-import BScroll from 'better-scroll'
-
-import { useDispatch, useSelector } from 'react-redux'
 import { setCurrentPlayMusicLyric } from '../../store/actionCreators'
-let oLRC = {
-  ti: '', //歌曲名
-  ar: '', //演唱者
-  al: '', //专辑名
-  by: '', //歌词制作人
-  offset: 0, //时间补偿值，单位毫秒，用于调整歌词整体位置
-  ms: [] //歌词数组{t:时间,c:歌词}
-}
-const createLrcObj = lrc => {
-  oLRC.ms = []
-  if (lrc.length == 0) return
-  let lrcs = lrc.split('\n') //用回车拆分成数组
-  for (let i in lrcs) {
-    //遍历歌词数组
-    lrcs[i] = lrcs[i].replace(/(^\s*)|(\s*$)/g, '') //去除前后空格
-    let t = lrcs[i].substring(lrcs[i].indexOf('[') + 1, lrcs[i].indexOf(']')) //取[]间的内容
-    let s = t.split(':') //分离:前后文字
-    if (isNaN(parseInt(s[0]))) {
-      //不是数值
-      for (let i in oLRC) {
-        if (i !== 'ms' && i === s[0].toLowerCase()) {
-          oLRC[i] = s[1]
-        }
-      }
-    } else {
-      //是数值
-      let arr = lrcs[i].match(/\[(\d+:.+?)\]/g) //提取时间字段，可能有多个
-      let start = 0
-      for (let k in arr) {
-        start += arr[k].length //计算歌词位置
-      }
-      let content = lrcs[i].substring(start) //获取歌词内容
-      for (let k in arr) {
-        let t = arr[k].substring(1, arr[k].length - 1) //取[]间的内容
-        let s = t.split(':') //分离:前后文字
-        oLRC.ms.push({
-          //对象{t:时间,c:歌词}加入ms数组
-          t: (parseFloat(s[0]) * 60 + parseFloat(s[1])).toFixed(3),
-          c: content
-        })
-      }
-    }
-  }
-  oLRC.ms.sort(function (a, b) {
-    //按时间顺序排序
-    return a.t - b.t
-  })
-  return oLRC.ms
-}
+let scrollTimer
+let Lyric
 export default memo(function MusicLyric(props) {
-  const [lyrics, setLyrics] = useState([])
+  //获取歌词
+  const [lyric, setLyric] = useState([])
+  //获取当前播放的歌词在第几行
+  const [lineNum, setLineNum] = useState(0)
+  //获取当前播放音乐id 和信息
   const { currentPlayMusic, currentPlayMusicId } = props
-  const dispatch = useDispatch()
+  //获取歌词容器ref引用
   const lyricRef = useRef()
-  const { lyric } = useSelector(state => {
-    return {
-      lyric: state.player.currentPlayMusicLyric
+  //歌词滚动后自动触发该函数
+  const handleLyric = ({ lineNum }) => {
+    if (lineNum > 2) {
+      lyricRef.current.scrollTo(0, lineNum * 30 - 30)
     }
-  })
-
+    //根据行数滚动歌词容器
+    //设置歌词当前滚动到的行数
+    setLineNum(lineNum)
+  }
+  const handleLyricScroll = useCallback(() => {
+    clearTimeout(scrollTimer)
+    scrollTimer = setTimeout(() => {
+      lyricRef.current.scrollTo(0, lineNum * 30 - 30)
+    }, 1000)
+  }, [lineNum])
   useEffect(() => {
-    dispatch(setCurrentPlayMusicLyric(currentPlayMusicId))
-    let obj = lyric ? createLrcObj(lyric) : null
-    setLyrics(obj)
-     new BScroll(lyricRef.current, {
-      scrollY: true,
-      mouseWheel: true
+    setCurrentPlayMusicLyric(currentPlayMusicId).then(({ data }) => {
+      //生成Lyric实例
+      Lyric = new LyricParser(data.lrc.lyric, handleLyric)
+      //调用播放方法
+      Lyric.play()
+      //获取所有歌词
+      setLyric(Lyric.lines)
     })
-  }, [currentPlayMusicId, dispatch, lyric,lyrics])
-
+    //这里一定要返回一个清除歌词滚动的方法 不然会生成多个Lyric同时调用
+    return () => {
+      Lyric && Lyric.stop()
+    }
+  }, [currentPlayMusicId])
   return (
     <div className='music-lyric-container'>
       <img src={currentPlayMusic.al && currentPlayMusic.al.picUrl} alt='' />
       <p>歌曲名:{currentPlayMusic.name}</p>
       <p>歌手:{currentPlayMusic.ar && handleSinger(currentPlayMusic.ar)}</p>
       <p>专辑:{currentPlayMusic.al && currentPlayMusic.al.name}</p>
-      <div className='wrapper' ref={lyricRef}>
-        <ul
-          className='content'
-          style={{ height: `${lyrics && lyrics.length * 25}px` }}
-        >
-          {lyrics &&
-            lyrics.map((item, index) => {
-              return (
-                <li>
-                  {item.t}
-                  {item.c}
-                </li>
-              )
-            })}
-        </ul>
+      <div
+        ref={lyricRef}
+        className='lyric-content'
+        onScroll={() => handleLyricScroll()}
+      >
+        {lyric.length !== 0 &&
+          lyric.map((item, index) => {
+            return (
+              <p className={`${index === lineNum ? 'active' : ''}`}>
+                {item.txt}
+              </p>
+            )
+          })}
       </div>
     </div>
   )

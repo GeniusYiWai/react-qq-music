@@ -12,14 +12,12 @@ export default memo(function Player() {
   )
   //切换音乐播放状态
   const [isPlaying, setIsPlaying] = useState(false)
-
   //获取store中的当前播放音乐信息 用于展示背景图
   const { currentPlayMusic } = useSelector(state => {
     return {
       currentPlayMusic: state.player.currentPlayMusic
     }
   })
-
   return (
     <div className='player-container'>
       <div
@@ -44,10 +42,10 @@ export default memo(function Player() {
           isPlaying={isPlaying}
           setIsPlaying={setIsPlaying}
         />
-        {/* <MusicLyric
+        <MusicLyric
           currentPlayMusic={currentPlayMusic}
           currentPlayMusicId={currentPlayMusicId}
-        /> */}
+        />
       </div>
     </div>
   )

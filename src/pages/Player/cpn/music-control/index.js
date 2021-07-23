@@ -6,9 +6,7 @@ import {
   PlayCircleOutlined,
   PauseCircleOutlined
 } from '@ant-design/icons'
-import {
-  setCurrentPlayMusic
-} from '../../store/actionCreators'
+import { setCurrentPlayMusic } from '../../store/actionCreators'
 import { useSelector, useDispatch } from 'react-redux'
 import {
   formatMinuteSecond,
@@ -16,7 +14,7 @@ import {
   getPlaySong,
   getRandomIndex
 } from '@/utils/tools'
-import { getItem } from '@/utils/storage'
+import { getItem, setItem } from '@/utils/storage'
 import player from '@/assets/img/player.png'
 import './index.less'
 //0 -205px 列表循坏
@@ -90,6 +88,7 @@ export default memo(function Progress(props) {
       audioRef.current.currentTime = currentTime
       //静音
       audioRef.current.muted = true
+      
     },
     [duration, audioRef]
   )
@@ -141,6 +140,7 @@ export default memo(function Progress(props) {
           break
       }
       setCurrentPlayMusicId(playlist[newIndex].id)
+      setItem('currentPlayMusicId', playlist[newIndex].id)
     },
     [setCurrentPlayMusicId, playlist, currentPlayMusicId]
   )
