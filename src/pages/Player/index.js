@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react'
+import React, { memo, useState, useRef, useEffect } from 'react'
 import './index.less'
 import MusicPlaylist from './cpn/music-playlist'
 import MusicControl from './cpn/music-control'
@@ -6,10 +6,23 @@ import MusicLyric from './cpn/music-lyric'
 import { getItem } from '@/utils/storage'
 import { useSelector } from 'react-redux'
 export default memo(function Player() {
+  //获取歌词组件的引用
+  const childRef = useRef()
+  // changeLyricScroll就是子组件暴露给父组件的方法
+  //这个方法用来手动控制歌词的滚动状态
+  const changeLyricScroll = () => {
+    childRef.current.changeLyricScroll()
+  }
+  //这个方法用来手动控制歌词的滚动进度
+  const changeLyricProgress = time => {
+    childRef.current.changeLyricProgress(time)
+  }
   //从缓存中取出当前播放的音乐id
   const [currentPlayMusicId, setCurrentPlayMusicId] = useState(
     getItem('currentPlayMusicId')
   )
+  //从缓存中获取播放列表
+  const [playlist, setPlaylist] = useState(getItem('playlist') || [])
   //切换音乐播放状态
   const [isPlaying, setIsPlaying] = useState(false)
   //获取store中的当前播放音乐信息 用于展示背景图
@@ -18,8 +31,16 @@ export default memo(function Player() {
       currentPlayMusic: state.player.currentPlayMusic
     }
   })
+
   return (
-    <div className='player-container'>
+    <div
+      className='player-container'
+      style={
+        playlist.length === 0
+          ? { backgroundColor: 'rgba(19, 214, 214, 0.15)' }
+          : null
+      }
+    >
       <div
         style={{
           backgroundImage: `url(${
@@ -34,18 +55,28 @@ export default memo(function Player() {
             setCurrentPlayMusicId={setCurrentPlayMusicId}
             currentPlayMusicId={currentPlayMusicId}
             isPlaying={isPlaying}
+            playlist={playlist}
+            setPlaylist={setPlaylist}
           />
         </div>
-        <MusicControl
-          currentPlayMusicId={currentPlayMusicId}
-          setCurrentPlayMusicId={setCurrentPlayMusicId}
-          isPlaying={isPlaying}
-          setIsPlaying={setIsPlaying}
-        />
-        <MusicLyric
-          currentPlayMusic={currentPlayMusic}
-          currentPlayMusicId={currentPlayMusicId}
-        />
+        {playlist.length > 0 ? (
+          <>
+            <MusicControl
+              currentPlayMusicId={currentPlayMusicId}
+              setCurrentPlayMusicId={setCurrentPlayMusicId}
+              isPlaying={isPlaying}
+              setIsPlaying={setIsPlaying}
+              changeLyricScroll={changeLyricScroll}
+              changeLyricProgress={changeLyricProgress}
+            />
+            <MusicLyric
+              ref={childRef}
+              currentPlayMusic={currentPlayMusic}
+              currentPlayMusicId={currentPlayMusicId}
+              isPlaying={isPlaying}
+            />
+          </>
+        ) : null}
       </div>
     </div>
   )

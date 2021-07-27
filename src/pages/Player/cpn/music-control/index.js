@@ -12,7 +12,8 @@ import {
   formatMinuteSecond,
   handleSinger,
   getPlaySong,
-  getRandomIndex
+  getRandomIndex,
+  debounce
 } from '@/utils/tools'
 import { getItem, setItem } from '@/utils/storage'
 import player from '@/assets/img/player.png'
@@ -35,9 +36,20 @@ const mode = [
 export default memo(function Progress(props) {
   //获取缓存中的播放列表 用于切换歌曲
   const playlist = getItem('playlist')
-  //获取音乐播放状态 当前播放的音乐id
-  const { isPlaying, setIsPlaying, currentPlayMusicId, setCurrentPlayMusicId } =
-    props
+  //isPlaying, 音乐播放状态
+  //setIsPlaying, 歌曲是否已经在播放
+  //currentPlayMusicId, 当前播放的音乐id
+  //setCurrentPlayMusicId 设置当前播放音乐的id
+  //changeLyricScroll 父组件控制歌词组件的滚动状态的方法
+  //changeLyricProgress 父组件控制歌词组件的滚动进度的方法
+  const {
+    isPlaying,
+    setIsPlaying,
+    currentPlayMusicId,
+    setCurrentPlayMusicId,
+    changeLyricScroll,
+    changeLyricProgress
+  } = props
   const dispatch = useDispatch()
   //从store中获取当前正在播放的音乐信息
   const { currentPlayMusic } = useSelector(state => {
@@ -63,9 +75,11 @@ export default memo(function Progress(props) {
   const changePlayStatus = useCallback(
     status => {
       setIsPlaying(status)
+      //调用父组件控制歌词组件是否滚动的方法
+      changeLyricScroll()
       status ? audioRef.current.play() : audioRef.current.pause()
     },
-    [audioRef, setIsPlaying]
+    [setIsPlaying]
   )
 
   //处理进度条点击完成修改音乐播放进度
@@ -73,7 +87,7 @@ export default memo(function Progress(props) {
     //取消静音
     audioRef.current.muted = false
     changePlayStatus(true)
-  }, [changePlayStatus, audioRef])
+  }, [changePlayStatus])
 
   //处理进度条点击修改进度条进度
   const onProgressChange = useCallback(
@@ -86,11 +100,12 @@ export default memo(function Progress(props) {
       currentTime = ((value / 100) * duration) / 1000
       //改变音乐播放进度
       audioRef.current.currentTime = currentTime
+      //改变歌词滚动进度
+      changeLyricProgress(audioRef.current.currentTime * 1000)
       //静音
       audioRef.current.muted = true
-      
     },
-    [duration, audioRef]
+    [duration]
   )
 
   //这个方法会在音乐播放时一直调用 从而可以实现修改进度条的值
@@ -99,7 +114,7 @@ export default memo(function Progress(props) {
     setCurrentTime(audioRef.current.currentTime * 1000)
     //设置进度条的值
     setProgress((currentTime / duration) * 100)
-  }, [currentTime, duration, audioRef])
+  }, [currentTime, duration])
 
   //处理播放上一首或者下一首
   const switchSong = useCallback(
@@ -139,10 +154,14 @@ export default memo(function Progress(props) {
         default:
           break
       }
-      setCurrentPlayMusicId(playlist[newIndex].id)
-      setItem('currentPlayMusicId', playlist[newIndex].id)
+      //这里对切换上一首或者下一首进行了防抖处理 防止用户快速切换歌曲 导致歌词组件无法及时清除上一个已经进行的歌词滚动 因为歌词滚动需要时间初始化 如果快速切换会导致清除函数无法及时生效 使得多个歌词滚动同时进行 歌词会来回跳跃
+      debounce(() => {
+        setIsPlaying(true)
+        setCurrentPlayMusicId(playlist[newIndex].id)
+        setItem('currentPlayMusicId', playlist[newIndex].id)
+      }, 200)()
     },
-    [setCurrentPlayMusicId, playlist, currentPlayMusicId]
+    [setCurrentPlayMusicId, playlist, currentPlayMusicId, setIsPlaying]
   )
 
   //当音乐播放完成后触发该函数 自动播放下一首
@@ -181,10 +200,7 @@ export default memo(function Progress(props) {
     dispatch(setCurrentPlayMusic(currentPlayMusicId))
     //请求数据获取当前播放音乐的url地址
     audioRef.current.src = getPlaySong(currentPlayMusicId)
-    //更改音乐播放状态
-    setIsPlaying(true)
-    audioRef.current.play()
-  }, [audioRef, currentPlayMusicId, setIsPlaying, dispatch])
+  }, [currentPlayMusicId])
   return (
     <div className='progress-container'>
       <audio
@@ -193,6 +209,8 @@ export default memo(function Progress(props) {
         ref={audioRef}
         onTimeUpdate={() => onMusicPlay()}
         onEnded={() => onMusicEnded()}
+        //监听音乐是否在播放 如果是 就修改播放图标的状态
+        onPlay={() => setIsPlaying(true)}
         hidden
       ></audio>
       <div className='control'>

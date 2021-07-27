@@ -15,6 +15,12 @@ export const setItem = (name, value) => {
     localStorage.setItem(name, value)
   }
 }
+
+//删除缓存
+export const clearItem = (name, value) => {
+  localStorage.removeItem(name)
+}
+
 //通过音乐id查找其是否存在于缓存中的音乐列表
 export const getMusicById = id => {
   const playlist = getItem('playlist')

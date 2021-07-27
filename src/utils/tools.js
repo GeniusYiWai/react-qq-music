@@ -103,3 +103,14 @@ export const getScrollTop = () => {
   }
   return scrollTop
 }
+
+//防抖
+export const debounce = (fn, wait) => {
+  let timer
+  return function (...args) {
+    clearTimeout(timer)
+    timer = setTimeout(() => {
+      fn.apply(this, args)
+    }, wait)
+  }
+}

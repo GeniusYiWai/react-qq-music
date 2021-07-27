@@ -39,14 +39,36 @@
       background-color: gray;
       background-repeat: no-repeat;
       display: none;
-      transform: translateX(-10px);
+      transform: translateX(10px);
     }
     .isPlaying {
       display: inline-block;
     }
-
     .song-name {
       position: relative;
+      .name {
+        cursor: pointer;
+        margin-top: 0;
+        position: relative;
+        height: 30px;
+        line-height: 30px;
+        p {
+          display: flex;
+          position: absolute;
+          left: 110px;
+          top: 0;
+          opacity: 0;
+          transition: all 0.5s;
+          span{
+            font-size: 20px;
+          }
+        }
+        &:hover {
+          p {
+            opacity: 1;
+          }
+        }
+      }
     }
     div {
       flex: 1;
@@ -55,6 +77,19 @@
       text-align: center;
       height: 30px;
       line-height: 30px;
+    }
+  }
+  .player-playlist-action {
+    display: flex;
+    justify-content: center;
+    div {
+      border: 1px solid hsla(0, 0%, 100%, 0.2);
+      padding: 10px;
+      cursor: pointer;
+      color: #fff;
+      &:hover {
+        border-color: #fff;
+      }
     }
   }
 }
