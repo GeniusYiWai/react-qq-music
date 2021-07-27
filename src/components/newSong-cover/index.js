@@ -1,10 +1,10 @@
-import React, { memo, useState } from 'react'
+import React, { memo } from 'react'
 import './index.less'
 import { handleSinger, formatMinuteSecond, clipImgSize } from '@/utils/tools'
 import { message } from 'antd'
 import { getItem, setItem, getMusicById } from '@/utils/storage'
 import { CheckCanPlay } from '@/api/player'
-import playImg from '@/assets/img/play.png'
+import PlayImg from '../play-img'
 //通用新歌封面
 //name 歌曲名称
 //artists 歌曲作者
@@ -20,14 +20,6 @@ export default memo(function NewSongCover(props) {
       id
     }
   } = props
-  //控制鼠标移入显示播放图片
-  const [imgShow, setImgShow] = useState(false)
-  const handleCoverMove = () => {
-    setImgShow(true)
-  }
-  const handleCoverLeave = () => {
-    setImgShow(false)
-  }
   const handlePlay = () => {
     //先判断歌曲是否可以播放
     CheckCanPlay(id).then(
@@ -65,23 +57,14 @@ export default memo(function NewSongCover(props) {
 
   return (
     <div className='song-container text-nowrap'>
-      <div
-        onMouseMove={() => handleCoverMove()}
-        onMouseLeave={() => handleCoverLeave()}
-        className='img-container'
-      >
-        <img
-          src={`${picUrl}${clipImgSize(86, 86)}`}
-          alt=''
-          className='song-cover'
-        />
-        <div className='play-img'>
+      <div className='img-container'>
+        <div style={{position:'relative'}}>
           <img
-            src={playImg}
+            src={`${picUrl}${clipImgSize(86, 86)}`}
             alt=''
-            className={imgShow ? 'play-img-block' : 'play-img-none'}
-            onClick={() => handlePlay()}
+            className='song-cover'
           />
+          <PlayImg handleClick={() => handlePlay()}></PlayImg>
         </div>
       </div>
 
