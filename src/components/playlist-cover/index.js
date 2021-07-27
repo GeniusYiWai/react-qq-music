@@ -8,17 +8,21 @@ import './index.less'
 // playCount 歌单播放次数
 export default memo(function PlaylistCover(props) {
   const {
-    playlist: { coverImgUrl, name, playCount }
+    playlist: { id, coverImgUrl, name, playCount }
   } = props
-  const handleShowPalylistDetail = () => {
-    console.log(111)
+  const handleShowPalylistDetail = id => {
+    console.log(id)
   }
   return (
     <div className='playlist-cover-wrapper'>
       <div className='playlist-cover'>
         <div className='playlist-cover-box'>
-          <img src={`${coverImgUrl}${clipImgSize(150, 150)}`} alt='' className='playlist-img'/>
-          <PlayImg handleClick={() => handleShowPalylistDetail()}></PlayImg>
+          <img
+            src={`${coverImgUrl}${clipImgSize(150, 150)}`}
+            alt=''
+            className='playlist-img'
+          />
+          <PlayImg handleClick={() => handleShowPalylistDetail(id)}></PlayImg>
         </div>
       </div>
       <div className='playlist-cover-info'>
