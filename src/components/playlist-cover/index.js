@@ -1,4 +1,5 @@
 import React, { memo } from 'react'
+import { useHistory } from 'react-router-dom'
 import { clipImgSize } from '@/utils/tools'
 import PlayImg from '../play-img'
 import './index.less'
@@ -7,11 +8,19 @@ import './index.less'
 //  name 歌单名称
 // playCount 歌单播放次数
 export default memo(function PlaylistCover(props) {
+  const history = useHistory()
+
   const {
     playlist: { id, coverImgUrl, name, playCount }
   } = props
+  //播放歌单内的全部歌曲
   const handleShowPalylistDetail = id => {
+    // console.log(id)
+  }
+  //查看歌单详情
+  const showPlaylistDetail = id => {
     console.log(id)
+    history.push(`/playlist/detail/${id}`)
   }
   return (
     <div className='playlist-cover-wrapper'>
@@ -26,7 +35,9 @@ export default memo(function PlaylistCover(props) {
         </div>
       </div>
       <div className='playlist-cover-info'>
-        <p className='text-nowrap'>{name}</p>
+        <p className='text-nowrap' onClick={() => showPlaylistDetail(id)}>
+          {name}
+        </p>
         <p className='playNum'>播放量: {playCount}</p>
       </div>
     </div>

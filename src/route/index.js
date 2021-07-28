@@ -22,7 +22,7 @@ const routes = [
     path: '/musichall',
     exact: true,
     render: () => {
-      return <Redirect to='/musichall/dj' />
+      return <Redirect to='/musichall/playlist' />
     }
   },
   {
@@ -53,6 +53,7 @@ const routes = [
         path: '/musichall/playlist',
         component: lazy(() => import('../pages/MusicHall/cpn/playlist'))
       },
+      
       {
         path: '/musichall/rank',
         component: lazy(() => import('../pages/MusicHall/cpn/rank'))
@@ -66,7 +67,11 @@ const routes = [
   {
     path: '/player',
     component: lazy(() => import('../pages/Player'))
-  }
+  },
+  {
+    path: '/playlist/detail/:id',
+    component: lazy(() => import('../pages/PlaylistDetail'))
+  },
 ]
 
 export default routes

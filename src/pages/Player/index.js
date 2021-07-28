@@ -1,4 +1,4 @@
-import React, { memo, useState, useRef, useEffect } from 'react'
+import React, { memo, useState, useRef } from 'react'
 import './index.less'
 import MusicPlaylist from './cpn/music-playlist'
 import MusicControl from './cpn/music-control'

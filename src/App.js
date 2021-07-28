@@ -6,6 +6,7 @@ import routes from './route'
 import store from './store'
 import Header from './components/Header'
 import { Skeleton } from 'antd'
+import LoginBox from './pages/LoginBox'
 import '@/assets/css/common.less'
 export default memo(function App() {
   return (
@@ -27,6 +28,8 @@ export default memo(function App() {
           {/* 头部 */}
           {window.location.pathname === '/player' ? null : <Header />}
           {renderRoutes(routes)}
+          {/* 登录弹出层 需要在全局展示 所以放在这里 */}
+          <LoginBox />
         </Suspense>
       </Router>
     </Provider>

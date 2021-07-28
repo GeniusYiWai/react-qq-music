@@ -17,14 +17,14 @@ const setCurrentPlayMusicAction = music => {
 }
 
 //设置当前播放音乐的歌词 action
-const setCurrentPlayMusicLyricAction = lyric => {
-  return {
-    type: SET_CURRENT_MUSIC_LYRIC,
-    lyric: {
-      currentPlayMusicLyric: lyric
-    }
-  }
-}
+// const setCurrentPlayMusicLyricAction = lyric => {
+//   return {
+//     type: SET_CURRENT_MUSIC_LYRIC,
+//     lyric: {
+//       currentPlayMusicLyric: lyric
+//     }
+//   }
+// }
 
 //设置当前播放音乐的id action
 const setCurrentPlayMusicIdAction = id => {

@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useState, useEffect } from 'react'
+import React, { memo, useCallback, useState } from 'react'
 import { setItem, clearItem, getItem } from '@/utils/storage'
 import './index.less'
 import { debounce } from '@/utils/tools'
@@ -57,7 +57,7 @@ export default memo(function Playlist(props) {
       setPlaylist(localPlyalist)
       setItem('playlist', localPlyalist)
     },
-    [playlist, currentPlayMusicId]
+    [playlist, currentPlayMusicId,setPlaylist]
   )
   return (
     <div className='player-playlist-container'>
