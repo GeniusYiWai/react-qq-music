@@ -1,5 +1,5 @@
 import React, { memo, useState, useEffect, useCallback } from 'react'
-import { BackTop } from 'antd'
+
 import { useDispatch, useSelector } from 'react-redux'
 import { setDjByCate } from './store/actionCreators'
 import DjCover from 'components/dj-cover'
@@ -130,7 +130,6 @@ export default memo(function Dj() {
           )
         })}
       </div>
-      <BackTop />
     </div>
   )
 })
