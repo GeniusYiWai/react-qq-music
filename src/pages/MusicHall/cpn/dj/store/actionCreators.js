@@ -1,6 +1,5 @@
 import { SET_DJ_BY_CATE } from './constant'
-import {  getDjByType } from '@/api/dj'
-
+import { getDjByType } from '@/api/dj'
 
 //获取电台详情通过类型 action
 const setDjByCateAction = dj => {
@@ -9,7 +8,6 @@ const setDjByCateAction = dj => {
     dj
   }
 }
-
 
 //获取电台详情通过类型  dispatch
 export const setDjByCate = type => {

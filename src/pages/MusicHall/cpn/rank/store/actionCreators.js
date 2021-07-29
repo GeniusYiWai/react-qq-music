@@ -25,6 +25,10 @@ export const setAllRank = () => {
   return dispatch => {
     getAllRank().then(({ data }) => {
       dispatch(setAllRankAction(data.list))
+      //这里直接在排行榜加载完成之后调用了获取第一个排行榜详情的dispatch
+      getRankById(data.list[0].id).then(({ data }) => {
+        dispatch(setRankByIdAction(data.playlist))
+      })
     })
   }
 }

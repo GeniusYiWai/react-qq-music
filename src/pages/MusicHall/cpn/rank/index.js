@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState, useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import RankType from './cpn/rank-type'
 import { setAllRank, setRankById } from './store/actionCreators'
 import { Button } from 'antd'
@@ -19,21 +19,28 @@ export default memo(function Rank() {
   //切换排行榜
   const [currentIndex, setcurrentIndex] = useState(0)
 
-  //通过排行榜id获取详情
-  const getRanlDetailByID = useCallback(id => {
-    dispatch(setRankById(id))
-  }, [])
   //从rank store中获取排行榜分类和排行榜详情
   const { rankList, rankDetail } = useSelector(state => {
     return {
       rankList: state.rank.rankList,
       rankDetail: state.rank.rankDetail
     }
-  })
+  }, shallowEqual)
+  //通过排行榜id获取详情
+  const getRanlDetailByID = useCallback(
+    index => {
+      //切换当前选中的排行榜
+      setcurrentIndex(index)
+      //手动调用获取排行榜详情的dispatch
+      dispatch(setRankById(rankList[index].id))
+    },
+    [rankList]
+  )
   //第一次加载页面 手动加载第一个排行榜分类下的数据
   useEffect(() => {
+    //这里进行了处理 在加载完成排行榜之后手动抛出了获取第一个排行榜详情的dispatch 所以只需要执行一次
+    //这里不能监听currentIndex的改变取请求排行榜详情 因为 dispatch(setRankById(rankList[currentIndex].id)) 直接执行是会报错的 rankList此时还没有获取到
     dispatch(setAllRank())
-    dispatch(setRankById(19723756))
   }, [])
   return (
     <div className='rank-container'>

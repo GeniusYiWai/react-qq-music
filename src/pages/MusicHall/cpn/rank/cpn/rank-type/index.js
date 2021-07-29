@@ -13,8 +13,8 @@ import './index.less'
 export default memo(function RankType(props) {
   const { id, name, coverImgUrl, updateFrequency } = props.rank
   const { index, currentIndex, setcurrentIndex, fetchData } = props
-  const getRankListById = (id, index) => {
-    fetchData(id)
+  const getRankListById = index => {
+    fetchData(index)
     setcurrentIndex(index)
   }
   return (
@@ -23,7 +23,7 @@ export default memo(function RankType(props) {
         index === currentIndex ? 'rank-active ' : ''
       }`}
       key={id}
-      onClick={() => getRankListById(id, index)}
+      onClick={() => getRankListById(index)}
     >
       <LazyLoadImg url={coverImgUrl} width={50} height={50} />
 

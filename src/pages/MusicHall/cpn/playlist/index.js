@@ -61,9 +61,12 @@ export default memo(function Playlist() {
   )
   //监听 key值 一旦发生变化就重新加载数据
   useEffect(() => {
-    dispatch(setPlaylistCate())
     dispatch(setPlaylistByCate({ cate: key }))
   }, [key])
+  //加载所有歌单分类 只需要在渲染阶段执行一次 所以传入一个空数组
+  useEffect(() => {
+    dispatch(setPlaylistCate())
+  }, [])
 
   return (
     <div className='playlist-conatiner'>

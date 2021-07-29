@@ -25,14 +25,13 @@ export default memo(function NewAlbumRec() {
   //自定义当前选项卡的索引
   const [currentIndex, setCurrentIndex] = useState(0)
   //切换当前选项卡的索引 一旦切换就会重新加载数据
-  const switchTabs = useCallback((index, id) => {
-    dispatch(setNewAlbumRec(id))
+  const switchTabs = useCallback(index => {
     setCurrentIndex(index)
   }, [])
   useEffect(() => {
     //调用dispatch 请求歌单数据 存入home state 第一次加载页面 手动加载第一个分类下的数据
-    dispatch(setNewAlbumRec(Tabs[0].area))
-  }, [])
+    dispatch(setNewAlbumRec(Tabs[currentIndex].area))
+  }, [currentIndex])
   return (
     <div className='newalbum-container'>
       <div className='w-1200'>
@@ -40,7 +39,6 @@ export default memo(function NewAlbumRec() {
           Tabs={Tabs}
           switchTabs={switchTabs}
           currentIndex={currentIndex}
-          type={'area'}
         />
         <div className='newalbum-content'>
           {newAlbum.slice(0, PAGESIZE).map((item, index) => {
