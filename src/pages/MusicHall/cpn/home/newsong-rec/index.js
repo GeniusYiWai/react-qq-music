@@ -14,10 +14,9 @@ const Tabs = [
   { categoryName: '日本', id: '8' },
   { categoryName: '韩国', id: '16' }
 ]
-//每页展示歌单数量
+//每页展示新歌数量
 const PAGESIZE = 9
 export default memo(function NewSongRec() {
-  //redux hooks
   //获取dispatch
   const dispatch = useDispatch()
   //获取home下的state的playlistRec
@@ -27,20 +26,15 @@ export default memo(function NewSongRec() {
     }),
     shallowEqual
   )
-
-  //react hooks
-  //自定义当前选项卡的索引
+  //当前新歌首发的索引 默认是第一个 对应上方的新歌首发选项卡
   const [currentIndex, setCurrentIndex] = useState(0)
+  //当前新歌首发的页码
   const [currentPage, setCurrentPage] = useState(0)
-  //切换当前选项卡的索引
-  const switchTabs = useCallback(
-    (index, id) => {
-      dispatch(setNewSongRec(id))
-      setCurrentIndex(index)
-    },
-    []
-  )
-  //切换当前推荐列表的索引
+  //切换当前新歌首发的分类
+  const switchTabs = useCallback(index => {
+    setCurrentIndex(index)
+  }, [])
+  //切换当前新歌首发展示数据的页码
   const switchPage = useCallback(
     page => {
       if (page * PAGESIZE >= newSong.length) {
@@ -51,14 +45,14 @@ export default memo(function NewSongRec() {
       setCurrentPage(page)
     },
     [newSong]
-  ) 
+  )
   useEffect(() => {
-    if (newSong.length !== 0) {
-      return
-    }
-    //调用dispatch 请求歌单数据 存入home state
-    dispatch(setNewSongRec(Tabs[0].id))
-  }, [dispatch, newSong])
+    //每当新歌首发分类被切换 就会重新抛出dispatch 请求数据
+    //第一次加载页面默认请求第一个分类下的数据
+    dispatch(setNewSongRec(Tabs[currentIndex].id))
+    //手动把页码变成第一页
+    setCurrentPage(0)
+  }, [currentIndex])
   return (
     <div className='newsong-container'>
       <SwitchPage currentPage={currentPage} switchPage={switchPage} />
@@ -68,14 +62,12 @@ export default memo(function NewSongRec() {
           Tabs={Tabs}
           switchTabs={switchTabs}
           currentIndex={currentIndex}
-          type={'id'}
         />
-
         <div className='newsong-content'>
           {newSong
             .slice(currentPage * PAGESIZE, currentPage * PAGESIZE + PAGESIZE)
-            .map((item, index) => {
-              return <NewSongCover song={item} key={index} />
+            .map(item => {
+              return <NewSongCover song={item} key={item.id} />
             })}
           <DotsContainer
             length={newSong.length}

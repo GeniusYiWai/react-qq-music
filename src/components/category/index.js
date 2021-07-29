@@ -6,7 +6,7 @@ import './index.less'
 //currentIndex 当前选择的分类
 //type 请求携带的参数
 export default memo(function Category(props) {
-  const { Tabs, switchTabs, currentIndex,type } = props
+  const { Tabs, switchTabs, currentIndex } = props
   return (
     <div>
       <div className='playlist-tabs'>
@@ -15,7 +15,7 @@ export default memo(function Category(props) {
             <div
               key={index}
               className={index === currentIndex ? 'active' : ''}
-              onClick={() => switchTabs(index, item[type])}
+              onClick={() => switchTabs(index)}
             >
               {item.categoryName}
             </div>
