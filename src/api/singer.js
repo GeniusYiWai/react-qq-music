@@ -3,7 +3,7 @@ import request from '../utils/request'
 //type 性别
 //area 地区
 //initial 姓名首字母
-export const getSinger = ( area = '', initial = '', type = '' ) => {
+export const getSinger = (area = '', initial = '', type = '') => {
   return request.get(
     `/artist/list?type=${type}&area=${area}&initial=${initial}`
   )
@@ -13,4 +13,9 @@ export const getSinger = ( area = '', initial = '', type = '' ) => {
 //offset 偏移数量
 export const getHotSinger = (limit = '', offset = 1) => {
   return request.get(`/top/artists?limit=${limit}&offset=${offset}`)
+}
+
+//获取收藏的歌手
+export const getCollectSinger = () => {
+  return request.get(`/artist/sublist`)
 }

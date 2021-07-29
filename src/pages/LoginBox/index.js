@@ -38,6 +38,7 @@ export default memo(function LoginBox() {
       footer={null}
       onCancel={handleCancel}
       destroyOnClose={true}
+      centered
     >
       <Tabs defaultActiveKey='1' centered>
         <TabPane tab='手机号登录' key='1'>

@@ -1,19 +1,15 @@
 import React, { memo } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Tabs, Input, message } from 'antd'
-// import LoginByPhone from '../login-phone'
-// import LoginByEmail from '../login-email'
-// import LoginByQRCode from '../login-qrcode'
 import {
   showLoginBoxDispatch,
   userLoginDispatch
 } from '@/pages/Mine/store/actionCreators'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import { logout } from '@/api/login'
 import { setItem } from '@/utils/storage'
-import './index.less'
 import logo from '@/assets/img/logo.png'
-
+import './index.less'
 // antd
 const { Search } = Input
 const { TabPane } = Tabs
@@ -51,7 +47,7 @@ export default memo(function Header() {
     return {
       isLogin: state.user.isLogin
     }
-  })
+  }, shallowEqual)
   const handleLogout = () => {
     logout().then(({ data }) => {
       if (data.code === 200) {

@@ -1,7 +1,41 @@
+@theme-color: #31c27c;
 .singer-container {
   background: #fafafa;
   position: relative;
   .singer-bg {
+    position: relative;
+    .collect-singer-container {
+      width: 1000px;
+      height: 200px;
+      .collect-singer-wrapper {
+        display: flex !important;
+        justify-content: center;
+        .collect-singer-item {
+          img {
+            width: 150px;
+            margin: 20px;
+            border-radius: 5px;
+          }
+          p {
+            color: @theme-color;
+          }
+        }
+      }
+    }
+    .prev,
+    .next {
+      font-size: 30px;
+      color: @theme-color;
+      position: absolute;
+      cursor: pointer;
+    }
+    .prev {
+      left: 5%;
+    }
+    .next {
+      right: 5%;
+    }
+
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -22,6 +56,7 @@
       padding: 10px 35px;
       border: 1px solid #fff;
       margin-top: 10px;
+      cursor: pointer;
     }
     height: 376px;
     text-align: center;
@@ -36,6 +71,5 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-
   }
 }

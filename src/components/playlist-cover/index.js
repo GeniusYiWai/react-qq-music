@@ -27,18 +27,10 @@ export default memo(function PlaylistCover(props) {
     <div className='playlist-cover-wrapper'>
       <div className='playlist-cover'>
         <div className='playlist-cover-box'>
-          <LazyLoadImg
-            url={coverImgUrl}
-            width={150}
-            height={150}
-            className='playlist-img'
-          />
+          <div className='playlist-img'>
+            <LazyLoadImg url={coverImgUrl} width={150} height={150} />
+          </div>
 
-          {/* <img
-            src={`${coverImgUrl}${clipImgSize(150, 150)}`}
-            alt=''
-            className='playlist-img'
-          /> */}
           <PlayImg handleClick={() => handleShowPalylistDetail(id)}></PlayImg>
         </div>
       </div>

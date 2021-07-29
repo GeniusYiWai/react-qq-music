@@ -61,7 +61,9 @@ export default memo(function NewSongCover(props) {
     <div className='song-container text-nowrap'>
       <div className='img-container'>
         <div style={{ position: 'relative' }}>
-          <LazyLoadImg url={picUrl} width={86} height={86} />
+          <div className='song-cover'>
+            <LazyLoadImg url={picUrl} width={86} height={86} />
+          </div>
           <PlayImg handleClick={() => handlePlay()}></PlayImg>
         </div>
       </div>

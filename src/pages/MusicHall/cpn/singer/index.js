@@ -1,10 +1,18 @@
-import React, { memo, useEffect, useCallback, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { memo, useEffect, useCallback, useState, useRef } from 'react'
+import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import BgImage from '@/assets/img/bg_singer.jpg'
 import ConditionQuery from 'components/condition-query'
 import SingerCover from './cpn/singer-cover'
 import SingerItem from './cpn/singer-item'
-import { setSinger, setHotSinger } from './store/actionCreators'
+
+import {
+  setSinger,
+  setHotSinger,
+  setCollectSingerDispatch
+} from './store/actionCreators'
+import { showLoginBoxDispatch } from '@/pages/Mine/store/actionCreators'
+import { Carousel } from 'antd'
+import { LeftOutlined, RightOutlined } from '@ant-design/icons'
 import './index.less'
 //首字母查询
 const Initials = [
@@ -82,40 +90,119 @@ const Type = [
     type: '3'
   }
 ]
+const newCollectSingerArray = []
+const pageSize = 5
 export default memo(function Singer() {
+  const carouselRef = useRef()
   const dispatch = useDispatch()
   //混合查询条件 因为可以多个参数一起查询
   const [combineCondition, setCombineCondition] = useState({
+    //按首字母查询
     initial: '',
+    //按地区查询
     area: '',
+    //按类型查询
     type: ''
   })
-  //获取singer state
-  const { singer, hotSinger } = useSelector(state => {
-    return {
-      singer: state.singer.singerList,
-      hotSinger: state.singer.hotSingerList
-    }
-  })
-  //切换查询条件
+  //singer 上面展示的按分类查询的歌手数据
+  //hotSinger 下方展示的热门歌手数据
+  //isLogin 用户登录状态
+  const { singer, hotSinger, isLogin, collectSingerList } = useSelector(
+    state => {
+      return {
+        singer: state.singer.singerList,
+        hotSinger: state.singer.hotSingerList,
+        isLogin: state.user.isLogin,
+        collectSingerList: state.singer.collectSingerList
+      }
+    },
+    shallowEqual
+  )
+  //切换查询条件 将新的查询条件与之前的进行对比 新的替代旧的
   const switchCondition = useCallback((condition, value) => {
     setCombineCondition(combineCondition => ({
       ...combineCondition,
       [condition]: value
     }))
   }, [])
-  //切换查询条件 重新触发加载
+  //监听combineCondition的改变 一旦切换查询条件 就会重新触发加载数据
   useEffect(() => {
-    console.log(combineCondition)
+    //第一次加载 会先加载默认的全部数据
     dispatch(setSinger(combineCondition))
+    //加载下方的热门歌手
     dispatch(setHotSinger({}))
   }, [combineCondition])
+  //这个函数用来获取走马灯展示的数据
+  //因为直接遍历关注歌手列表 走马灯一页只能显示一张图片
+  //所以通过创建一个新数组 将原来的歌手列表按5个一组查询排序 这样一个走马灯页面就可以显示5张图片
+  const spliceList = useCallback(() => {
+    const totalPage = Math.ceil(collectSingerList.length / pageSize)
+    for (let i = 0; i < totalPage; i++) {
+      newCollectSingerArray[i] = collectSingerList.slice(
+        i * pageSize,
+        i * pageSize + pageSize
+      )
+    }
+  }, [collectSingerList])
+  spliceList()
+  //这里监听用户登录状态的变更 如果用户登录了就重新发送请求 加载用户关注的歌手
+  useEffect(() => {
+    dispatch(setCollectSingerDispatch())
+  }, [isLogin])
   return (
     <div className='singer-container'>
       <div className='singer-bg' style={{ backgroundImage: `url(${BgImage})` }}>
-        <h1>万千歌手 尽在眼前</h1>
-        <h3>登录查看你的关注歌手</h3>
-        <input type='button' value='立即登录' className='login-btn' />
+        {isLogin ? (
+          <>
+            <LeftOutlined
+              className='prev'
+              onClick={() => {
+                carouselRef.current.prev()
+              }}
+            />
+            <Carousel
+              effect='fade'
+              autoplay
+              className='collect-singer-container'
+              ref={carouselRef}
+            >
+              {newCollectSingerArray.map((singer, index) => {
+                return (
+                  <div className='collect-singer-wrapper' key={index}>
+                    {singer.map(item => {
+                      return (
+                        <div className='collect-singer-item' key={item.id}>
+                          <img src={item.picUrl} alt='' />
+                          <p>{item.name}</p>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )
+              })}
+            </Carousel>
+            <RightOutlined
+              className='next'
+              onClick={() => {
+                carouselRef.current.next()
+              }}
+            />
+          </>
+        ) : (
+          <>
+            <h1>万千歌手 尽在眼前</h1>
+            <h3>登录查看你的关注歌手</h3>
+            <input
+              type='button'
+              value='立即登录'
+              className='login-btn'
+              onClick={() => {
+                //展示登录弹出层
+                dispatch(showLoginBoxDispatch(true))
+              }}
+            />
+          </>
+        )}
       </div>
       <ConditionQuery
         condition='initial'

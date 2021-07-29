@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useState, useRef } from 'react'
+import React, { memo, useCallback, useState, useRef, useEffect } from 'react'
 import { clipImgSize } from '@/utils/tools'
 import LazyLoad from 'react-lazyload'
 import lazyLoadImg from '@/assets/img/lazyload.jpg'
