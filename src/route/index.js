@@ -30,48 +30,64 @@ const routes = [
     component: lazy(() => import('../pages/MusicHall')),
     routes: [
       {
+        path: '/musichall/pl/detail/:id',
+        exact: true,
+        component: lazy(() => import('../pages/MusicHall/cpn/playlist-detail'))
+      },
+      {
         path: '/musichall/home',
+        exact: true,
+
         component: lazy(() => import('../pages/MusicHall/cpn/home'))
       },
       {
         path: '/musichall/disc',
+        exact: true,
+
         component: lazy(() => import('../pages/MusicHall/cpn/disc'))
       },
       {
         path: '/musichall/dj',
+        exact: true,
+
         component: lazy(() => import('../pages/MusicHall/cpn/dj'))
       },
       {
         path: '/musichall/mv',
+        exact: true,
+
         component: lazy(() => import('../pages/MusicHall/cpn/mv'))
       },
       {
         path: '/musichall/singer',
+        exact: true,
+
         component: lazy(() => import('../pages/MusicHall/cpn/singer'))
       },
       {
         path: '/musichall/playlist',
+        exact: true,
         component: lazy(() => import('../pages/MusicHall/cpn/playlist'))
       },
-      
+
       {
         path: '/musichall/rank',
+        exact: true,
+
         component: lazy(() => import('../pages/MusicHall/cpn/rank'))
       }
     ]
   },
   {
     path: '/mine',
+    exact: true,
     component: lazy(() => import('../pages/Mine'))
   },
   {
     path: '/player',
+    exact: true,
     component: lazy(() => import('../pages/Player'))
-  },
-  {
-    path: '/playlist/detail/:id',
-    component: lazy(() => import('../pages/PlaylistDetail'))
-  },
+  }
 ]
 
 export default routes

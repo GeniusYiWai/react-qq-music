@@ -15,6 +15,8 @@ import djReducer from '../pages/MusicHall/cpn/dj/store'
 import mvReducer from '../pages/MusicHall/cpn/mv/store'
 //user recuder
 import userReducer from '../pages/Mine/store/'
+//playlistDetail recuder
+import plDetailReducer from '../pages/MusicHall/cpn/playlist-detail/store'
 const cReucer = combineReducers({
   home: homeReducer,
   singer: singerReducer,
@@ -23,6 +25,7 @@ const cReucer = combineReducers({
   player: playerReducer,
   dj: djReducer,
   mv: mvReducer,
-  user: userReducer
+  user: userReducer,
+  plDetail: plDetailReducer
 })
 export default cReucer

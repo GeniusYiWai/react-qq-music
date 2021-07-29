@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import { clipImgSize } from '@/utils/tools'
+import LazyLoadImg from 'components/lazyload-img'
 import './index.less'
 //排行榜分类
 // id,  id
@@ -25,7 +25,8 @@ export default memo(function RankType(props) {
       key={id}
       onClick={() => getRankListById(id, index)}
     >
-      <img src={`${coverImgUrl}${clipImgSize(50, 50)}`} alt='' />
+      <LazyLoadImg url={coverImgUrl} width={50} height={50} />
+
       <div className='rank-type-info'>
         <p>{name}</p>
         <span>{updateFrequency}</span>

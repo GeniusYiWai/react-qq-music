@@ -1,5 +1,7 @@
 import React, { memo } from 'react'
-import { handleSinger, formatMinuteSecond, clipImgSize } from '@/utils/tools'
+import LazyLoadImg from 'components/lazyload-img'
+
+import { handleSinger, formatMinuteSecond } from '@/utils/tools'
 import './index.less'
 
 //排行榜下的歌曲详情
@@ -20,7 +22,7 @@ export default memo(function RankDetail(props) {
   return (
     <div className={`rank-detail-container ${index % 2 === 0 ? 'zebra' : ''}`}>
       <div className='rank-detail-cover'>
-        <img src={`${picUrl}${clipImgSize(50, 50)}`} alt='' />
+        <LazyLoadImg url={picUrl} width={50} height={50} />
         <span>{name}</span>
       </div>
       <div className='rank-detail-info'>

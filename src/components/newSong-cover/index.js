@@ -1,10 +1,12 @@
 import React, { memo } from 'react'
-import './index.less'
-import { handleSinger, formatMinuteSecond, clipImgSize } from '@/utils/tools'
+import LazyLoadImg from 'components/lazyload-img'
+import { handleSinger, formatMinuteSecond } from '@/utils/tools'
 import { message } from 'antd'
 import { getItem, setItem, getMusicById } from '@/utils/storage'
 import { CheckCanPlay } from '@/api/player'
 import PlayImg from '../play-img'
+import './index.less'
+
 //通用新歌封面
 //name 歌曲名称
 //artists 歌曲作者
@@ -58,12 +60,8 @@ export default memo(function NewSongCover(props) {
   return (
     <div className='song-container text-nowrap'>
       <div className='img-container'>
-        <div style={{position:'relative'}}>
-          <img
-            src={`${picUrl}${clipImgSize(86, 86)}`}
-            alt=''
-            className='song-cover'
-          />
+        <div style={{ position: 'relative' }}>
+          <LazyLoadImg url={picUrl} width={86} height={86} />
           <PlayImg handleClick={() => handlePlay()}></PlayImg>
         </div>
       </div>

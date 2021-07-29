@@ -1,7 +1,5 @@
 import React, { memo, useState, useEffect, useCallback } from 'react'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
-// import { Spin } from 'antd'
-// import { Carousel } from 'antd'
 import { setNewSongRec } from '../store/actionCreators'
 import NewSongCover from 'components/newSong-cover'
 import BigTitle from '../cpn/big-title'
@@ -40,7 +38,7 @@ export default memo(function NewSongRec() {
       dispatch(setNewSongRec(id))
       setCurrentIndex(index)
     },
-    [dispatch]
+    []
   )
   //切换当前推荐列表的索引
   const switchPage = useCallback(

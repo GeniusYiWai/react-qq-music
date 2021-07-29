@@ -1,6 +1,7 @@
 import React, { memo } from 'react'
 import { useHistory } from 'react-router-dom'
-import { clipImgSize } from '@/utils/tools'
+import LazyLoadImg from 'components/lazyload-img'
+
 import PlayImg from '../play-img'
 import './index.less'
 //通用歌单封面’
@@ -20,17 +21,24 @@ export default memo(function PlaylistCover(props) {
   //查看歌单详情
   const showPlaylistDetail = id => {
     console.log(id)
-    history.push(`/playlist/detail/${id}`)
+    history.push(`/musichall/pl/detail/${id}`)
   }
   return (
     <div className='playlist-cover-wrapper'>
       <div className='playlist-cover'>
         <div className='playlist-cover-box'>
-          <img
+          <LazyLoadImg
+            url={coverImgUrl}
+            width={150}
+            height={150}
+            className='playlist-img'
+          />
+
+          {/* <img
             src={`${coverImgUrl}${clipImgSize(150, 150)}`}
             alt=''
             className='playlist-img'
-          />
+          /> */}
           <PlayImg handleClick={() => handleShowPalylistDetail(id)}></PlayImg>
         </div>
       </div>

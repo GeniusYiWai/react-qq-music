@@ -3,7 +3,7 @@ import { useParams } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { setPlaylistDetailDispatch } from './store/actionCreators'
 import { clipImgSize } from '@/utils/tools'
-
+import PlaylistDetailCover from './cpn/pl-detail-cover'
 import './index.less'
 export default memo(function PlaylistDetail() {
   const params = useParams()
@@ -47,6 +47,12 @@ export default memo(function PlaylistDetail() {
           <h3>简介:</h3>
           <p>{playlistDetail.description}</p>
         </div>
+      </div>
+
+      <div className='pl-songs-container'>
+        {playlistSongs.map(song => {
+          return <PlaylistDetailCover song={song} key={song.id} />
+        })}
       </div>
     </div>
   )

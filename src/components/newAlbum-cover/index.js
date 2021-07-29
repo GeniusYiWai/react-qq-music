@@ -1,5 +1,6 @@
 import React, { memo } from 'react'
-import { handleSinger, clipImgSize } from '@/utils/tools'
+import LazyLoadImg from 'components/lazyload-img'
+import { handleSinger } from '@/utils/tools'
 import './index.less'
 //通用专辑封面
 //id album id
@@ -10,11 +11,10 @@ export default memo(function PlaylistCover(props) {
   const {
     album: { id, picUrl, artists, name }
   } = props
-
   return (
     <div className='album-cover'>
       <div key={id}>
-        <img src={`${picUrl}${clipImgSize(150, 150)}`} alt='' />
+        <LazyLoadImg url={picUrl} width={150} height={150} />
         <p className='text-nowrap'>{name}</p>
         <p className='singer text-nowrap'>{handleSinger(artists)}</p>
       </div>

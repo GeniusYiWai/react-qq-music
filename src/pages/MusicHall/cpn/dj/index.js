@@ -59,7 +59,9 @@ export default memo(function Dj() {
   const handleSelectCate = useCallback(index => {
     setcurretnIndex(index)
     //获取点击的分类距离顶部的距离
-    const offsetTop = document.querySelector('.dj-list' + index).offsetTop - 10
+    const offsetTop =
+      document.querySelector('.dj-list' + index) &&
+      document.querySelector('.dj-list' + index).offsetTop - 10
     ScrollTop(offsetTop, 600)
   }, [])
 
@@ -70,8 +72,9 @@ export default memo(function Dj() {
       djCateList.forEach((item, index) => {
         if (
           scrollTop >=
-          document.querySelector('.dj-list' + index).offsetTop -
-            document.body.clientHeight / 2
+          (document.querySelector('.dj-list' + index) &&
+            document.querySelector('.dj-list' + index).offsetTop -
+              document.body.clientHeight / 2)
         ) {
           setcurretnIndex(index)
         }
@@ -115,16 +118,15 @@ export default memo(function Dj() {
         {djList.map((item, index) => {
           return (
             <div className={`dj-list dj-list${index}`} key={index}>
-              <div
+              <p
                 className={`dj-title ${
                   index === curretnIndex ? 'dj-title-active' : ''
                 } `}
               >
                 {djCateList[index] && djCateList[index].name}
-              </div>
-
+              </p>
               {item.map(dj => {
-                return <DjCover dj={dj} key={dj.id} />
+                return <DjCover dj={dj} key={dj.id} className='dj-item' />
               })}
             </div>
           )
