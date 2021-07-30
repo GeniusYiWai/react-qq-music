@@ -1,7 +1,6 @@
 import {
-  SET_CURRENTMUSIC,
+  SET_CURRENT_MUSIC,
   SET_MUSIC_STATUS,
-  SET_CURRENT_MUSIC_LYRIC,
   SET_CURRENT_MUSIC_ID
 } from './constant'
 const initState = {
@@ -15,13 +14,11 @@ const initState = {
 }
 function reducer(state = initState, action) {
   switch (action.type) {
-    case SET_CURRENTMUSIC:
+    case SET_CURRENT_MUSIC:
       return { ...state, ...action.music }
     case SET_MUSIC_STATUS:
       state.isPlaying = action.status
       return { ...state }
-    case SET_CURRENT_MUSIC_LYRIC:
-      return { ...state, ...action.lyric }
     case SET_CURRENT_MUSIC_ID:
       return { ...state, ...action.id }
     default:

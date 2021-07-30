@@ -10,7 +10,7 @@ import React, {
 import './index.less'
 import { handleSinger } from '@/utils/tools'
 import LyricParser from 'lyric-parser'
-import { setCurrentPlayMusicLyric } from '../../store/actionCreators'
+import { getLyric } from '@/api/player'
 //这里必须把歌词类放到最外面 否则每次重新渲染都会丢失
 let Lyric
 export default memo(
@@ -55,7 +55,7 @@ export default memo(
     // }, [lineNum])
     useEffect(() => {
       const LyricRef = lyricRef
-      setCurrentPlayMusicLyric(currentPlayMusicId).then(({ data }) => {
+      getLyric(currentPlayMusicId).then(({ data }) => {
         //生成Lyric实例
         Lyric = new LyricParser(data.lrc.lyric, handleLyric)
         //调用播放方法 前提是音乐在播放

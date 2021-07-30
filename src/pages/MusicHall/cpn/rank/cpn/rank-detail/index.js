@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
 import LazyLoadImg from 'components/lazyload-img'
 import PlayImg from 'components/play-img'
-
+import { playMusic } from '@/utils/player'
 import { handleSinger, formatMinuteSecond } from '@/utils/tools'
 import './index.less'
 //排行榜下的歌曲详情
@@ -21,7 +21,7 @@ export default memo(function RankDetail(props) {
   const { index } = props
 
   const handlePlay = () => {
-    console.log(id)
+    playMusic(id, name, ar, dt)
   }
   return (
     <div className={`rank-detail-container ${index % 2 === 0 ? 'zebra' : ''}`}>

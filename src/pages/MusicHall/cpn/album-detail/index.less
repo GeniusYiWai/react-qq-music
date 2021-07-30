@@ -1,0 +1,50 @@
+.album-detail-container {
+  .album-detail-top {
+    margin-top: 20px;
+    display: flex;
+    .album-detail-cover {
+      img {
+        width: 250px;
+        height: 250px;
+        border-radius: 5px;
+      }
+      flex: 1;
+    }
+    .album-detail-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      flex: 1;
+      p {
+        font-size: 15px;
+      }
+    }
+    .album-detail-description {
+      p {
+        height: 200px;
+        overflow-y: scroll;
+        &::-webkit-scrollbar {
+          width: 5px;
+          height: 5px;
+        }
+        &::-webkit-scrollbar-thumb {
+          background-color: rgba(0, 0, 0, 0.1);
+        }
+        &::-webkit-scrollbar-thumb {
+          background-color: #ddd;
+        }
+        &::-webkit-scrollbar-thumb {
+          background-color: #ccc;
+          border-radius: 5px;
+        }
+        &::-webkit-scrollbar-track {
+          background: transparent;
+        }
+      }
+      flex: 2;
+    }
+  }
+  .album-songs-container {
+    padding: 50px;
+  }
+}

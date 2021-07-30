@@ -16,7 +16,9 @@ import {
   debounce
 } from '@/utils/tools'
 import { getItem, setItem } from '@/utils/storage'
+import { CheckCanPlay } from '@/api/player'
 import player from '@/assets/img/player.png'
+import { message } from 'antd'
 import './index.less'
 //0 -205px 列表循坏
 //0 -232px 单曲循环
@@ -201,10 +203,11 @@ export default memo(function Progress(props) {
     //请求数据获取当前播放音乐的url地址
     audioRef.current.src = getPlaySong(currentPlayMusicId)
   }, [currentPlayMusicId])
+
   return (
     <div className='progress-container'>
       <audio
-        autoPlay
+        autoplay
         controls
         ref={audioRef}
         onTimeUpdate={() => onMusicPlay()}

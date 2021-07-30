@@ -2,13 +2,14 @@ import React, { memo } from 'react'
 import { handleSinger } from '@/utils/tools'
 import LazyLoadImg from 'components/lazyload-img'
 import PlayImg from 'components/play-img'
+import { playMusic } from '@/utils/player'
 import './index.less'
 export default memo(function PlaylistDetailCover(props) {
   const {
-    song: { name, id, ar, al }
+    song: { name, id, ar, al, duration }
   } = props
   const handlePlay = () => {
-    console.log(id)
+    playMusic(id, name, ar, duration)
   }
   return (
     <div className='pl-cover'>

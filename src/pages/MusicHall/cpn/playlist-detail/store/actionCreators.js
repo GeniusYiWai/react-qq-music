@@ -19,7 +19,6 @@ const setPlaylistSongsAction = songs => {
     }
   }
 }
-
 //设置歌单详情  dispatch
 export const setPlaylistDetailDispatch = id => {
   return dispatch => {
