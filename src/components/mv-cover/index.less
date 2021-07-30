@@ -7,19 +7,18 @@
     height: 126px;
     width: 150px;
     overflow: hidden;
+    &:hover {
+      img {
+        transform: scale(1.1);
+      }
+    }
     img {
       position: absolute;
       left: 0;
       top: 0;
-      width: 150px;
-      height: 150px;
-      object-fit: cover;
       border-radius: 2px;
       transition: all 0.3s;
       cursor: pointer;
-      &:hover {
-        transform: scale(1.1);
-      }
     }
   }
   .mv-info {

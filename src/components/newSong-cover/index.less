@@ -12,15 +12,21 @@
         transform: scale(1.1);
       }
     }
-    .song-cover {
-      width: 86px;
-      height: 86px;
-      border-radius: 2px;
-      transition: all 0.3s;
-      overflow: hidden;
+    .song-wrapper {
+      position: relative;
+      img {
+        width: 86px;
+        height: 86px;
+      }
+      .song-cover {
+        width: 86px;
+        height: 86px;
+        border-radius: 2px;
+        transition: all 0.3s;
+        overflow: hidden;
+      }
     }
   }
-
   .song-info {
     margin-left: 10px;
     display: flex;

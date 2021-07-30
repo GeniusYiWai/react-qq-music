@@ -1,5 +1,4 @@
 @theme-color: #31c27c;
-
 .rank-detail-container {
   display: flex;
   justify-content: space-between;
@@ -9,16 +8,26 @@
   p,
   span {
     cursor: pointer;
+    margin-top: 10px;
     &:hover {
       color: @theme-color;
     }
   }
   .rank-detail-cover {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    &:hover {
+      img {
+        transform: scale(1.1);
+      }
+    }
     img {
       width: 60px;
       height: 60px;
       margin-right: 10px;
       cursor: pointer;
+      transition: all 0.3s;
     }
   }
   .rank-detail-info {

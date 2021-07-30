@@ -15,8 +15,8 @@ export default memo(function PlaylistCover(props) {
     playlist: { id, coverImgUrl, name, playCount }
   } = props
   //播放歌单内的全部歌曲
-  const handleShowPalylistDetail = id => {
-    // console.log(id)
+  const handlePlay = id => {
+    console.log(id)
   }
   //查看歌单详情
   const showPlaylistDetail = id => {
@@ -30,8 +30,7 @@ export default memo(function PlaylistCover(props) {
           <div className='playlist-img'>
             <LazyLoadImg url={coverImgUrl} width={150} height={150} />
           </div>
-
-          <PlayImg handleClick={() => handleShowPalylistDetail(id)}></PlayImg>
+          <PlayImg handleClick={() => handlePlay(id)}></PlayImg>
         </div>
       </div>
       <div className='playlist-cover-info'>

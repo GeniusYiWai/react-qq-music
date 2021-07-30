@@ -6,17 +6,25 @@
     color: @theme-color;
     cursor: pointer;
   }
-  img {
+  .album-wrapper {
+    position: relative;
     width: 150px;
     height: 150px;
-    border-radius: 2px;
-    transition: all 0.3s;
-    overflow: hidden;
-    cursor: pointer;
     &:hover {
-      transform: scale(1.1);
+      img {
+        transform: scale(1.1);
+      }
+    }
+    img {
+      width: 150px;
+      height: 150px;
+      border-radius: 2px;
+      transition: all 0.3s;
+      overflow: hidden;
+      cursor: pointer;
     }
   }
+
   .text-nowrap {
     margin-top: 10px;
   }

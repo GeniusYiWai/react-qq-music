@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useState, useRef, useEffect } from 'react'
+import React, { memo, useCallback, useState, useRef } from 'react'
 import { clipImgSize } from '@/utils/tools'
 import LazyLoad from 'react-lazyload'
 import lazyLoadImg from '@/assets/img/lazyload.jpg'
@@ -19,23 +19,12 @@ export default memo(function LazyLoadImg(props) {
     imgRef.current.src = notFound
   }, [])
   return (
-    <div
-      className='lazyload-container'
-      style={{ width: width + 'px', height: height + 'px' }}
-    >
-      {show ? (
-        <img
-          src={lazyLoadImg}
-          alt=''
-          className='lazyload-img'
-          style={{ width: width + 'px', height: height + 'px' }}
-        />
-      ) : null}
+    <div className='lazyload-container'>
+      {show ? <img src={lazyLoadImg} alt='' className='lazyload-img' /> : null}
       <LazyLoad style={{ width: width + 'px', height: height + 'px' }}>
         <img
           ref={imgRef}
           src={`${url}${clipImgSize(width, height)}`}
-          style={{ width: width + 'px', height: height + 'px' }}
           alt=''
           className='real-img'
           onLoad={() => {

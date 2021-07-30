@@ -1,9 +1,9 @@
 import React, { memo } from 'react'
 import LazyLoadImg from 'components/lazyload-img'
+import PlayImg from 'components/play-img'
 
 import { handleSinger, formatMinuteSecond } from '@/utils/tools'
 import './index.less'
-
 //排行榜下的歌曲详情
 // name, 名称
 // id, id
@@ -19,12 +19,20 @@ export default memo(function RankDetail(props) {
     dt
   } = props.item
   const { index } = props
+
+  const handlePlay = () => {
+    console.log(id)
+  }
   return (
     <div className={`rank-detail-container ${index % 2 === 0 ? 'zebra' : ''}`}>
-      <div className='rank-detail-cover'>
-        <LazyLoadImg url={picUrl} width={50} height={50} />
-        <span>{name}</span>
+      <div>
+        <div className='rank-detail-cover'>
+          <LazyLoadImg url={picUrl} width={60} height={60} />
+          <PlayImg handleClick={() => handlePlay()}></PlayImg>
+        </div>
+        <p>{name}</p>
       </div>
+
       <div className='rank-detail-info'>
         <span>{handleSinger(ar)}</span>
         <i>{formatMinuteSecond(dt)}</i>
