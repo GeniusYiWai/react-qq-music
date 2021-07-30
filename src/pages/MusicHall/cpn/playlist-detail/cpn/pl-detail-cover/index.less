@@ -1,15 +1,26 @@
 .pl-cover {
   width: 120px;
   margin: 20px;
-  img {
-    border-radius: 8px;
-    cursor: pointer;
+  .pl-wrapper {
+    position: relative;
     width: 120px;
     height: 350px;
-    object-fit: cover;
-    transition: all 0.3s;
+    .play-img {
+      width: 70px;
+      height: 70px;
+    }
     &:hover {
-      transform: translateY(-10px);
+      img {
+        transform: translateY(-10px);
+      }
+    }
+    img {
+      border-radius: 8px;
+      cursor: pointer;
+      width: 120px;
+      height: 350px;
+      object-fit: cover;
+      transition: all 0.3s;
     }
   }
 }

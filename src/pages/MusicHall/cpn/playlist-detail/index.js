@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setPlaylistDetailDispatch } from './store/actionCreators'
 import { clipImgSize } from '@/utils/tools'
 import PlaylistDetailCover from './cpn/pl-detail-cover'
+
 import './index.less'
 export default memo(function PlaylistDetail() {
   const params = useParams()
@@ -15,9 +16,9 @@ export default memo(function PlaylistDetail() {
       playlistSongs: state.plDetail.playlistSongs
     }
   })
-  // console.log(playlistDetail)
-  console.log(playlistSongs)
   useEffect(() => {
+    //每次进来先滚动到最顶部
+    window.scrollTo(0, 0)
     dispacth(setPlaylistDetailDispatch(id))
   }, [id])
   return (
