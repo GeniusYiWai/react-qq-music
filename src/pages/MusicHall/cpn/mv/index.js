@@ -100,24 +100,26 @@ export default memo(function Singer() {
   }, [combineCondition])
   return (
     <div className='mv-container'>
-      <ConditionQuery
-        condition='order'
-        categoryName='categoryName'
-        Category={Order}
-        switchCondition={switchCondition}
-      />
-      <ConditionQuery
-        condition='area'
-        categoryName='categoryName'
-        Category={Area}
-        switchCondition={switchCondition}
-      />
-      <ConditionQuery
-        condition='type'
-        categoryName='categoryName'
-        Category={Type}
-        switchCondition={switchCondition}
-      />
+      <div className='conditionQuery w-1200'>
+        <ConditionQuery
+          condition='order'
+          categoryName='categoryName'
+          Category={Order}
+          switchCondition={switchCondition}
+        />
+        <ConditionQuery
+          condition='area'
+          categoryName='categoryName'
+          Category={Area}
+          switchCondition={switchCondition}
+        />
+        <ConditionQuery
+          condition='type'
+          categoryName='categoryName'
+          Category={Type}
+          switchCondition={switchCondition}
+        />
+      </div>
       <div className='mv-list-container w-1200'>
         {mvList.map(item => {
           return <MvCover mv={item} key={item.id} />

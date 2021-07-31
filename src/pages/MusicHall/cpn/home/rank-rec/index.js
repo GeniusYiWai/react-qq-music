@@ -30,7 +30,7 @@ export default memo(function RankRec() {
       <BigTitle title='排行榜' />
       <div className='rank-content w-1200'>
         {rank.map((item, index) => {
-          return <RankCover rank={item} key={index} index={index}/>
+          return <RankCover rank={item} key={index} index={index} />
         })}
       </div>
     </div>

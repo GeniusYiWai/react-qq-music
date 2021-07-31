@@ -1,12 +1,24 @@
 import React, { memo } from 'react'
-import './index.less'
+import { useHistory } from 'react-router'
 import BgImage from '@/assets/img/bg_index_top.jpg'
+import './index.less'
+
 export default memo(function RankCover(props) {
   const { rank, index } = props
+  const history = useHistory()
   //根据排行榜的索引展示不同的背景图片
   const backgroundPosition = index * -224 + 'px'
+  const goToRank = () => {
+    console.log(111)
+    history.push('/musichall/rank')
+  }
   return (
-    <div className='rank-cover-wrapper'>
+    <div
+      className='rank-cover-wrapper'
+      onClick={() => {
+        goToRank()
+      }}
+    >
       <div
         className='rank-cover-container'
         style={{

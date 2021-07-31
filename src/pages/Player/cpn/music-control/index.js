@@ -202,12 +202,13 @@ export default memo(function Progress(props) {
     dispatch(setCurrentPlayMusic(currentPlayMusicId))
     //请求数据获取当前播放音乐的url地址
     audioRef.current.src = getPlaySong(currentPlayMusicId)
+    audioRef.current.play()
   }, [currentPlayMusicId])
 
   return (
     <div className='progress-container'>
       <audio
-        autoplay
+        autoPlay
         controls
         ref={audioRef}
         onTimeUpdate={() => onMusicPlay()}

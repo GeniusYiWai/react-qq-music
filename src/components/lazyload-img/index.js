@@ -27,6 +27,7 @@ export default memo(function LazyLoadImg(props) {
           src={`${url}${clipImgSize(width, height)}`}
           alt=''
           className='real-img'
+          style={{ width: width + 'px', height: height + 'px' }}
           onLoad={() => {
             showImage()
           }}

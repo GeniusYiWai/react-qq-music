@@ -18,6 +18,7 @@ import userReducer from '../pages/Mine/store/'
 //playlistDetail recuder
 import plDetailReducer from '../pages/MusicHall/cpn/playlist-detail/store'
 import albumDetailReducer from '../pages/MusicHall/cpn/album-detail/store'
+import mvDetailReducer from '../pages/MusicHall/cpn/mv-detail/store'
 const cReucer = combineReducers({
   home: homeReducer,
   singer: singerReducer,
@@ -28,6 +29,7 @@ const cReucer = combineReducers({
   mv: mvReducer,
   user: userReducer,
   plDetail: plDetailReducer,
-  albumDetail: albumDetailReducer
+  albumDetail: albumDetailReducer,
+  mvDetail: mvDetailReducer
 })
 export default cReucer

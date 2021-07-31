@@ -14,7 +14,7 @@ export default memo(function AlbumDetailCover(props) {
   }
   return (
     <div
-      className='pl-cover'
+      className='album-cover'
       style={{
         backgroundColor:
           index % 2 === 0 ? 'rgba(50,150,50,.1)' : 'rgba(50,100,50,.1)'
@@ -26,7 +26,7 @@ export default memo(function AlbumDetailCover(props) {
           handlePlay()
         }}
       >
-        <PlayCircleOutlined className='play-img' />
+        <PlayCircleOutlined className='play-album-img' />
         {name}
       </p>
       <p className='text-nowrap'>{handleSinger(ar)}</p>

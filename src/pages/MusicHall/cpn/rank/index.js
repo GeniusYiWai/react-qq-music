@@ -10,6 +10,7 @@ import {
   DownloadOutlined,
   CommentOutlined
 } from '@ant-design/icons'
+import { playRank } from '@/utils/player'
 
 import { handleDate } from '@/utils/tools'
 import RankDetail from './cpn/rank-detail'
@@ -26,6 +27,10 @@ export default memo(function Rank() {
       rankDetail: state.rank.rankDetail
     }
   }, shallowEqual)
+  const handlePlay = useCallback(() => {
+    return
+    playRank(rankDetail.tracks)
+  }, [rankDetail])
   //通过排行榜id获取详情
   const getRanlDetailByID = useCallback(
     index => {
@@ -38,6 +43,7 @@ export default memo(function Rank() {
   )
   //第一次加载页面 手动加载第一个排行榜分类下的数据
   useEffect(() => {
+    window.scrollTo(0, 0)
     //这里进行了处理 在加载完成排行榜之后手动抛出了获取第一个排行榜详情的dispatch 所以只需要执行一次
     //这里不能监听currentIndex的改变取请求排行榜详情 因为 dispatch(setRankById(rankList[currentIndex].id)) 直接执行是会报错的 rankList此时还没有获取到
     dispatch(setAllRank())
@@ -71,7 +77,14 @@ export default memo(function Rank() {
                 最近更新{handleDate(rankDetail.updateTime)}
               </p>
               <div className='rank-right-info'>
-                <Button icon={<PlayCircleOutlined />}>播放</Button>
+                <Button
+                  icon={<PlayCircleOutlined />}
+                  onClick={() => {
+                    handlePlay()
+                  }}
+                >
+                  播放
+                </Button>
                 <Button icon={<FolderAddOutlined />}>
                   {rankDetail.subscribedCount}
                 </Button>

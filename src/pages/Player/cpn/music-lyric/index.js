@@ -19,11 +19,11 @@ export default memo(
     useImperativeHandle(ref, () => ({
       // changeVal 就是暴露给父组件的方法
       changeLyricScroll: () => {
-        Lyric.togglePlay()
+        Lyric && Lyric.togglePlay()
       },
       changeLyricProgress: time => {
-        Lyric.seek(time)
-        Lyric.togglePlay()
+        Lyric && Lyric.seek(time)
+        Lyric && Lyric.togglePlay()
       }
     }))
     //获取当前播放的歌词在第几行
@@ -56,12 +56,17 @@ export default memo(
     useEffect(() => {
       const LyricRef = lyricRef
       getLyric(currentPlayMusicId).then(({ data }) => {
-        //生成Lyric实例
-        Lyric = new LyricParser(data.lrc.lyric, handleLyric)
-        //调用播放方法 前提是音乐在播放
-        isPlaying && Lyric.play()
-        //获取所有歌词
-        setLyric(Lyric.lines)
+        if (data.nolyric) {
+          setLyric([{ txt: '纯音乐,敬请欣赏!' }])
+          setLineNum(0)
+        } else {
+          //生成Lyric实例
+          Lyric = new LyricParser(data.lrc.lyric, handleLyric)
+          //调用播放方法 前提是音乐在播放
+          isPlaying && Lyric.play()
+          //获取所有歌词
+          setLyric(Lyric.lines)
+        }
       })
       //这里一定要返回一个清除歌词滚动的方法 不然会生成多个Lyric同时调用
       return () => {

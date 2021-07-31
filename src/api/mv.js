@@ -17,3 +17,20 @@ export const getMv = ({
     `/mv/all?area=${area}&order=${order}&type=${type}&limit=${limit}&offset=${offset}`
   )
 }
+
+//获取mv详情
+export const getMvDeatil = id => {
+  return request.get(`/mv/detail?mvid=${id}`)
+}
+
+//获取mv播放地址
+//id mv id
+//r 分辨率
+export const getMvUrl = (id, r = 1080) => {
+  return request.get(`/mv/url?id=${id}&r=${r}`)
+}
+
+//获取相似mv
+export const getSimiMv = id => {
+  return request.get(`simi/mv?mvid=${id}`)
+}

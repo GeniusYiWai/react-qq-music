@@ -147,7 +147,9 @@ export default memo(function Singer() {
   spliceList()
   //这里监听用户登录状态的变更 如果用户登录了就重新发送请求 加载用户关注的歌手
   useEffect(() => {
-    dispatch(setCollectSingerDispatch())
+    if (isLogin) {
+      dispatch(setCollectSingerDispatch())
+    }
   }, [isLogin])
   return (
     <div className='singer-container'>

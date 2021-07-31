@@ -1,15 +1,17 @@
 @theme-color: #31c27c;
 .album-cover {
-  width: 18%;
+  width: 150px;
+  height: 150px;
   margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   p:hover {
     color: @theme-color;
     cursor: pointer;
   }
   .album-wrapper {
     position: relative;
-    width: 150px;
-    height: 150px;
     &:hover {
       img {
         transform: scale(1.1);
@@ -26,6 +28,7 @@
   }
 
   .text-nowrap {
+    width: 150px;
     margin-top: 10px;
   }
   .singer {

@@ -1,6 +1,5 @@
 import React, { memo } from 'react'
 import PlayImg from '../play-img'
-
 import LazyLoadImg from 'components/lazyload-img'
 import './index.less'
 //通用mv 封面
@@ -10,7 +9,7 @@ export default memo(function MVCover(props) {
     mv: { cover, id, name, playCount, artistName }
   } = props
   const handlePlay = () => {
-    console.log(id)
+    window.open(`/musichall/mvdetail/${id}`)
   }
   return (
     <div className='mv-cover-container'>
@@ -19,7 +18,9 @@ export default memo(function MVCover(props) {
         <PlayImg handleClick={() => handlePlay()}></PlayImg>
       </div>
       <div className='mv-info'>
-        <p className='mv-name text-nowrap'>{name}</p>
+        <p className='mv-name text-nowrap' onClick={() => handlePlay()}>
+          {name}
+        </p>
         <p className='mv-artist text-nowrap'>{artistName}</p>
         <span className='mv-playnum'>{playCount}</span>
       </div>
