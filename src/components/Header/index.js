@@ -1,6 +1,7 @@
 import React, { memo } from 'react'
+import { message } from 'antd'
+
 import { NavLink } from 'react-router-dom'
-import { Tabs, Input, message } from 'antd'
 import {
   showLoginBoxDispatch,
   userLoginDispatch
@@ -8,11 +9,10 @@ import {
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import { logout } from '@/api/login'
 import { setItem } from '@/utils/storage'
+import Search from '../search'
 import logo from '@/assets/img/logo.png'
 import './index.less'
-// antd
-const { Search } = Input
-const { TabPane } = Tabs
+
 //路由表
 const routes = [
   {

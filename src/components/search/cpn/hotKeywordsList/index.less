@@ -1,0 +1,36 @@
+@theme-color: #31c27c;
+.hotkeywords-container {
+  position: absolute;
+  background-color: #fff;
+  z-index: 99;
+  width: 260px;
+  border: 1px solid #c9c9c9;
+  border-top-color: transparent;
+  & div:first-child {
+    margin-top: 0;
+  }
+  .hotkeywords-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.3s;
+    cursor: pointer;
+    justify-content: space-betwaeen;
+    padding: 5px 0;
+    margin: 10px 0;
+    & > span {
+      margin-right: 10px;
+      color: #999;
+    }
+    &:hover {
+      background-color: @theme-color;
+    }
+
+    p {
+      span {
+        color: #ff4222;
+        margin: 0 10px;
+      }
+    }
+  }
+}

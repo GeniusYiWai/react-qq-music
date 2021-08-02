@@ -18,7 +18,6 @@ export default memo(function PlaylistCover(props) {
   const handlePlay = () => {
     playPlaylist(id)
   }
-  
   //查看歌单详情
   const showPlaylistDetail = id => {
     history.push(`/musichall/pl/detail/${id}`)

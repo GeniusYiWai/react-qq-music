@@ -57,7 +57,7 @@ export default memo(function Playlist(props) {
       setPlaylist(localPlyalist)
       setItem('playlist', localPlyalist)
     },
-    [playlist, currentPlayMusicId,setPlaylist]
+    [playlist, currentPlayMusicId, setPlaylist]
   )
   return (
     <div className='player-playlist-container'>

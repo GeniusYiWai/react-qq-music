@@ -16,9 +16,7 @@ import {
   debounce
 } from '@/utils/tools'
 import { getItem, setItem } from '@/utils/storage'
-import { CheckCanPlay } from '@/api/player'
 import player from '@/assets/img/player.png'
-import { message } from 'antd'
 import './index.less'
 //0 -205px 列表循坏
 //0 -232px 单曲循环

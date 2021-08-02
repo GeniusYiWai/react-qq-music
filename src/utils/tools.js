@@ -1,12 +1,14 @@
 //处理歌手
 export const handleSinger = artists => {
-  return artists.reduce((initVal, val, index) => {
-    if (index === artists.length - 1) {
-      return initVal + val.name
-    } else {
-      return initVal + val.name + '/'
-    }
-  }, '')
+  if (Array.isArray(artists)) {
+    return artists.reduce((initVal, val, index) => {
+      if (index === artists.length - 1) {
+        return initVal + val.name
+      } else {
+        return initVal + val.name + '/'
+      }
+    }, '')
+  }
 }
 //处理日期
 export const handleDate = date => {
@@ -113,4 +115,10 @@ export const debounce = (fn, wait) => {
       fn.apply(this, args)
     }, wait)
   }
+}
+
+export const highlightKeyword = (keyword, str) => {
+  const reg = new RegExp(keyword, 'g')
+  str = str && str.replace(reg, `<span class='highlight'>${keyword}</span>`)
+  return str
 }

@@ -6,10 +6,11 @@ import { playMusic } from '@/utils/player'
 import './index.less'
 export default memo(function PlaylistDetailCover(props) {
   const {
-    song: { name, id, ar, al, duration }
+    song: { name, id, ar, al, dt }
   } = props
+  console.log(props)
   const handlePlay = () => {
-    playMusic(id, name, ar, duration)
+    playMusic(id, name, ar, dt)
   }
   return (
     <div className='pl-cover'>
