@@ -1,15 +1,31 @@
-import React, { memo, useState, useEffect } from 'react'
-import { getItem, setItem } from '@/utils/storage'
+import React, { memo, useCallback } from 'react'
+import { clearItem } from '@/utils/storage'
+import { DeleteOutlined } from '@ant-design/icons'
 import './index.less'
-export default memo(function HistorySearch() {
-  const [historySearch, setHistorySearch] = useState([])
-  useEffect(() => {
-    setHistorySearch(getItem('historySearch') || [])
+export default memo(function HistorySearch(props) {
+  const { history, setHistory } = props
+  const handleClear = useCallback(() => {
+    clearItem('historySearch')
+    setHistory([])
   }, [])
+
   return (
-    <div>
-      {historySearch.map((item, index) => {
-        return <p>{item}</p>
+    <div className='historysearch-container'>
+      <h3>
+        <p>历史搜索</p>
+
+        <DeleteOutlined
+          onClick={() => {
+            handleClear()
+          }}
+        />
+      </h3>
+      {history.map((item, index) => {
+        return (
+          <p className='historysearch-item' key={index}>
+            {item}
+          </p>
+        )
       })}
     </div>
   )

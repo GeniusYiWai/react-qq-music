@@ -1,0 +1,32 @@
+@theme-color: #31c27c;
+
+.historysearch-container {
+  position: absolute;
+  top: 240px;
+  left: -1px;
+  background-color: #fff;
+  z-index: 99;
+  width: 260px;
+  border: 1px solid #c9c9c9;
+  transition: all 0.3s;
+  h3 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    span {
+      font-size: 18px;
+      cursor: pointer;
+      &:hover {
+        color: @theme-color;
+      }
+    }
+  }
+  .historysearch-item {
+    padding: 10px;
+    cursor: pointer;
+    &:hover {
+      background-color: @theme-color;
+    }
+  }
+}

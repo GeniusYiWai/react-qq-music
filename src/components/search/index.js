@@ -4,6 +4,7 @@ import { getHotKeywords, getSearchSuggest } from '@/api/search'
 import HotKeywordsList from './cpn/hotKeywordsList'
 import SearchSuggestion from './cpn/search-suggestion'
 import HistorySearch from './cpn/history-search'
+import { setItem, getItem } from '@/utils/storage'
 import { debounce } from '@/utils/tools'
 import './index.less'
 const { Search } = Input
@@ -18,6 +19,9 @@ export default memo(function SearchInput() {
   const [showsearchSuggestion, setShowSearchSuggestion] = useState(false)
   //联想建议数据
   const [searchSuggestion, setSearchSuggestion] = useState({})
+  //历史搜索数据
+  const [history, setHistory] = useState(getItem('historySearch') || [])
+
   //鼠标聚焦 显示热搜列表
   const handleFocus = value => {
     if (value.trim() !== '') {
@@ -54,10 +58,17 @@ export default memo(function SearchInput() {
 
   const onFinish = useCallback(debounce(_onFinish, 500), [_onFinish])
 
+  const handlePress = value => {
+    const historySearch = getItem('historySearch') || []
+    if (value && value.trim() !== '') {
+      historySearch.push(value)
+      setItem('historySearch', historySearch)
+      setHistory(historySearch)
+    }
+  }
   useEffect(() => {
     //获取热门搜索关键字
     getHotKeywords().then(({ data: { data } }) => {
-      console.log(data)
       setHotKeywords(data.slice(0, 5))
     })
   }, [])
@@ -70,17 +81,17 @@ export default memo(function SearchInput() {
         onFocus={e => {
           handleFocus(e.target.value)
         }}
-        onBlur={() => {
-          handleBlur()
-        }}
         onChange={e => {
           handleChange(e.target.value)
+        }}
+        onKeyPress={e => {
+          handlePress(e.target.value)
         }}
       />
       {showHotKey ? (
         <>
           <HotKeywordsList hotKeywords={hotKeywords} />
-          <HistorySearch />
+          <HistorySearch history={history} setHistory={setHistory} />
         </>
       ) : null}
       {showsearchSuggestion ? (
