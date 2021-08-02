@@ -3,6 +3,7 @@ import { Input } from 'antd'
 import { getHotKeywords, getSearchSuggest } from '@/api/search'
 import HotKeywordsList from './cpn/hotKeywordsList'
 import SearchSuggestion from './cpn/search-suggestion'
+import HistorySearch from './cpn/history-search'
 import { debounce } from '@/utils/tools'
 import './index.less'
 const { Search } = Input
@@ -76,7 +77,12 @@ export default memo(function SearchInput() {
           handleChange(e.target.value)
         }}
       />
-      {showHotKey ? <HotKeywordsList hotKeywords={hotKeywords} /> : null}
+      {showHotKey ? (
+        <>
+          <HotKeywordsList hotKeywords={hotKeywords} />
+          <HistorySearch />
+        </>
+      ) : null}
       {showsearchSuggestion ? (
         <SearchSuggestion
           searchSuggestion={searchSuggestion}
