@@ -1,7 +1,5 @@
 @theme-color: #31c27c;
 .mv-cover-container {
-  width: 150px;
-  height: 150px;
   .mv-img-cover {
     position: relative;
     overflow: hidden;
@@ -20,7 +18,12 @@
   }
   .mv-info {
     p {
+      width: 150px;
       cursor: pointer;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+  
     }
     p:hover {
       color: @theme-color;

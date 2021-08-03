@@ -30,7 +30,7 @@ const routes = [
     component: lazy(() => import('../pages/MusicHall')),
     routes: [
       {
-        path: '/musichall/pl/detail/:id',
+        path: '/musichall/playlist/detail/:id',
         exact: true,
         component: lazy(() => import('../pages/MusicHall/cpn/playlist-detail'))
       },
@@ -84,6 +84,11 @@ const routes = [
         exact: true,
 
         component: lazy(() => import('../pages/MusicHall/cpn/rank'))
+      },
+      {
+        path: '/musichall/search/:k',
+        exact: true,
+        component: lazy(() => import('../pages/MusicHall/cpn/search'))
       }
     ]
   },

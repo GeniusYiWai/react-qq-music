@@ -1,9 +1,12 @@
 import React, { memo, Suspense } from 'react'
 import { renderRoutes } from 'react-router-config'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import { Skeleton } from 'antd'
 import './index.less'
 export default memo(function MusicHall(props) {
+  const location = useLocation()
+  const path = location.pathname.split('/')
+  const index = path.indexOf('search')
   const { route } = props
   //首页路由表
   const routes = [
@@ -38,15 +41,23 @@ export default memo(function MusicHall(props) {
   ]
   return (
     <div className='musichall-container'>
-      <div className='musichall w-1200'>
-        {routes.map((item, index) => {
-          return (
-            <NavLink to={item.path} key={index} activeClassName='active'>
-              {item.title}
-            </NavLink>
-          )
-        })}
-      </div>
+      {index === -1 ? (
+        <div className='musichall w-1200'>
+          {routes.map((item, index) => {
+            return (
+              <NavLink
+                to={item.path}
+                key={index}
+                activeClassName='active'
+                exact
+              >
+                {item.title}
+              </NavLink>
+            )
+          })}
+        </div>
+      ) : null}
+
       <Suspense
         fallback={
           <>

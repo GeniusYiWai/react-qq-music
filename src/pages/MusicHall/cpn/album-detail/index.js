@@ -41,9 +41,8 @@ export default memo(function AlbumDetail() {
           <p className='text-nowrap'>歌手</p>
           <p className='text-nowrap'>时长</p>
         </div>
-        {albumSongs.map((album,index) => {
-          return <AlbumDetailCover song={album} key={album.id} index={index}/>
-        })}
+
+        <AlbumDetailCover song={albumSongs} />
       </div>
     </div>
   )

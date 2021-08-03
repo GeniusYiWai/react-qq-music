@@ -26,3 +26,9 @@ export const getMusicById = id => {
   const playlist = getItem('playlist')
   return playlist.find(item => item.id === id)
 }
+
+//查找关键字是否已经存在于缓存中的历史搜索
+export const isExist = vlaue => {
+  const playlist = getItem('historySearch')
+  return playlist.find(item => item === vlaue)
+}

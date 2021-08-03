@@ -1,0 +1,47 @@
+@theme-color: #31c27c;
+.search-box {
+  .search-box-top {
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 247px;
+  }
+  .search-content {
+    .search-type {
+      display: flex;
+      font-size: 16px;
+      justify-content: center;
+      p {
+        margin: 20px;
+        cursor: pointer;
+      }
+      .selected {
+        color: @theme-color;
+      }
+    }
+  }
+  .search-result {
+    .singer-result-container,
+    .user-result-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .playlist-result-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+
+      & > div {
+        margin: 20px;
+      }
+    }
+    .mv-result-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      & > div {
+        margin: 40px;
+      }
+    }
+  }
+}

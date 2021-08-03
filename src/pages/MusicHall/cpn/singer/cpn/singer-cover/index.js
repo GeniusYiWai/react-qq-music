@@ -3,11 +3,15 @@ import LazyLoadImg from 'components/lazyload-img'
 import './index.less'
 //歌手详情封面
 export default memo(function SingerCover(props) {
-  const { singer } = props
+  const {
+    singer: { picUrl, name, nickname, signature, avatarUrl }
+  } = props
+
   return (
     <div className='singer-cover-container'>
-      <LazyLoadImg url={singer.picUrl} width={100} height={100} />
-      <p>{singer.name}</p>
+      <LazyLoadImg url={picUrl || avatarUrl} width={100} height={100} />
+      <p>{name || nickname}</p>
+      <p>{signature}</p>
     </div>
   )
 })
