@@ -5,7 +5,6 @@ import './index.less'
 export default memo(function HistorySearch(props) {
   const { history, setHistory } = props
   const handleClear = useCallback(() => {
-    console.log(11111)
     clearItem('historySearch')
     setHistory([])
   }, [setHistory])

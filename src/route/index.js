@@ -86,7 +86,7 @@ const routes = [
         component: lazy(() => import('../pages/MusicHall/cpn/rank'))
       },
       {
-        path: '/musichall/search/:k',
+        path: '/musichall/search',
         exact: true,
         component: lazy(() => import('../pages/MusicHall/cpn/search'))
       }

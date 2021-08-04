@@ -8,7 +8,6 @@ export default memo(function PlaylistDetailCover(props) {
   const {
     song: { name, id, ar, al, dt }
   } = props
-  console.log(props)
   const handlePlay = () => {
     playMusic(id, name, ar, dt)
   }

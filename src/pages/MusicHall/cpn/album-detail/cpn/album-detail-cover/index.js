@@ -25,7 +25,7 @@ export default memo(function AlbumDetailCover(props) {
             style={{
               backgroundColor: index % 2 === 0 ? '#f7f7f7' : '#fafafa'
             }}
-            key={id}
+            key={index}
           >
             <p
               className='text-nowrap'

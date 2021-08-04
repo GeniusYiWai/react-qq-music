@@ -152,3 +152,12 @@ export const dateFormat = (time, format) => {
     return rt > 10 || !isAddZero(o) ? rt : `0${rt}`
   })
 }
+
+export const parseParam = params => {
+  let obj = params.reduce((init, val) => {
+    const foo = val.split('=')
+    init[foo[0]] = foo[1]
+    return init
+  }, {})
+  return obj
+}

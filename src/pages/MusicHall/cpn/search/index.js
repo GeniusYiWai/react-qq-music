@@ -1,13 +1,15 @@
-import React, { memo, useEffect, useState, useCallback } from 'react'
-import { useParams } from 'react-router-dom'
+import React, { memo, useEffect, useState, useCallback, useMemo } from 'react'
+import { useLocation, useHistory } from 'react-router-dom'
 import { getSearchResult } from '@/api/search'
-import './index.less'
+import { parseParam } from '@/utils/tools'
 import bgSearch from '@/assets/img/bg_search.jpg'
 import SongCover from '../album-detail/cpn/album-detail-cover'
 import AlbumCover from './cpn/album-cover'
 import SingerCover from '../singer/cpn/singer-cover'
 import PlaylistCover from 'components/playlist-cover'
 import MvCover from 'components/mv-cover'
+import './index.less'
+
 const Types = [
   {
     value: '单曲',
@@ -41,12 +43,6 @@ const Types = [
     type: 1004,
     field: 'mvs'
   },
-
-  {
-    value: '歌词',
-    type: 1006,
-    field: 'songs'
-  },
   {
     value: '视频',
     type: 1014,
@@ -54,20 +50,36 @@ const Types = [
   }
 ]
 export default memo(function Search() {
-  const param = useParams()
-  const { k } = param
-  const [index, setIndex] = useState(0)
-  const [result, setResult] = useState([])
-  const switchType = useCallback(index => {
-    setIndex(index)
-  }, [])
-  useEffect(() => {
-    const { type, field } = Types[index]
-    getSearchResult(k, type).then(({ data: { result } }) => {
-      console.log(result)
-      setResult(result[field])
+  const location = useLocation()
+  const history = useHistory()
+  const params = location.search.split('?')[1].split('&')
+  const { k: keyword, t: field } = useMemo(() => parseParam(params), [params])
+  const { type, i } = useMemo(() => {
+    let type, i
+    Types.forEach((e, index) => {
+      if (e.field === field) {
+        type = e.type
+        i = index
+      }
     })
-  }, [k, index])
+    return { type, i }
+  }, [field])
+  const [index, setIndex] = useState(i)
+  const [result, setResult] = useState([])
+  const switchType = useCallback(
+    index => {
+      setIndex(index)
+      const { field } = Types[index]
+      history.push(`/musichall/search?k=${keyword}&t=${field}`)
+    },
+    [history, keyword]
+  )
+  useEffect(() => {
+    getSearchResult(keyword, type).then(({ data: { result } }) => {
+      setResult(result[field])
+      setIndex(i)
+    })
+  }, [keyword, field, type, i])
   return (
     <div className='search-box'>
       <div
@@ -96,42 +108,39 @@ export default memo(function Search() {
           {index === 1 && result && <AlbumCover album={result} />}
           {index === 2 && result ? (
             <div className='singer-result-container'>
-              {result.map(item => {
-                return <SingerCover singer={item} key={item.id} />
+              {result.map((item, index) => {
+                return <SingerCover singer={item} key={index} />
               })}
             </div>
           ) : null}
           {index === 3 && result ? (
             <div className='playlist-result-container'>
-              {result.map(item => {
-                return <PlaylistCover playlist={item} key={item.id} />
+              {result.map((item, index) => {
+                return <PlaylistCover playlist={item} key={index} />
               })}
             </div>
           ) : null}
           {index === 4 && result ? (
             <div className='user-result-container'>
-              {result.map(item => {
-                return <SingerCover singer={item} key={item.userId} />
+              {result.map((item, index) => {
+                return <SingerCover singer={item} key={index} />
               })}
             </div>
           ) : null}
           {index === 5 && result ? (
             <div className='mv-result-container'>
-              {result.map(item => {
-                return <MvCover mv={item} key={item.id} />
+              {result.map((item, index) => {
+                return <MvCover mv={item} key={index} />
               })}
             </div>
           ) : null}
-          
-
-          {index === 8 && result ? (
+          {index === 6 && result ? (
             <div className='mv-result-container'>
-              {result.map(item => {
-                return <MvCover mv={item} key={item.id} />
+              {result.map((item, index) => {
+                return <MvCover mv={item} key={index} />
               })}
             </div>
           ) : null}
-
         </div>
       </div>
     </div>

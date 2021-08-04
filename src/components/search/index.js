@@ -7,7 +7,6 @@ import HistorySearch from './cpn/history-search'
 import { setItem, getItem, isExist } from '@/utils/storage'
 import { debounce } from '@/utils/tools'
 import { useHistory } from 'react-router-dom'
-
 import './index.less'
 const { Search } = Input
 export default memo(function SearchInput() {
@@ -41,8 +40,10 @@ export default memo(function SearchInput() {
   }, [])
   //隐藏热门搜索和搜索联想
   const hideAll = useCallback(() => {
-    setShowHotKey(false)
-    setShowSearchSuggestion(false)
+    setTimeout(() => {
+      setShowHotKey(false)
+      setShowSearchSuggestion(false)
+    }, 600)
   }, [])
   //用户输入 隐藏热搜列表 显示搜索联想建议
   const handleChange = useCallback(value => {
@@ -90,12 +91,15 @@ export default memo(function SearchInput() {
       if (value && value.trim() !== '') {
         const flag = isExist(value)
         if (!flag) {
-          historySearch.push(value)
+          historySearch.unshift(value)
+          if (historySearch.length > 5) {
+            historySearch.pop()
+          }
           setItem('historySearch', historySearch)
           setHistory(historySearch)
         }
         hideAll()
-        historyHook.push(`/musichall/search/${value}`)
+        historyHook.push(`/musichall/search?k=${value}&t=songs`)
       }
     }
   }, [])
@@ -108,8 +112,7 @@ export default memo(function SearchInput() {
   return (
     <div className='search-container' ref={searchBoxRef}>
       <Search
-        placeholder='搜索音乐、MV、歌单、用户'
-        style={{ width: '260px' }}
+        placeholder='请输入关键字'
         allowClear
         onFocus={e => {
           handleFocus(e.target.value)
@@ -121,6 +124,7 @@ export default memo(function SearchInput() {
           handlePress(e)
         }}
       />
+
       {showHotKey ? (
         <>
           <HotKeywordsList hotKeywords={hotKeywords} />

@@ -15,3 +15,5 @@ export const getHighQualityByCate = (cate, limit, before) => {
 export const getPlaylistDeatil = id => {
   return request.get(`/playlist/detail?id=${id}`)
 }
+
+
