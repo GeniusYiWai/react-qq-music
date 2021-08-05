@@ -1,5 +1,7 @@
 import request from '../utils/request'
 import md5 from 'js-md5'
+// 带上时间戳,防止缓存
+const timestamp = new Date().getTime()
 //手机号登录
 export const logibByPhone = (phoneNumber, password) => {
   const md5_password = md5(password)
@@ -19,8 +21,6 @@ export const loginByEmail = (email, password) => {
 
 //二维码key生成接口
 export const getQRKey = () => {
-  // 带上时间戳,防止缓存
-  const timestamp = new Date().getTime()
   return request.get(`/login/qr/key?timestamp=${timestamp}`)
 }
 
@@ -43,4 +43,8 @@ export const getQRStatus = key => {
 //退出登录
 export const logout = () => {
   return request.get(`/logout`)
+}
+
+export const getLoginStatus = () => {
+  return request.get(`/login/status?timestamp=${timestamp}`)
 }

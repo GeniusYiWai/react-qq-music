@@ -5,6 +5,9 @@ import LoginByEmail from './cpn/login-email'
 import LoginByQRCode from './cpn/login-qrcode'
 import { useSelector, useDispatch } from 'react-redux'
 import { showLoginBoxDispatch, userLoginDispatch } from './store/actionCreators'
+import { setUserDispatch } from '../../pages/Mine/store/actionCreators'
+import { getLoginStatus } from '@/api/login'
+
 import { setItem } from '@/utils/storage'
 const { TabPane } = Tabs
 export default memo(function LoginBox() {
@@ -29,8 +32,18 @@ export default memo(function LoginBox() {
   }
   //登录成功 将登录态存入缓存 修改state中的用户登录状态
   const handleLoginSuccess = () => {
-    dispatch(userLoginDispatch(true))
-    setItem('login', true)
+    getLoginStatus().then(
+      ({
+        data: {
+          data: { profile }
+        }
+      }) => {
+        dispatch(userLoginDispatch(true))
+        dispatch(setUserDispatch(profile))
+        setItem('userInfo', profile)
+        setItem('login', true)
+      }
+    )
   }
   return (
     <Modal
@@ -41,20 +54,20 @@ export default memo(function LoginBox() {
       centered
     >
       <Tabs defaultActiveKey='1' centered>
-        <TabPane tab='手机号登录' key='1'>
+        <TabPane tab='二维码登录' key='1'>
+          <LoginByQRCode
+            setVisible={changeModal}
+            handleLoginSuccess={handleLoginSuccess}
+          />
+        </TabPane>
+        <TabPane tab='手机号登录' key='2'>
           <LoginByPhone
             setVisible={changeModal}
             handleLoginSuccess={handleLoginSuccess}
           />
         </TabPane>
-        <TabPane tab='邮箱登录' key='2'>
+        <TabPane tab='邮箱登录' key='3'>
           <LoginByEmail
-            setVisible={changeModal}
-            handleLoginSuccess={handleLoginSuccess}
-          />
-        </TabPane>
-        <TabPane tab='二维码登录' key='3'>
-          <LoginByQRCode
             setVisible={changeModal}
             handleLoginSuccess={handleLoginSuccess}
           />

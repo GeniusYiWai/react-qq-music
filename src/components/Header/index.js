@@ -1,14 +1,11 @@
 import React, { memo } from 'react'
-import { message } from 'antd'
 import { NavLink } from 'react-router-dom'
 import {
   showLoginBoxDispatch,
-  userLoginDispatch
 } from '@/pages/Mine/store/actionCreators'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
-import { logout } from '@/api/login'
-import { setItem } from '@/utils/storage'
 import Search from '../search'
+import Logout from '../logout'
 import logo from '@/assets/img/logo.png'
 import './index.less'
 
@@ -47,42 +44,9 @@ export default memo(function Header() {
       isLogin: state.user.isLogin
     }
   }, shallowEqual)
-  const handleLogout = () => {
-    logout().then(({ data }) => {
-      if (data.code === 200) {
-        message.success('退出成功')
-        dispatch(userLoginDispatch(false))
-        setItem('login', false)
-      } else {
-        message.error('退出失败')
-      }
-    })
-  }
-  //控制弹出层显示隐藏
-  // const [visible, setVisible] = useState(false)
-  //显示弹出层
-  // const showModal = () => {
-  //   setVisible(true)
-  // }
-  // const handleCancel = () => {
-  //   setVisible(false)
-  // }
 
   return (
     <div className='header'>
-      {/* <Modal visible={visible} footer={null} onCancel={handleCancel}>
-        <Tabs defaultActiveKey='1' centered>
-          <TabPane tab='手机号登录' key='1'>
-            <LoginByPhone setVisible={setVisible} />
-          </TabPane>
-          <TabPane tab='邮箱登录' key='2'>
-            <LoginByEmail setVisible={setVisible} />
-          </TabPane>
-          <TabPane tab='二维码登录' key='3'>
-            <LoginByQRCode setVisible={setVisible} />
-          </TabPane>
-        </Tabs>
-      </Modal> */}
       <div className='header-container w-1200'>
         <div className='header-left'>
           <img src={logo} alt='' className='logo' />
@@ -116,14 +80,7 @@ export default memo(function Header() {
             allowClear
           />
           {isLogin ? (
-            <input
-              type='button'
-              value='退出登录'
-              className='login'
-              onClick={() => {
-                handleLogout()
-              }}
-            />
+            <Logout />
           ) : (
             <input
               type='button'

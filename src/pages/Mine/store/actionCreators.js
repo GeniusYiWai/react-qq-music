@@ -1,11 +1,19 @@
-import { USER_LOGIN, SHOW_LOGIN_BOX } from './constant'
-
+import { USER_LOGIN, SHOW_LOGIN_BOX, SET_USER_INFO } from './constant'
 //用户登录 action
 const userLoginAction = login => {
   return {
     type: USER_LOGIN,
     login: {
       isLogin: login
+    }
+  }
+}
+//设置用户信息
+const setUserAction = user => {
+  return {
+    type: SET_USER_INFO,
+    user: {
+      userInfo: user
     }
   }
 }
@@ -30,5 +38,11 @@ export const userLoginDispatch = login => {
 export const showLoginBoxDispatch = status => {
   return dispatch => {
     dispatch(showLoginBoxAction(status))
+  }
+}
+//设置用户信息 dispatch
+export const setUserDispatch = profile => {
+  return dispatch => {
+    dispatch(setUserAction(profile))
   }
 }
