@@ -161,3 +161,16 @@ export const parseParam = params => {
   }, {})
   return obj
 }
+//arr 要遍历的数组
+//parentId 顶层id
+export const toTree = (arr, parentId) => {
+  return arr.reduce((init, val) => {
+    //如果当前的父评论id为0 也就是顶层id 就说明它有子数据
+    if (val.parentCommentId === parentId) {
+      //对整个数据再次进行遍历 如果有数据的parentCommentId等于这个数据的commentId 就说明它是这个第一层数据的子数据
+      val.children = toTree(arr, val.commentId)
+      init.push(val)
+    }
+    return init
+  }, [])
+}

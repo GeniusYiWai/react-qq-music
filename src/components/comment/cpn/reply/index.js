@@ -2,24 +2,28 @@ import React, { memo, useState } from 'react'
 import { Form, Input } from 'antd'
 import moment from 'moment'
 import { sendComment } from '@/api/comment'
+import { useSelector, useDispatch, shallowEqual } from 'react-redux'
+import { showLoginBoxDispatch } from '@/pages/Mine/store/actionCreators'
 import './index.less'
 const { TextArea } = Input
 
 export default memo(function Reply(props) {
   const { setShowReplyComment, id, commentId, comment, setComment } = props
+  //获取用户登录状态
+  const { isLogin } = useSelector(state => {
+    return {
+      isLogin: state.user.isLogin
+    }
+  }, shallowEqual)
+  const dispatch = useDispatch()
   const [value, setValue] = useState()
   const replyComment = () => {
-    //   console.log(comment.children.push({
-    //     author: "Cy3-_determition"
-    // avatar: "https://p3.music.126.net/EQVhMkyRMhwZyVN-GcddxQ==/109951165435642034.jpg"
-    // commentId: 5164376731
-    // content: "你的赞凑够一组了"
-    // datetime: 1606058785126
-    // liked: false
-    // likedCount: 37
-    //   }));
+    if (!isLogin) {
+      dispatch(showLoginBoxDispatch(true))
+      return
+    }
 
-    if (value.trim() !== '') {
+    if (value && value.trim() !== '') {
       sendComment(2, 2, id, value, commentId).then(
         ({
           data: {

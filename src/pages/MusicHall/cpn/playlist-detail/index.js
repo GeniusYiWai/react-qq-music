@@ -2,13 +2,15 @@ import React, { memo, useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { setPlaylistDetailDispatch } from './store/actionCreators'
-import { clipImgSize } from '@/utils/tools'
+import { clipImgSize, toTree } from '@/utils/tools'
 import PlaylistDetailCover from './cpn/pl-detail-cover'
 import Comment from 'components/comment'
 import { getPlaylistComment } from '@/api/comment'
+
 import './index.less'
 export default memo(function PlaylistDetail() {
   const params = useParams()
+  //获取当前的歌单id
   const { id } = params
   const dispacth = useDispatch()
   //热门评论
@@ -23,118 +25,22 @@ export default memo(function PlaylistDetail() {
       playlistSongs: state.plDetail.playlistSongs
     }
   })
+
   useEffect(() => {
     dispacth(setPlaylistDetailDispatch(id))
+    //获取歌单下的评论
     getPlaylistComment(id).then(
       ({ data: { comments, hotComments, total } }) => {
-        const newHotComments = []
+        // comments 总评论
+        // hotComments 热门评论
+        // total 评论总数
+        //设置评论总数
         setTotalNum(total)
 
-        hotComments.forEach(
-          ({
-            content,
-            parentCommentId,
-            liked,
-            likedCount,
-            commentId,
-            time: datetime,
-            user: { avatarUrl: avatar, nickname: author }
-          }) => {
-            if (parentCommentId === 0) {
-              newHotComments.push({
-                content,
-                liked,
-                likedCount,
-                commentId,
-                datetime,
-                avatar,
-                author,
-                children: []
-              })
-            }
-          }
-        )
-        hotComments.forEach(
-          ({
-            content,
-            parentCommentId,
-            liked,
-            likedCount,
-            commentId,
-            time: datetime,
-            user: { avatarUrl: avatar, nickname: author }
-          }) => {
-            newHotComments.forEach(i => {
-              if (i.commentId === parentCommentId) {
-                i.children.push({
-                  content,
-                  liked,
-                  likedCount,
-                  commentId,
-                  datetime,
-                  avatar,
-                  author
-                })
-              }
-            })
-          }
-        )
-
-        setHotComments(newHotComments)
-        const newComments = []
-
-        comments.forEach(
-          ({
-            content,
-            parentCommentId,
-            liked,
-            likedCount,
-            commentId,
-            time: datetime,
-            user: { avatarUrl: avatar, nickname: author }
-          }) => {
-            if (parentCommentId === 0) {
-              newComments.push({
-                content,
-                liked,
-                likedCount,
-                commentId,
-                datetime,
-                avatar,
-                author,
-                children: []
-              })
-            }
-          }
-        )
-        comments.forEach(
-          ({
-            content,
-            parentCommentId,
-            liked,
-            likedCount,
-            commentId,
-            time: datetime,
-            user: { avatarUrl: avatar, nickname: author }
-          }) => {
-            newHotComments.forEach(i => {
-              if (i.commentId === parentCommentId) {
-                i.children.push({
-                  content,
-                  liked,
-                  likedCount,
-                  commentId,
-                  datetime,
-                  avatar,
-                  author
-                })
-              }
-            })
-          }
-        )
-
-        setHotComments(newHotComments)
-        setComments(newComments)
+        //返回的数据结构是一级评论parentid为0 二级评论的parentId为回复的评论的commentId 需要进行格式化
+        setHotComments(toTree(hotComments, 0))
+        setComments(toTree(comments, 0))
+        
         //每次进来先滚动到最顶部
         window.scrollTo(0, 0)
       }
