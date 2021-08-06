@@ -14,7 +14,7 @@ const routes = [
     title: '音乐馆'
   },
   {
-    path: '/mine',
+    path: '/profile',
     title: '我的音乐'
   },
   {

@@ -4,14 +4,14 @@ import {
   getCollectPlaylist as getCollectPlaylistAPI,
   getCollectMv as getCollectMvAPI,
   getCollectAlbum as getCollectAlbumAPI
-} from '@/api/mine'
+} from '@/api/profile'
 import { getMusicById } from '@/api/player'
 import PlaylistCover from 'components/Playlist/playlistCover'
 import AlbumCover from 'components/Album/newAlbumCover'
 import SongCover from 'components/Album/albumDetailCover'
 import MvCover from 'components/Mv/mvCover'
 import Category from 'components/Common/category'
-
+import Empty from 'components/Common/empty'
 import './index.less'
 const Tabs = [
   {
@@ -103,28 +103,40 @@ export default memo(function Collect(props) {
       />
       {currentIndex === 0 ? (
         <div className='w-1200'>
-          <SongCover song={likeSongs} />
+          {likeSongs.length !== 0 ? <SongCover song={likeSongs} /> : <Empty />}
         </div>
       ) : null}
       {currentIndex === 1 ? (
         <div className='playlist-result-container'>
-          {likePlaylists.map((item, index) => {
-            return <PlaylistCover playlist={item} key={index} />
-          })}
+          {likePlaylists.length !== 0 ? (
+            likePlaylists.map((item, index) => {
+              return <PlaylistCover playlist={item} key={index} />
+            })
+          ) : (
+            <Empty />
+          )}
         </div>
       ) : null}
       {currentIndex === 2 ? (
         <div className='mv-result-container'>
-          {likeAlbums.map((item, index) => {
-            return <AlbumCover album={item} key={index} />
-          })}
+          {likeAlbums.length !== 0 ? (
+            likeAlbums.map((item, index) => {
+              return <AlbumCover album={item} key={index} />
+            })
+          ) : (
+            <Empty />
+          )}
         </div>
       ) : null}
       {currentIndex === 3 ? (
         <div className='mv-result-container'>
-          {likeMvs.map((item, index) => {
-            return <MvCover mv={item} key={index} />
-          })}
+          {likeMvs.length !== 0 ? (
+            likeMvs.map((item, index) => {
+              return <MvCover mv={item} key={index} />
+            })
+          ) : (
+            <Empty />
+          )}
         </div>
       ) : null}
     </div>

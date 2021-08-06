@@ -1,6 +1,6 @@
 import request from '../utils/request'
 
-//获取用户收藏的音乐
+//获取当前登录用户收藏的音乐 目前只能查看登录的用户收藏的音乐
 //uid 用户id
 export const getCollectSongs = uid => {
   return request.get(`/likelist?uid=${uid}`)
@@ -35,7 +35,7 @@ export const getUserInfo = uid => {
   return request.get(`/user/detail?uid=${uid}`)
 }
 
-//获取当前登录用户收藏的mv 只能获取自己的
+//获取当前登录用户收藏的mv 只能获取当前登录用户
 export const getCollectMv = () => {
   return request.get(`/mv/sublist`)
 }

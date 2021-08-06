@@ -89,18 +89,28 @@ const routes = [
         path: '/musichall/search',
         exact: true,
         component: lazy(() => import('../pages/MusicHall/cpn/search'))
+      },
+      {
+        path: '*',
+        exact: true,
+        component: lazy(() => import('components/Common/notFound'))
       }
     ]
   },
   {
-    path: '/mine',
+    path: '/profile',
     exact: true,
-    component: lazy(() => import('../pages/Mine'))
+    component: lazy(() => import('../pages/Profile'))
   },
   {
     path: '/player',
     exact: true,
     component: lazy(() => import('../pages/Player'))
+  },
+  {
+    path: '*',
+    exact: true,
+    component: lazy(() => import('components/Common/notFound'))
   }
 ]
 

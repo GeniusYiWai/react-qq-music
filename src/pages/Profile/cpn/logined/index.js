@@ -4,11 +4,13 @@ import {
   getCollectPlaylist as getCollectPlaylistAPI,
   getUserFollow as getUserFollowAPI,
   getUserFan as getUserFanAPI
-} from '@/api/mine'
+} from '@/api/profile'
 import PlaylistCover from 'components/Playlist/playlistCover'
 import SingerCover from 'components/Singer/singerCover'
 import Category from 'components/Common/category'
 import Collect from '../collect'
+import Empty from 'components/Common/empty'
+
 import './index.less'
 const Tabs = [
   {
@@ -96,23 +98,35 @@ export default memo(function CollectList(props) {
       {currentIndex === 0 ? <Collect userId={userId} /> : null}
       {currentIndex === 1 ? (
         <div className='playlist-result-container'>
-          {userCreatePlaylist.map((item, index) => {
-            return <PlaylistCover playlist={item} key={index} />
-          })}
+          {userCreatePlaylist.length !== 0 ? (
+            userCreatePlaylist.map((item, index) => {
+              return <PlaylistCover playlist={item} key={index} />
+            })
+          ) : (
+            <Empty text='这里空空如也' />
+          )}
         </div>
       ) : null}
       {currentIndex === 2 ? (
         <div className='singer-result-container'>
-          {userFollow.map((item, index) => {
-            return <SingerCover singer={item} key={index} />
-          })}
+          {userFollow.length !== 0 ? (
+            userFollow.map((item, index) => {
+              return <SingerCover singer={item} key={index} />
+            })
+          ) : (
+            <Empty text='这里空空如也' />
+          )}
         </div>
       ) : null}
       {currentIndex === 3 ? (
         <div className='singer-result-container'>
-          {userFan.map((item, index) => {
-            return <SingerCover singer={item} key={index} />
-          })}
+          {userFan.length !== 0 ? (
+            userFan.map((item, index) => {
+              return <SingerCover singer={item} key={index} />
+            })
+          ) : (
+            <Empty text='这里空空如也' />
+          )}
         </div>
       ) : null}
     </div>

@@ -4,7 +4,7 @@ import {
   SET_COLLECT_SINGER
 } from './constant'
 import { getSinger, getHotSinger } from '@/api/singer'
-import { getCollectSinger } from '@/api/mine'
+import { getCollectSinger } from '@/api/profile'
 
 //获取歌手 action
 const setSingerAction = singer => {
