@@ -17,12 +17,6 @@ export const getCollectAlbum = uid => {
   return request.get(`/album/sublist?uid=${uid}`)
 }
 
-//获取用户关注列表
-//uid 用户id
-export const getUserFollow = uid => {
-  return request.get(`/user/follows?uid=${uid}`)
-}
-
 //获取用户粉丝列表
 //uid 用户id
 export const getUserFan = uid => {
@@ -40,7 +34,12 @@ export const getCollectMv = () => {
   return request.get(`/mv/sublist`)
 }
 
-//获取收藏的歌手
+//获取关注的歌手
 export const getCollectSinger = () => {
   return request.get(`/artist/sublist`)
+}
+//获取用户关注的用户
+//uid 用户id
+export const getUserFollow = uid => {
+  return request.get(`/user/follows?uid=${uid}`)
 }

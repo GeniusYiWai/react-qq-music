@@ -2,13 +2,13 @@ import React, { memo, useEffect, useState, useCallback } from 'react'
 
 import {
   getCollectPlaylist as getCollectPlaylistAPI,
-  getUserFollow as getUserFollowAPI,
   getUserFan as getUserFanAPI
 } from '@/api/profile'
 import PlaylistCover from 'components/Playlist/playlistCover'
 import SingerCover from 'components/Singer/singerCover'
 import Category from 'components/Common/category'
 import Collect from '../collect'
+import Follow from '../follow'
 import Empty from 'components/Common/empty'
 
 import './index.less'
@@ -33,8 +33,6 @@ export default memo(function CollectList(props) {
   const [currentIndex, setCurrentIndex] = useState(0)
   //用户创建的歌单
   const [userCreatePlaylist, setUserCreatePlaylist] = useState([])
-  //用户关注列表
-  const [userFollow, setUserFollow] = useState([])
   //用户粉丝列表
   const [userFan, setUserFan] = useState([])
   //切换当前一级分类
@@ -53,12 +51,6 @@ export default memo(function CollectList(props) {
       setUserCreatePlaylist(newArr)
     })
   }, [userId])
-  //获取用户关注列表
-  const getUserFollow = useCallback(() => {
-    getUserFollowAPI(userId).then(({ data: { follow } }) => {
-      setUserFollow(follow)
-    })
-  }, [userId])
   //获取用户粉丝列表
   const getUserFan = useCallback(() => {
     getUserFanAPI(userId).then(({ data: { followeds } }) => {
@@ -70,16 +62,13 @@ export default memo(function CollectList(props) {
       case 1:
         getUserCreatePlaylist()
         break
-      case 2:
-        getUserFollow()
-        break
       case 3:
         getUserFan()
         break
       default:
         break
     }
-  }, [currentIndex, getUserCreatePlaylist, getUserFollow, getUserFan])
+  }, [currentIndex, getUserCreatePlaylist, getUserFan])
   return (
     <div>
       <div
@@ -107,17 +96,7 @@ export default memo(function CollectList(props) {
           )}
         </div>
       ) : null}
-      {currentIndex === 2 ? (
-        <div className='singer-result-container'>
-          {userFollow.length !== 0 ? (
-            userFollow.map((item, index) => {
-              return <SingerCover singer={item} key={index} />
-            })
-          ) : (
-            <Empty text='这里空空如也' />
-          )}
-        </div>
-      ) : null}
+      {currentIndex === 2 ? <Follow userId={userId} /> : null}
       {currentIndex === 3 ? (
         <div className='singer-result-container'>
           {userFan.length !== 0 ? (

@@ -108,6 +108,11 @@ const routes = [
     component: lazy(() => import('../pages/Player'))
   },
   {
+    path: '/profile/singer/:id',
+    exact: true,
+    component: lazy(() => import('../pages/Singer'))
+  },
+  {
     path: '*',
     exact: true,
     component: lazy(() => import('components/Common/notFound'))

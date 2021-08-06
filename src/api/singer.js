@@ -14,3 +14,9 @@ export const getSinger = (area = '', initial = '', type = '') => {
 export const getHotSinger = (limit = '', offset = 1) => {
   return request.get(`/top/artists?limit=${limit}&offset=${offset}`)
 }
+
+//获取歌手详情
+
+export const getSingerInfo = id => {
+  return request.get(`/artist/detail?id=${id}`)
+}
