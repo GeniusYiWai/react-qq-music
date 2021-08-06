@@ -3,8 +3,8 @@ import request from '../utils/request'
 export const getAllRank = () => {
   return request.get(`/toplist`)
 }
-
 //通过排行榜类型获取详情
+//id 排行榜类型
 export const getRankById = id => {
   return request.get(`/playlist/detail?id=${id}`)
 }

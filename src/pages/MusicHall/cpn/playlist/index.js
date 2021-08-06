@@ -2,7 +2,7 @@ import React, { memo, useEffect, useState, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { setPlaylistCate, setPlaylistByCate } from './store/actionCreators'
 import './index.less'
-import PlaylistCover from 'components/playlist-cover'
+import PlaylistCover from 'components/Playlist/playlistCover'
 import { Menu } from 'antd'
 const { SubMenu } = Menu
 //歌单分类 写死

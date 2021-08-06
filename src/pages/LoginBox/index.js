@@ -1,11 +1,11 @@
 import React, { memo } from 'react'
 import { Modal, Tabs } from 'antd'
-import LoginByPhone from './cpn/login-phone'
-import LoginByEmail from './cpn/login-email'
-import LoginByQRCode from './cpn/login-qrcode'
+import LoginByPhone from './cpn/loginByPhone'
+import LoginByEmail from './cpn/loginByEmail'
+import LoginByQRCode from './cpn/loginByQrcode'
 import { useSelector, useDispatch } from 'react-redux'
 import { showLoginBoxDispatch, userLoginDispatch } from './store/actionCreators'
-import { setUserDispatch } from '../../pages/Mine/store/actionCreators'
+import { setUserDispatch } from './store/actionCreators'
 import { getLoginStatus } from '@/api/login'
 
 import { setItem } from '@/utils/storage'
@@ -38,9 +38,13 @@ export default memo(function LoginBox() {
           data: { profile }
         }
       }) => {
+        //更改state中的用户登录状态
         dispatch(userLoginDispatch(true))
+        //更改state中的用户信息
         dispatch(setUserDispatch(profile))
+        //将当前登录用户的信息存入缓存
         setItem('userInfo', profile)
+        //将登录状态设置为true
         setItem('login', true)
       }
     )

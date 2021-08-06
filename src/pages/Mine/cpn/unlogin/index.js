@@ -1,6 +1,6 @@
 import React, { memo, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { showLoginBoxDispatch } from '@/pages/Mine/store/actionCreators'
+import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
 import unLoginBg from '@/assets/img/bg_profile_unlogin.jpg'
 import recLogin from '@/assets/img/rec_login.png'
 import './index.less'

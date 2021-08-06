@@ -2,7 +2,7 @@ import React, { memo, createElement, useState } from 'react'
 import { Comment } from 'antd'
 import moment from 'moment'
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
-import { showLoginBoxDispatch } from '@/pages/Mine/store/actionCreators'
+import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
 import { likeComment as likeCommentAPI } from '@/api/comment'
 import { LikeOutlined, LikeFilled } from '@ant-design/icons'
 

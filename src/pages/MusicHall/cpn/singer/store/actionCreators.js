@@ -3,7 +3,8 @@ import {
   SET_HOTSINGER_REC,
   SET_COLLECT_SINGER
 } from './constant'
-import { getSinger, getHotSinger, getCollectSinger } from '@/api/singer'
+import { getSinger, getHotSinger } from '@/api/singer'
+import { getCollectSinger } from '@/api/mine'
 
 //获取歌手 action
 const setSingerAction = singer => {

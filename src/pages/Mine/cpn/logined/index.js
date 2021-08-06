@@ -5,9 +5,9 @@ import {
   getUserFollow as getUserFollowAPI,
   getUserFan as getUserFanAPI
 } from '@/api/mine'
-import PlaylistCover from 'components/playlist-cover'
-import SingerCover from '@/pages/MusicHall/cpn/singer/cpn/singer-cover'
-import Category from 'components/category'
+import PlaylistCover from 'components/Playlist/playlistCover'
+import SingerCover from 'components/Singer/singerCover'
+import Category from 'components/Common/category'
 import Collect from '../collect'
 import './index.less'
 const Tabs = [
@@ -25,7 +25,8 @@ const Tabs = [
   }
 ]
 export default memo(function CollectList(props) {
-  const { userId, backgroundUrl, avatarUrl, nickname, signature } = props.user
+  const { userId, backgroundUrl, avatarUrl, nickname, signature } =
+    props.userInfo
   //当前展示的一级索引
   const [currentIndex, setCurrentIndex] = useState(0)
   //用户创建的歌单
@@ -50,7 +51,6 @@ export default memo(function CollectList(props) {
       setUserCreatePlaylist(newArr)
     })
   }, [userId])
-
   //获取用户关注列表
   const getUserFollow = useCallback(() => {
     getUserFollowAPI(userId).then(({ data: { follow } }) => {

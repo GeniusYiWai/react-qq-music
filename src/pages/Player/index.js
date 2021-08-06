@@ -1,8 +1,8 @@
 import React, { memo, useState, useRef } from 'react'
 import './index.less'
-import MusicPlaylist from './cpn/music-playlist'
-import MusicControl from './cpn/music-control'
-import MusicLyric from './cpn/music-lyric'
+import MusicPlaylist from './cpn/musicPlaylist'
+import MusicControl from './cpn/musicControl'
+import MusicLyric from './cpn/musicLyric'
 import { getItem } from '@/utils/storage'
 import { useSelector } from 'react-redux'
 export default memo(function Player() {

@@ -32,17 +32,17 @@ const routes = [
       {
         path: '/musichall/playlist/detail/:id',
         exact: true,
-        component: lazy(() => import('../pages/MusicHall/cpn/playlist-detail'))
+        component: lazy(() => import('../pages/MusicHall/cpn/playlistDetail'))
       },
       {
         path: '/musichall/album/detail/:id',
         exact: true,
-        component: lazy(() => import('../pages/MusicHall/cpn/album-detail'))
+        component: lazy(() => import('../pages/MusicHall/cpn/albumDetail'))
       },
       {
         path: '/musichall/mvdetail/:id',
         exact: true,
-        component: lazy(() => import('../pages/MusicHall/cpn/mv-detail'))
+        component: lazy(() => import('../pages/MusicHall/cpn/mvDetail'))
       },
       {
         path: '/musichall/home',

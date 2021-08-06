@@ -11,7 +11,8 @@ export const getAllPlaylistCate = () => {
 export const getHighQualityByCate = (cate, limit, before) => {
   return request.get(`/top/playlist/highquality?cat=${cate}&limit=${limit}`)
 }
-
+//获取歌单详情
+//id 歌单id
 export const getPlaylistDeatil = id => {
   return request.get(`/playlist/detail?id=${id}`)
 }

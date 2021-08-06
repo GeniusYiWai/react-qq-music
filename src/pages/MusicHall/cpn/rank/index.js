@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useState, useCallback } from 'react'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
-import RankType from './cpn/rank-type'
+import RankType from 'components/Rank/rankType'
 import { setAllRank, setRankById } from './store/actionCreators'
 import { Button } from 'antd'
 import {
@@ -13,7 +13,7 @@ import {
 import { playRank } from '@/utils/player'
 
 import { handleDate } from '@/utils/tools'
-import RankDetail from './cpn/rank-detail'
+import RankDetail from 'components/Rank/rankDetail'
 import './index.less'
 export default memo(function Rank() {
   const dispatch = useDispatch()

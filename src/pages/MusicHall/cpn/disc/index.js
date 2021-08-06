@@ -1,8 +1,8 @@
 import React, { memo, useState, useEffect, useCallback } from 'react'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import { setNewAlbumRec } from '../../cpn/home/store/actionCreators'
-import NewAlbumCover from 'components/newAlbum-cover'
-import Category from 'components/category'
+import NewAlbumCover from 'components/Album/newAlbumCover'
+import Category from 'components/Common/category'
 import './index.less'
 //新碟上架选项卡 用于传入到category组件中
 const Tabs = [

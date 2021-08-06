@@ -23,12 +23,12 @@ export const clearItem = (name, value) => {
 
 //通过音乐id查找其是否存在于缓存中的音乐列表
 export const getMusicById = id => {
-  const playlist = getItem('playlist')||[]
+  const playlist = getItem('playlist') || []
   return playlist.find(item => item.id === id)
 }
 
 //查找关键字是否已经存在于缓存中的历史搜索
 export const isExist = vlaue => {
-  const playlist = getItem('historySearch')||[]
+  const playlist = getItem('historySearch') || []
   return playlist.find(item => item === vlaue)
 }

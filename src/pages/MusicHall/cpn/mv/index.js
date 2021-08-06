@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import ConditionQuery from 'components/condition-query'
-import MvCover from 'components/mv-cover'
+import ConditionQuery from 'components/Common/conditionQuery'
+import MvCover from 'components/Mv/mvCover'
 import { setMv } from './store/actionCreators'
 import './index.less'
 //地区筛选条件

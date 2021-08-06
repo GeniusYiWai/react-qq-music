@@ -6,11 +6,11 @@ import {
   getCollectAlbum as getCollectAlbumAPI
 } from '@/api/mine'
 import { getMusicById } from '@/api/player'
-import PlaylistCover from 'components/playlist-cover'
-import AlbumCover from 'components/newAlbum-cover'
-import SongCover from '@/pages/MusicHall/cpn/album-detail/cpn/album-detail-cover'
-import MvCover from 'components/mv-cover'
-import Category from 'components/category'
+import PlaylistCover from 'components/Playlist/playlistCover'
+import AlbumCover from 'components/Album/newAlbumCover'
+import SongCover from 'components/Album/albumDetailCover'
+import MvCover from 'components/Mv/mvCover'
+import Category from 'components/Common/category'
 
 import './index.less'
 const Tabs = [
@@ -28,8 +28,8 @@ const Tabs = [
   }
 ]
 export default memo(function Collect(props) {
+  //获取当前登录用户的id
   const { userId } = props
-
   //当前二级分类的索引
   const [currentIndex, setCurrentIndex] = useState(0)
   //切换当前二级分类

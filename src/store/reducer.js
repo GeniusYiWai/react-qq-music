@@ -14,11 +14,11 @@ import djReducer from '../pages/MusicHall/cpn/dj/store'
 //mv recuder
 import mvReducer from '../pages/MusicHall/cpn/mv/store'
 //user recuder
-import userReducer from '../pages/Mine/store/'
+import userReducer from '../pages/LoginBox/store/'
 //playlistDetail recuder
-import plDetailReducer from '../pages/MusicHall/cpn/playlist-detail/store'
-import albumDetailReducer from '../pages/MusicHall/cpn/album-detail/store'
-import mvDetailReducer from '../pages/MusicHall/cpn/mv-detail/store'
+import plDetailReducer from '../pages/MusicHall/cpn/playlistDetail/store'
+import albumDetailReducer from '../pages/MusicHall/cpn/albumDetail/store'
+import mvDetailReducer from '../pages/MusicHall/cpn/mvDetail/store'
 const cReucer = combineReducers({
   home: homeReducer,
   singer: singerReducer,

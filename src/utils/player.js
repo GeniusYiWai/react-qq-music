@@ -44,32 +44,38 @@ export const playMusic = (id, name, artists, duration) => {
   )
 }
 export const playPlaylist = id => {
-  getPlaylistDeatil(id).then(({ data: { playlist } }) => {
-    //获取歌单下的所有歌曲的id
-    const trackIds = playlist.trackIds.map(item => item.id).join(',')
-    //将歌曲id放在一起请求
-    getMusicByIdApi(trackIds).then(({ data }) => {
-      //格式化播放列表
-      const playlist = data.songs.reduce((init, val) => {
-        let { id, name, ar: artists, dt: duration } = val
-        artists = handleSinger(val.ar)
-        duration = formatMinuteSecond(val.dt)
-        init.push({
-          id,
-          name,
-          artists,
-          duration
+  getPlaylistDeatil(id)
+    .then(({ data }) => {
+      if (data.code === 200) {
+        //获取歌单下的所有歌曲的id
+        const trackIds = data.playlist.trackIds.map(item => item.id).join(',')
+        //将歌曲id放在一起请求
+        getMusicByIdApi(trackIds).then(({ data }) => {
+          //格式化播放列表
+          const playlist = data.songs.reduce((init, val) => {
+            let { id, name, ar: artists, dt: duration } = val
+            artists = handleSinger(val.ar)
+            duration = formatMinuteSecond(val.dt)
+            init.push({
+              id,
+              name,
+              artists,
+              duration
+            })
+            return init
+          }, [])
+          //将播放列表存入缓存
+          setItem('playlist', playlist)
+          //将当前播放的歌曲id存入缓存 默认是播放列表的第一个
+          setItem('currentPlayMusicId', playlist[0].id)
+          //跳转到歌曲播放页面
+          window.open('/player', 'alwaysRaised=yes')
         })
-        return init
-      }, [])
-      //将播放列表存入缓存
-      setItem('playlist', playlist)
-      //将当前播放的歌曲id存入缓存 默认是播放列表的第一个
-      setItem('currentPlayMusicId', playlist[0].id)
-      //跳转到歌曲播放页面
-      window.open('/player', 'alwaysRaised=yes')
+      }
     })
-  })
+    .catch(error => {
+      message.warning('请登录后尝试!')
+    })
 }
 
 export const playRank = tracks => {

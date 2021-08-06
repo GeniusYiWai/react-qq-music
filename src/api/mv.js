@@ -19,6 +19,7 @@ export const getMv = ({
 }
 
 //获取mv详情
+// id mv id
 export const getMvDeatil = id => {
   return request.get(`/mv/detail?mvid=${id}`)
 }
@@ -31,6 +32,7 @@ export const getMvUrl = (id, r = 1080) => {
 }
 
 //获取相似mv
+//id mv id
 export const getSimiMv = id => {
   return request.get(`simi/mv?mvid=${id}`)
 }

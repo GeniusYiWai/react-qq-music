@@ -14,8 +14,3 @@ export const getSinger = (area = '', initial = '', type = '') => {
 export const getHotSinger = (limit = '', offset = 1) => {
   return request.get(`/top/artists?limit=${limit}&offset=${offset}`)
 }
-
-//获取收藏的歌手
-export const getCollectSinger = () => {
-  return request.get(`/artist/sublist`)
-}

@@ -1,12 +1,10 @@
 import React, { memo, useState } from 'react'
 import { Form, Input } from 'antd'
-import moment from 'moment'
 import { sendComment } from '@/api/comment'
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
-import { showLoginBoxDispatch } from '@/pages/Mine/store/actionCreators'
+import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
 import './index.less'
 const { TextArea } = Input
-
 export default memo(function Reply(props) {
   const { setShowReplyComment, id, commentId, comment, setComment } = props
   //获取用户登录状态

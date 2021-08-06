@@ -44,7 +44,7 @@ export const getQRStatus = key => {
 export const logout = () => {
   return request.get(`/logout`)
 }
-
+//获取登录状态
 export const getLoginStatus = () => {
   return request.get(`/login/status?timestamp=${timestamp}`)
 }

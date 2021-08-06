@@ -7,15 +7,15 @@ import './index.less'
 
 export default memo(function Mine() {
   //获取用户登录状态和信息
-  const { isLogin, user } = useSelector(state => {
+  const { isLogin, userInfo } = useSelector(state => {
     return {
       isLogin: state.user.isLogin,
-      user: state.user.userInfo
+      userInfo: state.user.userInfo
     }
   }, shallowEqual)
   return (
     <div className='mine-container'>
-      {!isLogin ? <UnLogin /> : <Logined user={user} />}
+      {!isLogin ? <UnLogin /> : <Logined userInfo={userInfo} />}
     </div>
   )
 })

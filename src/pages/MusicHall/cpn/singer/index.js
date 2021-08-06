@@ -1,16 +1,16 @@
 import React, { memo, useEffect, useCallback, useState, useRef } from 'react'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import BgImage from '@/assets/img/bg_singer.jpg'
-import ConditionQuery from 'components/condition-query'
-import SingerCover from './cpn/singer-cover'
-import SingerItem from './cpn/singer-item'
+import ConditionQuery from 'components/Common/conditionQuery'
+import SingerCover from 'components/Singer/singerCover'
+import SingerItem from 'components/Singer/singerItem'
 
 import {
   setSinger,
   setHotSinger,
   setCollectSingerDispatch
 } from './store/actionCreators'
-import { showLoginBoxDispatch } from '@/pages/Mine/store/actionCreators'
+import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
 import { Carousel } from 'antd'
 import { LeftOutlined, RightOutlined } from '@ant-design/icons'
 import './index.less'
