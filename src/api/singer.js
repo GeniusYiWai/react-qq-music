@@ -20,3 +20,19 @@ export const getHotSinger = (limit = '', offset = 1) => {
 export const getSingerInfo = id => {
   return request.get(`/artist/detail?id=${id}`)
 }
+
+//歌手全部歌曲
+export const getSingerSongs = id => {
+  return request.get(`/artist/songs?id=${id}`)
+}
+
+//歌手热门歌曲
+
+//歌曲专辑
+export const getSingerAlbums = (id, limit = 30) => {
+  return request.get(`/artist/album?id=${id}&limit=${limit}`)
+}
+//歌手mv
+export const getSingerMvs = id => {
+  return request.get(`/artist/mv?id=${id}`)
+}

@@ -3,7 +3,8 @@ import {
   getCollectSongs as getCollectSongsAPI,
   getCollectPlaylist as getCollectPlaylistAPI,
   getCollectMv as getCollectMvAPI,
-  getCollectAlbum as getCollectAlbumAPI
+  getCollectAlbum as getCollectAlbumAPI,
+
 } from '@/api/profile'
 import { getMusicById } from '@/api/player'
 import PlaylistCover from 'components/Playlist/playlistCover'
@@ -57,7 +58,7 @@ export default memo(function Collect(props) {
     getCollectPlaylistAPI(userId).then(({ data: { playlist } }) => {
       const newArr = []
       playlist.forEach(e => {
-        if (e.subscribed === true) {
+        if (e.creator.userId != userId) {
           newArr.push(e)
         }
       })

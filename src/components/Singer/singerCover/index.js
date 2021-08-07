@@ -11,7 +11,7 @@ export default memo(function SingerCover(props) {
   const handleClick = () => {
     id
       ? window.open(`/profile/singer/${id}`)
-      : window.open(`/profile?uid=${userId}`)
+      : window.open(`/profile/user/${userId}`)
   }
   return (
     <div className='singer-cover-container' onClick={() => handleClick()}>

@@ -1,11 +1,53 @@
+@theme-color: #31c27c;
+
 .singer-profile-container {
   background-color: #f3f3f3;
-  height: 100%;
   .singer-profile-box {
     display: flex;
     .singer-avatar {
       img {
         border-radius: 50%;
+        width: 200px;
+        height: 200px;
+      }
+    }
+  }
+  .singer-category {
+    div {
+      font-size: 20px;
+    }
+    .singer-artist-size {
+      display: flex;
+      justify-content: center;
+
+      p {
+        font-size: 20px;
+        margin: 0 25px;
+      }
+      .active {
+        color: @theme-color;
+      }
+    }
+  }
+  .singer-hotsongs-list {
+    .newalbum-container {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      padding-bottom: 50px;
+      position: relative;
+
+      & > div {
+        margin: 40px;
+      }
+    }
+    .mv-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      & > div {
+        margin: 40px;
       }
     }
   }

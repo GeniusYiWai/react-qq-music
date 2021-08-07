@@ -43,7 +43,7 @@ export default memo(function Logout() {
           alt=''
           className='logout-user-avatar'
         />
-        <p>{userInfo.nickname}</p>
+        <p>{userInfo && userInfo.nickname}</p>
       </div>
 
       {show ? (
@@ -53,8 +53,8 @@ export default memo(function Logout() {
               className='close-logout-box'
               onClick={() => setShow(false)}
             />
-            <img src={userInfo.avatarUrl} alt='' />
-            <span>{userInfo.nickname}</span>
+            <img src={userInfo && userInfo.avatarUrl} alt='' />
+            <span>{userInfo && userInfo.nickname}</span>
           </div>
           <p onClick={() => handleLogout()}>退出登录</p>
         </div>

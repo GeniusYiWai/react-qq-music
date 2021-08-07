@@ -1,0 +1,35 @@
+@theme-color: #31c27c;
+.listen-songs-container {
+  border: 1px solid #e5e5e5;
+  border-top: none;
+  .listen-songs-item {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    cursor: pointer;
+    & p:first-child {
+      font-size: 16px;
+      width: 72px;
+      text-align: center;
+    }
+    .song-info {
+      span {
+        font-size: 12px;
+      }
+
+      & span:first-child {
+        &:hover {
+          color: @theme-color;
+        }
+        font-weight: bold;
+        color: #333;
+      }
+      & span:last-child {
+        &:hover {
+          color: @theme-color;
+        }
+        color: #aeaeae;
+      }
+    }
+  }
+}

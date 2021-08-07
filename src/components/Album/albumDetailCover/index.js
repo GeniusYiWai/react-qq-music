@@ -6,8 +6,8 @@ import './index.less'
 export default memo(function AlbumDetailCover(props) {
   const { song } = props
   const handlePlay = index => {
-    const { id, name, dt, duration } = song[index]
-    playMusic(id, name, dt, duration)
+    const { id, name, ar, dt, duration } = song[index]
+    playMusic(id, name, ar, dt || duration)
   }
   return (
     <div>
@@ -18,7 +18,7 @@ export default memo(function AlbumDetailCover(props) {
         <p>时长</p>
       </div>
 
-      {song.map(({ name, artists, ar, album, dt, duration, id }, index) => {
+      {song.map(({ name, artists, ar, album, dt, duration, id, al, }, index) => {
         return (
           <div
             className='album-detail-cover'
@@ -37,7 +37,12 @@ export default memo(function AlbumDetailCover(props) {
               {name}
             </p>
             <p className='text-nowrap'>{handleSinger(ar || artists)}</p>
-            <p className='text-nowrap'>{album && album.name}</p>
+            {al ? (
+              <p className='text-nowrap'>{al && al.name}</p>
+            ) : (
+              <p className='text-nowrap'>{album && album.name}</p>
+            )}
+
             <p className='text-nowrap'>{formatMinuteSecond(dt || duration)}</p>
           </div>
         )

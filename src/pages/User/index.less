@@ -1,0 +1,100 @@
+.user {
+  background-color: #f3f3f3;
+}
+.user-info-container {
+  width: 980px;
+  margin: 0 auto;
+  padding: 35px;
+
+  background-color: #fff;
+  .user-info-wrapper {
+    display: flex;
+
+    .user-avatar {
+      & > div {
+        width: 210px;
+        height: 210px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid #d5d5d5;
+        img {
+          width: 200px;
+          height: 200px;
+        }
+      }
+    }
+    .user-info {
+      flex: 1;
+      margin-left: 40px;
+      .user-info-top {
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 15px;
+      }
+      .user-info-middle {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+        font-size: 12px;
+        & > div:last-child {
+          border-right: none;
+        }
+        & > div {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          margin-right: 30px;
+          padding-right: 40px;
+          border-right: 1px solid #ddd;
+          span {
+            font-size: 22px;
+          }
+        }
+      }
+      .user-info-bottom {
+        p {
+          margin-top: 10px;
+        }
+        .weibo {
+          font-size: 18px;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+  .user-personal-info {
+    h2 {
+      border-bottom: 2px solid #c20c0c;
+    }
+  }
+  .user-listern-songs-playlist-wrapper {
+    margin-top: 30px;
+  }
+  .user-create-playlist-wrapper {
+    margin-top: 20px;
+
+    .user-create-playlist {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      & > div {
+        margin: 10px;
+      }
+    }
+  }
+  .user-collect-playlist-wrapper {
+    margin-top: 20px;
+    .user-collect-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      & > div {
+        margin: 10px;
+      }
+    }
+  }
+}

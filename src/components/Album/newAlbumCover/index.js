@@ -10,7 +10,7 @@ import './index.less'
 // picUrl 图片地址
 // artists 专辑作者
 // name 专辑名称
-export default memo(function PlaylistCover(props) {
+export default memo(function NewAlbumCover(props) {
   const {
     album: { id, picUrl, artists, name }
   } = props

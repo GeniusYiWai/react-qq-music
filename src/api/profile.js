@@ -7,8 +7,8 @@ export const getCollectSongs = uid => {
 }
 //获取用户收藏的歌单
 //uid 用户id
-export const getCollectPlaylist = uid => {
-  return request.get(`/user/playlist?uid=${uid}`)
+export const getCollectPlaylist = (uid, limit = 100) => {
+  return request.get(`/user/playlist?uid=${uid}&limit=${limit}`)
 }
 
 //获取用户收藏的专辑
@@ -19,8 +19,8 @@ export const getCollectAlbum = uid => {
 
 //获取用户粉丝列表
 //uid 用户id
-export const getUserFan = uid => {
-  return request.get(`/user/followeds?uid=${uid}`)
+export const getUserFan = (uid, limit = 1000) => {
+  return request.get(`/user/followeds?uid=${uid}&limit=${limit}`)
 }
 
 //获取用户详情
@@ -40,6 +40,17 @@ export const getCollectSinger = () => {
 }
 //获取用户关注的用户
 //uid 用户id
-export const getUserFollow = uid => {
-  return request.get(`/user/follows?uid=${uid}`)
+export const getUserFollow = (uid, limit = 1000) => {
+  return request.get(`/user/follows?uid=${uid}&limit=${limit}`)
+}
+
+//获取用户动态
+
+export const getUserEvent = uid => {
+  return request.get(`/user/event?uid=${uid}`)
+}
+
+//获取用户播放记录
+export const getUserListenSongs = uid => {
+  return request.get(`/user/record?uid=${uid}&type=1`)
 }

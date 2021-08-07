@@ -44,7 +44,7 @@ export default memo(function CollectList(props) {
     getCollectPlaylistAPI(userId).then(({ data: { playlist } }) => {
       const newArr = []
       playlist.forEach(e => {
-        if (e.subscribed === false) {
+        if (e.creator.userId == userId) {
           newArr.push(e)
         }
       })
