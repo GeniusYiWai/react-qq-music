@@ -30,20 +30,17 @@ const routes = [
     component: lazy(() => import('../pages/MusicHall')),
     routes: [
       {
-        path: '/musichall/playlist/detail/:id',
+        path: '/musichall/song/detail/:id',
         exact: true,
-        component: lazy(() => import('../pages/MusicHall/cpn/playlistDetail'))
+        component: lazy(() => import('../pages/MusicHall/cpn/songDetail'))
       },
+
       {
         path: '/musichall/album/detail/:id',
         exact: true,
         component: lazy(() => import('../pages/MusicHall/cpn/albumDetail'))
       },
-      {
-        path: '/musichall/mvdetail/:id',
-        exact: true,
-        component: lazy(() => import('../pages/MusicHall/cpn/mvDetail'))
-      },
+
       {
         path: '/musichall/home',
         exact: true,
@@ -63,6 +60,11 @@ const routes = [
         component: lazy(() => import('../pages/MusicHall/cpn/dj'))
       },
       {
+        path: '/musichall/mv/detail/:id',
+        exact: true,
+        component: lazy(() => import('../pages/MusicHall/cpn/mvDetail'))
+      },
+      {
         path: '/musichall/mv',
         exact: true,
         component: lazy(() => import('../pages/MusicHall/cpn/mv'))
@@ -78,7 +80,11 @@ const routes = [
         exact: true,
         component: lazy(() => import('../pages/MusicHall/cpn/playlist'))
       },
-
+      {
+        path: '/musichall/playlist/detail/:id',
+        exact: true,
+        component: lazy(() => import('../pages/MusicHall/cpn/playlistDetail'))
+      },
       {
         path: '/musichall/rank',
         exact: true,

@@ -5,9 +5,9 @@ import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
 import { likeComment as likeCommentAPI } from '@/api/comment'
 import { LikeOutlined, LikeFilled } from '@ant-design/icons'
-
-import ReplyComment from './cpn/reply'
+import ReplyComment from './cpn/replyComment'
 export default memo(function CommentList(props) {
+  const { resourceType } = props
   //获取用户登录状态
   const { isLogin } = useSelector(state => {
     return {
@@ -56,7 +56,7 @@ export default memo(function CommentList(props) {
       return
     }
     let arr = comment
-    getCommentById(arr)
+    getCommentById(arr, commentId)
     //重新渲染组件
     setFlag(!flag)
   }
@@ -70,7 +70,7 @@ export default memo(function CommentList(props) {
           e.liked = !e.liked
           let type = e.liked ? 1 : 0
           e.liked ? e.likedCount++ : e.likedCount--
-          likeCommentAPI(id, commentId, type, 2)
+          likeCommentAPI(id, commentId, type, resourceType)
         }
       })
     }
@@ -83,7 +83,7 @@ export default memo(function CommentList(props) {
     ////根据点赞状态更改点赞数量
     comment.liked ? comment.likedCount++ : comment.likedCount--
     let type = comment.liked ? 1 : 0
-    likeCommentAPI(id, commentId, type, 2)
+    likeCommentAPI(id, commentId, type, resourceType)
   }
   return (
     <div className='comment-container w-1200'>
@@ -101,20 +101,22 @@ export default memo(function CommentList(props) {
             commentId={comment.commentId}
             setComment={setComment}
             comment={comment}
+            resourceType={resourceType}
           />
         ) : null}
-        {comment.children.map(item => {
-          return (
-            <Comment
-              actions={actions(item, false)}
-              author={item.user && item.user.nickname}
-              avatar={item.user && item.user.avatarUrl}
-              content={item.content}
-              datetime={moment(item.time).format('YYYY-MM-DD HH:mm:ss')}
-              key={item.commentId}
-            />
-          )
-        })}
+        {comment.children &&
+          comment.children.map(item => {
+            return (
+              <Comment
+                actions={actions(item, false)}
+                author={item.user && item.user.nickname}
+                avatar={item.user && item.user.avatarUrl}
+                content={item.content}
+                datetime={moment(item.time).format('YYYY-MM-DD HH:mm:ss')}
+                key={item.commentId}
+              />
+            )
+          })}
       </Comment>
     </div>
   )

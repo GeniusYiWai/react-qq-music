@@ -151,6 +151,9 @@ export default memo(function Singer() {
       dispatch(setCollectSingerDispatch())
     }
   }, [isLogin])
+  const handleClick = id => {
+    window.open(`/profile/singer/${id}`)
+  }
   return (
     <div className='singer-container'>
       <div className='singer-bg' style={{ backgroundImage: `url(${BgImage})` }}>
@@ -175,7 +178,10 @@ export default memo(function Singer() {
                       return (
                         <div className='collect-singer-item' key={item.id}>
                           <img src={item.picUrl} alt='' />
-                          <p>{item.name}</p>
+                          <p onClick={() => handleClick(item.id)}>
+                            {item.name}
+                          
+                          </p>
                         </div>
                       )
                     })}

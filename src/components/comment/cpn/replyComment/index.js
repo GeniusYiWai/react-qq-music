@@ -5,8 +5,17 @@ import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
 import './index.less'
 const { TextArea } = Input
+//2代表回复评论
+const commentType = 2
 export default memo(function Reply(props) {
-  const { setShowReplyComment, id, commentId, comment, setComment } = props
+  const {
+    setShowReplyComment,
+    id,
+    commentId,
+    comment,
+    setComment,
+    resourceType
+  } = props
   //获取用户登录状态
   const { isLogin } = useSelector(state => {
     return {
@@ -20,28 +29,10 @@ export default memo(function Reply(props) {
       dispatch(showLoginBoxDispatch(true))
       return
     }
-
     if (value && value.trim() !== '') {
-      sendComment(2, 2, id, value, commentId).then(
-        ({
-          data: {
-            comment: {
-              user: { nickname, avatarUrl },
-              commentId,
-              time,
-              content
-            }
-          }
-        }) => {
-          comment.children.push({
-            author: nickname,
-            commentId,
-            content,
-            datetime: time,
-            likedCount: 0,
-            liked: false,
-            avatar: avatarUrl
-          })
+      sendComment(commentType, resourceType, id, value, commentId).then(
+        ({ data: { comment: replyComment } }) => {
+          comment.children.unshift(replyComment)
           setComment(comment)
           setShowReplyComment(false)
         }
@@ -61,7 +52,6 @@ export default memo(function Reply(props) {
       </Form.Item>
       <Form.Item>
         <button
-          htmlType='submit'
           className='reply-btn'
           onClick={() => {
             replyComment()

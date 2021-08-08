@@ -23,6 +23,13 @@ export default memo(function RankDetail(props) {
   const handlePlay = () => {
     playMusic(id, name, ar, dt)
   }
+
+  const handleSingerClick = () => {
+    window.open(`/profile/singer/${ar[0].id}`)
+  }
+  const handleNameClick = () => {
+    window.open(`/musichall/song/detail/${id}`)
+  }
   return (
     <div className={`rank-detail-container ${index % 2 === 0 ? 'zebra' : ''}`}>
       <div>
@@ -30,11 +37,11 @@ export default memo(function RankDetail(props) {
           <LazyLoadImg url={picUrl} width={60} height={60} />
           <PlayImg handleClick={() => handlePlay()}></PlayImg>
         </div>
-        <p>{name}</p>
+        <p onClick={() => handleNameClick()}>{name}</p>
       </div>
 
       <div className='rank-detail-info'>
-        <span>{handleSinger(ar)}</span>
+        <span onClick={() => handleSingerClick()}>{handleSinger(ar)}</span>
         <i>{formatMinuteSecond(dt)}</i>
       </div>
     </div>

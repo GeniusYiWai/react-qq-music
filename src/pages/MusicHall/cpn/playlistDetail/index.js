@@ -2,12 +2,15 @@ import React, { memo, useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { setPlaylistDetailDispatch } from './store/actionCreators'
-import { clipImgSize, toTree } from '@/utils/tools'
+import { toTree } from '@/utils/tools'
 import PlaylistDetailCover from 'components/Playlist/playlistDetailCover'
 import Comment from 'components/Comment'
 import { getPlaylistComment } from '@/api/comment'
-
+import LazyLoadImg from 'components/Common/lazyloadImg'
+import PublishComment from 'components/Comment/cpn/publishComment'
 import './index.less'
+//资源类型 2代表歌单
+const resourceType = 2
 export default memo(function PlaylistDetail() {
   const params = useParams()
   //获取当前的歌单id
@@ -16,7 +19,7 @@ export default memo(function PlaylistDetail() {
   //热门评论
   const [hotComments, setHotComments] = useState([])
   //全部评论
-  const [comments, setComments] = useState([])
+  const [totalComments, setTotalComments] = useState([])
   //评论总数
   const [totalNum, setTotalNum] = useState(null)
   const { playlistDetail, playlistSongs } = useSelector(state => {
@@ -39,10 +42,7 @@ export default memo(function PlaylistDetail() {
 
         //返回的数据结构是一级评论parentid为0 二级评论的parentId为回复的评论的commentId 需要进行格式化
         setHotComments(toTree(hotComments, 0))
-        setComments(toTree(comments, 0))
-
-        //每次进来先滚动到最顶部
-        window.scrollTo(0, 0)
+        setTotalComments(toTree(comments, 0))
       }
     )
   }, [id])
@@ -50,9 +50,10 @@ export default memo(function PlaylistDetail() {
     <div className='pl-detail-container w-1200'>
       <div className='pl-detail-top'>
         <div className='pl-detail-cover'>
-          <img
-            src={`${playlistDetail.coverImgUrl}${clipImgSize(250, 250)}`}
-            alt=''
+          <LazyLoadImg
+            url={playlistDetail.coverImgUrl}
+            width={250}
+            height={250}
           />
         </div>
         <div className='pl-detail-info'>
@@ -79,13 +80,35 @@ export default memo(function PlaylistDetail() {
           return <PlaylistDetailCover song={song} key={song.id} />
         })}
       </div>
+      <PublishComment
+        totalNum={totalNum}
+        id={id}
+        setTotalComments={setTotalComments}
+        totalComments={totalComments}
+        setTotalNum={setTotalNum}
+        resourceType={resourceType}
+      />
       <h3>热门评论</h3>
       {hotComments.map(item => {
-        return <Comment comment={item} id={id} />
+        return (
+          <Comment
+            comment={item}
+            id={id}
+            key={item.time}
+            resourceType={resourceType}
+          />
+        )
       })}
       <h3>{`共${totalNum}条评论`}</h3>
-      {comments.map(item => {
-        return <Comment comment={item} id={id} />
+      {totalComments.map(item => {
+        return (
+          <Comment
+            comment={item}
+            id={id}
+            key={item.time}
+            resourceType={resourceType}
+          />
+        )
       })}
     </div>
   )

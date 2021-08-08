@@ -20,6 +20,9 @@ export default memo(function NewAlbumCover(props) {
   const showAlbumDetail = id => {
     window.open(`/musichall/album/detail/${id}`)
   }
+  const handleClick = () => {
+    window.open(`/profile/singer/${artists[0].id}`)
+  }
   return (
     <div className='album-cover'>
       <div key={id}>
@@ -30,7 +33,9 @@ export default memo(function NewAlbumCover(props) {
         <p className='text-nowrap' onClick={() => showAlbumDetail(id)}>
           {name}
         </p>
-        <p className='singer text-nowrap'>{handleSinger(artists)}</p>
+        <p className='singer text-nowrap' onClick={() => handleClick()}>
+          {handleSinger(artists)}
+        </p>
       </div>
     </div>
   )

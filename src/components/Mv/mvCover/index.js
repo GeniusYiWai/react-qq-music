@@ -6,10 +6,24 @@ import './index.less'
 //mv mv的信息
 export default memo(function MVCover(props) {
   const {
-    mv: { cover, coverUrl, id, title, name, playCount, artistName, vid, imgurl }
+    mv: {
+      cover,
+      coverUrl,
+      id,
+      title,
+      name,
+      playCount,
+      artistName,
+      vid,
+      imgurl,
+      artists
+    }
   } = props
   const handlePlay = () => {
-    window.open(`/musichall/mvdetail/${id || vid}`)
+    window.open(`/musichall/mv/detail/${id || vid}`)
+  }
+  const handleClick = () => {
+    window.open(`/profile/singer/${artists[0].id}`)
   }
   return (
     <div className='mv-cover-container'>
@@ -25,7 +39,9 @@ export default memo(function MVCover(props) {
         <p className='mv-name text-nowrap' onClick={() => handlePlay()}>
           {name || title}
         </p>
-        <p className='mv-artist text-nowrap'>{artistName}</p>
+        <p className='mv-artist text-nowrap' onClick={() => handleClick()}>
+          {artistName}
+        </p>
         <span className='mv-playnum'>{playCount}</span>
       </div>
     </div>

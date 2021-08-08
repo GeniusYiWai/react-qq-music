@@ -80,13 +80,12 @@ export default memo(function CollectList(props) {
         getUserFan()
         break
       case 4:
-        getUserFan()
-        break
         getUserListenSongs()
+        break
       default:
         break
     }
-  }, [currentIndex, getUserCreatePlaylist, getUserFan])
+  }, [currentIndex, getUserCreatePlaylist, getUserFan, getUserListenSongs])
   return (
     <div>
       <div

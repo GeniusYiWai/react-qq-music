@@ -8,6 +8,27 @@ export const getPlaylistComment = (id, limit = 20) => {
     `/comment/playlist?id=${id}&limit=${limit}&timestamp=${timestamp}`
   )
 }
+//获取歌曲评论
+//id 歌曲id
+export const getSongComment = (id, limit = 20) => {
+  return request.get(
+    `/comment/music?id=${id}&limit=${limit}&timestamp=${timestamp}`
+  )
+}
+//获取mv评论
+//id mvid
+export const getMvComment = (id, limit = 20) => {
+  return request.get(
+    `/comment/mv?id=${id}&limit=${limit}&timestamp=${timestamp}`
+  )
+}
+//获取专辑评论
+//id mvid
+export const getAlbumComment = (id, limit = 20) => {
+  return request.get(
+    `/comment/album?id=${id}&limit=${limit}&timestamp=${timestamp}`
+  )
+}
 //评论点赞
 // cid : 评论 id
 // t : 是否点赞 ,1 为点赞 ,0 为取消点赞

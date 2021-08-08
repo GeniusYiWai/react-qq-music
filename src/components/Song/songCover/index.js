@@ -23,6 +23,12 @@ export default memo(function NewSongCover(props) {
   const handlePlay = () => {
     playMusic(id, name, artists, duration)
   }
+  const handleClick = () => {
+    window.open(`/profile/singer/${artists[0].id}`)
+  }
+  const handleSongDetail = () => {
+    window.open(`/musichall/song/detail/${id}`)
+  }
   return (
     <div className='song-container text-nowrap'>
       <div className='img-container'>
@@ -35,8 +41,8 @@ export default memo(function NewSongCover(props) {
       </div>
       <div className='song-info'>
         <div>
-          <p>{name}</p>
-          <p>{handleSinger(artists)}</p>
+          <p onClick={() => handleSongDetail()}>{name}</p>
+          <p onClick={() => handleClick()}>{handleSinger(artists)}</p>
         </div>
         <div className='song-duration'>
           <p>{formatMinuteSecond(duration)}</p>
