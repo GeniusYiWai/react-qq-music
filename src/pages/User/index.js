@@ -10,7 +10,6 @@ import {
   getUserListenSongs as getUserListenSongsAPI
 } from '@/api/profile'
 import LazyLoadImg from 'components/Common/lazyloadImg'
-import { getArea } from '@/utils/area'
 import { WeiboCircleOutlined } from '@ant-design/icons'
 import Empty from 'components/Common/empty'
 import PlaylistCover from 'components/Playlist/playlistCover'
@@ -35,14 +34,11 @@ export default memo(function User() {
   const [userListenSongs, setUserListenSongs] = useState([])
   const [userCreatePlaylists, setUserCreatePlaylists] = useState([])
   const [userCollectPlaylists, setUserCollectPlaylists] = useState([])
-
-  const [area, setArea] = useState({})
   const [weibo, setWeibo] = useState('')
   const getUserInfo = useCallback(async () => {
     try {
       const { data } = await getUserInfoAPI(id)
       setUserInfo(data)
-      setArea(getArea(data.profile.province, data.profile.city))
       setWeibo(getWeibo(data.bindings)[0].url)
     } catch (error) {}
   }, [id])
@@ -93,7 +89,6 @@ export default memo(function User() {
           newArr.push(e)
         }
       })
-
       setUserCreatePlaylists(newArr)
     } catch (error) {}
   }, [id])
@@ -109,8 +104,6 @@ export default memo(function User() {
           newArr.push(e)
         }
       })
-      console.log(newArr)
-
       setUserCollectPlaylists(newArr)
     } catch (error) {}
   }, [id])
@@ -162,12 +155,9 @@ export default memo(function User() {
             </div>
             <div className='user-info-bottom'>
               <p>个人介绍: {userInfo.profile && userInfo.profile.signature}</p>
+
               <p>
-                所在地区: <span>{area.province}-</span>
-                <span>{area.city}</span>
-              </p>
-              <p>
-                社交网络:{' '}
+                社交网络:
                 <WeiboCircleOutlined
                   className='weibo'
                   onClick={() => goToWeibo()}
@@ -182,7 +172,7 @@ export default memo(function User() {
             {userListenSongs.length !== 0 ? (
               <ListenSongs listenSongs={userListenSongs} />
             ) : (
-              <Empty text='这里空空如也' />
+              <Empty text='这里空空如也' showBtn={false} />
             )}
           </div>
           <div className='user-create-playlist-wrapper'>

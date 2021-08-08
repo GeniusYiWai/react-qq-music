@@ -2,7 +2,8 @@ import React, { memo, useEffect, useState, useCallback } from 'react'
 
 import {
   getCollectPlaylist as getCollectPlaylistAPI,
-  getUserFan as getUserFanAPI
+  getUserFan as getUserFanAPI,
+  getUserListenSongs as getUserListenSongsAPI
 } from '@/api/profile'
 import PlaylistCover from 'components/Playlist/playlistCover'
 import SingerCover from 'components/Singer/singerCover'
@@ -10,6 +11,7 @@ import Category from 'components/Common/category'
 import Collect from '../collect'
 import Follow from '../follow'
 import Empty from 'components/Common/empty'
+import ListenSongs from '@/pages/User/cpn/listenSongsCover'
 
 import './index.less'
 const Tabs = [
@@ -24,6 +26,9 @@ const Tabs = [
   },
   {
     categoryName: '粉丝'
+  },
+  {
+    categoryName: '听歌排行'
   }
 ]
 export default memo(function CollectList(props) {
@@ -35,6 +40,7 @@ export default memo(function CollectList(props) {
   const [userCreatePlaylist, setUserCreatePlaylist] = useState([])
   //用户粉丝列表
   const [userFan, setUserFan] = useState([])
+  const [userListenSongs, setUserListenSongs] = useState([])
   //切换当前一级分类
   const switchTabs = useCallback(index => {
     setCurrentIndex(index)
@@ -57,6 +63,14 @@ export default memo(function CollectList(props) {
       setUserFan(followeds)
     })
   }, [userId])
+  const getUserListenSongs = useCallback(async () => {
+    try {
+      const {
+        data: { weekData }
+      } = await getUserListenSongsAPI(userId)
+      setUserListenSongs(weekData)
+    } catch (error) {}
+  }, [userId])
   useEffect(() => {
     switch (currentIndex) {
       case 1:
@@ -65,6 +79,10 @@ export default memo(function CollectList(props) {
       case 3:
         getUserFan()
         break
+      case 4:
+        getUserFan()
+        break
+        getUserListenSongs()
       default:
         break
     }
@@ -105,6 +123,16 @@ export default memo(function CollectList(props) {
             })
           ) : (
             <Empty text='这里空空如也' />
+          )}
+        </div>
+      ) : null}
+
+      {currentIndex === 4 ? (
+        <div className='user-listern-songs-playlist-wrapper'>
+          {userListenSongs.length !== 0 ? (
+            <ListenSongs listenSongs={userListenSongs} />
+          ) : (
+            <Empty text='这里空空如也' showBtn={false} />
           )}
         </div>
       ) : null}

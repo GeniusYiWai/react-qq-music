@@ -3,7 +3,7 @@ import { Empty } from 'antd'
 import empty from '@/assets/img/empty.jpg'
 import './index.less'
 export default memo(function EmptyStatus(props) {
-  let { text } = props
+  let { text, showBtn = true } = props
   text = text ? text : '什么都没有呢'
   return (
     <Empty
@@ -13,9 +13,11 @@ export default memo(function EmptyStatus(props) {
       }}
       description={<span>{text}</span>}
     >
-      <button type='primary' className='btn'>
-        去主页 发现更多精彩！
-      </button>
+      {showBtn ? (
+        <button type='primary' className='btn'>
+          去主页 发现更多精彩！
+        </button>
+      ) : null}
     </Empty>
   )
 })
