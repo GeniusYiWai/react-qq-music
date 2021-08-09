@@ -18,35 +18,40 @@ export default memo(function AlbumDetailCover(props) {
         <p>时长</p>
       </div>
 
-      {song.map(({ name, artists, ar, album, dt, duration, id, al, }, index) => {
-        return (
-          <div
-            className='album-detail-cover'
-            style={{
-              backgroundColor: index % 2 === 0 ? '#f7f7f7' : '#fafafa'
-            }}
-            key={index}
-          >
-            <p
-              className='text-nowrap'
-              onClick={() => {
-                handlePlay(index)
-              }}
-            >
-              <PlayCircleOutlined className='play-album-img' />
-              {name}
-            </p>
-            <p className='text-nowrap'>{handleSinger(ar || artists)}</p>
-            {al ? (
-              <p className='text-nowrap'>{al && al.name}</p>
-            ) : (
-              <p className='text-nowrap'>{album && album.name}</p>
-            )}
+      {song &&
+        song.map(
+          ({ name, artists, ar, album, dt, duration, id, al }, index) => {
+            return (
+              <div
+                className='album-detail-cover'
+                style={{
+                  backgroundColor: index % 2 === 0 ? '#f7f7f7' : '#fafafa'
+                }}
+                key={index}
+              >
+                <p
+                  className='text-nowrap'
+                  onClick={() => {
+                    handlePlay(index)
+                  }}
+                >
+                  <PlayCircleOutlined className='play-album-img' />
+                  {name}
+                </p>
+                <p className='text-nowrap'>{handleSinger(ar || artists)}</p>
+                {al ? (
+                  <p className='text-nowrap'>{al && al.name}</p>
+                ) : (
+                  <p className='text-nowrap'>{album && album.name}</p>
+                )}
 
-            <p className='text-nowrap'>{formatMinuteSecond(dt || duration)}</p>
-          </div>
-        )
-      })}
+                <p className='text-nowrap'>
+                  {formatMinuteSecond(dt || duration)}
+                </p>
+              </div>
+            )
+          }
+        )}
     </div>
   )
 })

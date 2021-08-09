@@ -1,51 +1,65 @@
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useEffect, useState, useCallback, useRef } from 'react'
 import { useParams } from 'react-router'
-import { useDispatch, useSelector } from 'react-redux'
-import { setPlaylistDetailDispatch } from './store/actionCreators'
 import { toTree } from '@/utils/tools'
 import PlaylistDetailCover from 'components/Playlist/playlistDetailCover'
 import Comment from 'components/Comment'
-import { getPlaylistComment } from '@/api/comment'
+import { getPlaylistComment as getPlaylistCommentAPI } from '@/api/comment'
+import { getPlaylistDeatil as getPlaylistDeatilAPI } from '@/api/playlist'
+import { getMusicById } from '@/api/player'
 import LazyLoadImg from 'components/Common/lazyloadImg'
 import PublishComment from 'components/Comment/cpn/publishComment'
+import Actions from 'components/Actions'
+import { ScrollTop } from '@/utils/tools'
 import './index.less'
 //资源类型 2代表歌单
 const resourceType = 2
 export default memo(function PlaylistDetail() {
+  const commentRef = useRef()
   const params = useParams()
   //获取当前的歌单id
   const { id } = params
-  const dispacth = useDispatch()
   //热门评论
   const [hotComments, setHotComments] = useState([])
   //全部评论
   const [totalComments, setTotalComments] = useState([])
   //评论总数
-  const [totalNum, setTotalNum] = useState(null)
-  const { playlistDetail, playlistSongs } = useSelector(state => {
-    return {
-      playlistDetail: state.plDetail.playlistDetail,
-      playlistSongs: state.plDetail.playlistSongs
-    }
-  })
+  const [totalNum, setTotalNum] = useState(0)
+  const [playlistDetail, setPlaylistDetail] = useState({})
+  const [playlistSongs, setPlaylistSongs] = useState([])
+  const [collect, setCollect] = useState(false)
 
-  useEffect(() => {
-    dispacth(setPlaylistDetailDispatch(id))
-    //获取歌单下的评论
-    getPlaylistComment(id).then(
-      ({ data: { comments, hotComments, total } }) => {
-        // comments 总评论
-        // hotComments 热门评论
-        // total 评论总数
-        //设置评论总数
-        setTotalNum(total)
-
-        //返回的数据结构是一级评论parentid为0 二级评论的parentId为回复的评论的commentId 需要进行格式化
-        setHotComments(toTree(hotComments, 0))
-        setTotalComments(toTree(comments, 0))
-      }
-    )
+  const getPlaylistDetail = useCallback(async () => {
+    const {
+      data: { playlist }
+    } = await getPlaylistDeatilAPI(id)
+    setPlaylistDetail(playlist)
+    setCollect(playlist.subscribed)
+    const trackIds = playlist.trackIds.map(item => item.id).join(',')
+    const {
+      data: { songs }
+    } = await getMusicById(trackIds)
+    setPlaylistSongs(songs)
   }, [id])
+  const getPlaylistComment = useCallback(async () => {
+    const {
+      data: { comments, hotComments, total }
+    } = await getPlaylistCommentAPI(id)
+    // comments 总评论
+    // hotComments 热门评论
+    // total 评论总数
+    //设置评论总数
+    setTotalNum(total)
+    //返回的数据结构是一级评论parentid为0 二级评论的parentId为回复的评论的commentId 需要进行格式化
+    setHotComments(toTree(hotComments, 0))
+    setTotalComments(toTree(comments, 0))
+  }, [id])
+  useEffect(() => {
+    getPlaylistDetail()
+    getPlaylistComment()
+  }, [id])
+  const ScrollToComment = useCallback(() => {
+    ScrollTop(commentRef.current.offsetTop, 600)
+  }, [])
   return (
     <div className='pl-detail-container w-1200'>
       <div className='pl-detail-top'>
@@ -57,8 +71,7 @@ export default memo(function PlaylistDetail() {
           />
         </div>
         <div className='pl-detail-info'>
-          <h1>{playlistDetail.name}</h1>
-
+          <h2>{playlistDetail.name}</h2>
           <p>
             作者:{playlistDetail.creator && playlistDetail.creator.nickname}
           </p>
@@ -75,19 +88,30 @@ export default memo(function PlaylistDetail() {
           <p>{playlistDetail.description}</p>
         </div>
       </div>
-      <div className='pl-songs-container'>
-        {playlistSongs.map(song => {
-          return <PlaylistDetailCover song={song} key={song.id} />
-        })}
-      </div>
-      <PublishComment
+      <Actions
         totalNum={totalNum}
+        collect={collect}
+        setCollect={setCollect}
         id={id}
-        setTotalComments={setTotalComments}
-        totalComments={totalComments}
-        setTotalNum={setTotalNum}
         resourceType={resourceType}
+        ScrollToComment={ScrollToComment}
       />
+      <div className='pl-songs-container'>
+        {playlistSongs &&
+          playlistSongs.map(song => {
+            return <PlaylistDetailCover song={song} key={song.id} />
+          })}
+      </div>
+      <div ref={commentRef}>
+        <PublishComment
+          totalNum={totalNum}
+          id={id}
+          setTotalComments={setTotalComments}
+          totalComments={totalComments}
+          setTotalNum={setTotalNum}
+          resourceType={resourceType}
+        />
+      </div>
       <h3>热门评论</h3>
       {hotComments.map(item => {
         return (
