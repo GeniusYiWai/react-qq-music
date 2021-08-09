@@ -28,7 +28,6 @@ export default memo(function Rank() {
     }
   }, shallowEqual)
   const handlePlay = useCallback(() => {
-    return
     playRank(rankDetail.tracks)
   }, [rankDetail])
   //通过排行榜id获取详情
@@ -48,7 +47,7 @@ export default memo(function Rank() {
     //这里不能监听currentIndex的改变取请求排行榜详情 因为 dispatch(setRankById(rankList[currentIndex].id)) 直接执行是会报错的 rankList此时还没有获取到
     dispatch(setAllRank())
   }, [])
-  
+
   return (
     <div className='rank-container'>
       <div className='rank-content w-1200'>

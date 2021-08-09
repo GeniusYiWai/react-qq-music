@@ -16,11 +16,14 @@ import { getSongComment as getSongCommentAPI } from '@/api/comment'
 //资源类型 0代表歌曲
 const resourceType = 0
 export default memo(function SongDetail() {
+  //获取评论区域的ref引用
   const commentRef = useRef()
   const params = useParams()
   //获取当前的歌曲id
   const { id } = params
+  //歌曲详情
   const [songDetail, setSongDetail] = useState({})
+  //歌词
   const [lyric, setLyric] = useState({})
   //热门评论
   const [hotComments, setHotComments] = useState([])
@@ -28,7 +31,6 @@ export default memo(function SongDetail() {
   const [totalComments, setTotalComments] = useState([])
   //评论总数
   const [totalNum, setTotalNum] = useState(0)
-
   //获取歌曲下的评论
   const getSongComment = useCallback(async () => {
     try {
@@ -40,15 +42,16 @@ export default memo(function SongDetail() {
       setTotalComments(toTree(comments, 0))
     } catch (error) {}
   }, [id])
+  //获取歌曲详情
   const getSongDeatil = useCallback(async () => {
     try {
       const {
         data: { songs }
       } = await getSongDeatilAPI(id)
-      console.log(songs[0])
       setSongDetail(songs[0])
     } catch (error) {}
   }, [id])
+  //获取歌词
   const getLyric = useCallback(async () => {
     try {
       const {
@@ -61,6 +64,7 @@ export default memo(function SongDetail() {
       }
     } catch (error) {}
   }, [id])
+  //滚动到评论区域
   const ScrollToComment = useCallback(() => {
     ScrollTop(commentRef.current.offsetTop, 600)
   }, [])

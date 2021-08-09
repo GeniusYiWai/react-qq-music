@@ -14,6 +14,8 @@ import './index.less'
 //资源类型 2代表歌单
 const resourceType = 2
 export default memo(function PlaylistDetail() {
+  //获取评论区域的ref引用
+
   const commentRef = useRef()
   const params = useParams()
   //获取当前的歌单id
@@ -24,10 +26,13 @@ export default memo(function PlaylistDetail() {
   const [totalComments, setTotalComments] = useState([])
   //评论总数
   const [totalNum, setTotalNum] = useState(0)
+  //歌单详情
   const [playlistDetail, setPlaylistDetail] = useState({})
+  //歌单下的歌曲
   const [playlistSongs, setPlaylistSongs] = useState([])
+  //歌单收藏状态
   const [collect, setCollect] = useState(false)
-
+  //获取歌单详情
   const getPlaylistDetail = useCallback(async () => {
     const {
       data: { playlist }
@@ -40,6 +45,8 @@ export default memo(function PlaylistDetail() {
     } = await getMusicById(trackIds)
     setPlaylistSongs(songs)
   }, [id])
+  //获取歌单评论
+
   const getPlaylistComment = useCallback(async () => {
     const {
       data: { comments, hotComments, total }
@@ -57,6 +64,7 @@ export default memo(function PlaylistDetail() {
     getPlaylistDetail()
     getPlaylistComment()
   }, [id])
+  //滚动到评论区域
   const ScrollToComment = useCallback(() => {
     ScrollTop(commentRef.current.offsetTop, 600)
   }, [])

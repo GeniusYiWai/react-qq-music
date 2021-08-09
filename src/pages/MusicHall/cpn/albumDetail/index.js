@@ -15,23 +15,30 @@ import './index.less'
 //资源类型 3代表专辑
 const resourceType = 3
 export default memo(function AlbumDetail() {
+  //获取评论区域的ref引用
   const commentRef = useRef()
+  //从url中获取专辑id
   const params = useParams()
   const { id } = params
   //热门评论
   const [hotComments, setHotComments] = useState([])
   //全部评论
   const [totalComments, setTotalComments] = useState([])
+  //专辑详情
   const [albumDetail, setAlbumDetail] = useState({})
+  //专辑下的歌曲
   const [albumSongs, setAlbumSongs] = useState([])
+  //专辑收藏状态
   const [collect, setCollect] = useState(false)
   //评论总数
   const [totalNum, setTotalNum] = useState(0)
+  //获取专辑详情
   const getAlbumDetail = useCallback(async () => {
     const { data } = await getAlbumDeatilAPI(id)
     setAlbumDetail(data.album)
     setAlbumSongs(data.songs)
   }, [])
+  //获取专辑下的评论
   const getAlbumComment = useCallback(async () => {
     const {
       data: { comments, hotComments, total }
@@ -51,6 +58,7 @@ export default memo(function AlbumDetail() {
     //获取专辑下的评论
     getAlbumComment()
   }, [id])
+  //滚动到评论区域
   const ScrollToComment = useCallback(() => {
     ScrollTop(commentRef.current.offsetTop, 600)
   }, [])

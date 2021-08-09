@@ -18,9 +18,12 @@ import { ScrollTop } from '@/utils/tools'
 //资源类型 1代表mv
 const resourceType = 1
 export default memo(function MvDetail() {
+  //获取评论区域的ref引用
   const commentRef = useRef()
+  //获取mv播放器的ref引用
   const videoRef = useRef()
   const params = useParams()
+  //从url中获取mvid
   const { id } = params
   //热门评论
   const [hotComments, setHotComments] = useState([])
@@ -28,9 +31,13 @@ export default memo(function MvDetail() {
   const [totalComments, setTotalComments] = useState([])
   //评论总数
   const [totalNum, setTotalNum] = useState(0)
+  //mv详情
   const [mvDetail, setMvDetail] = useState({})
+  //mv播放地址
   const [mvUrl, setMvUrl] = useState('')
+  //相似mv
   const [simiMvs, setSimiMvs] = useState([])
+  //mv收藏状态
   const [collect, setCollect] = useState(false)
   //获取mv详情
   const getMvDetail = useCallback(async () => {
@@ -55,6 +62,7 @@ export default memo(function MvDetail() {
     } = await getSimiMvAPI(id)
     setSimiMvs(mvs)
   }, [])
+  //获取mv下的评论
   const getMvComment = useCallback(async () => {
     const {
       data: { comments, hotComments, total }
@@ -68,22 +76,26 @@ export default memo(function MvDetail() {
     setHotComments(toTree(hotComments, 0))
     setTotalComments(toTree(comments, 0))
   }, [id])
+  //滚动到评论区域
+
   const ScrollToComment = useCallback(() => {
     ScrollTop(commentRef.current.offsetTop, 600)
   }, [])
+  //滚动到顶部
   const ScrollToTop = useCallback(() => {
     ScrollTop(0, 300)
   }, [])
+  //这个方法用来手动控制mv的播放
+  const playVideo = () => {
+    videoRef.current.playVideo()
+  }
   useEffect(() => {
     getMvDetail()
     getSimiMv()
     getMvUrl()
     getMvComment()
   }, [id])
-  //这个方法用来手动控制mv的播放
-  const playVideo = () => {
-    videoRef.current.playVideo()
-  }
+
   return (
     <div className='mv-detail-container w-1200'>
       <MvPlayer mvUrl={mvUrl} ref={videoRef} />
