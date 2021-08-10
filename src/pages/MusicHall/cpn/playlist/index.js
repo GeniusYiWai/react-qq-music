@@ -1,8 +1,10 @@
 import React, { memo, useEffect, useState, useCallback } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { setPlaylistCate, setPlaylistByCate } from './store/actionCreators'
 import './index.less'
 import PlaylistCover from 'components/Playlist/playlistCover'
+import {
+  getAllPlaylistCate as getAllPlaylistCateAPI,
+  getHighQualityByCate as getHighQualityByCateAPI
+} from '@/api/playlist'
 import { Menu } from 'antd'
 const { SubMenu } = Menu
 //歌单分类 写死
@@ -31,8 +33,32 @@ const Category = [
 export default memo(function Playlist() {
   //鼠标悬浮显示分类详情
   const [openKeys, setOpenKeys] = useState([])
+  //所有歌单分类
+  const [playlistCate, setPlaylistCate] = useState([])
+  //歌单详情
+  const [playlist, setPlaylist] = useState([])
   //切换歌单分类
   const [key, setKey] = useState('全部')
+  //获取所有歌单分类
+  const getAllPlaylistCate = async () => {
+    try {
+      const {
+        data: { tags }
+      } = await getAllPlaylistCateAPI()
+
+      setPlaylistCate(tags)
+    } catch (error) {}
+  }
+  //通过歌单分类获取歌单详情
+  const getAllPlaylistByCate = async ({ cate = '全部', limit = 20 }) => {
+    try {
+      const {
+        data: { playlists }
+      } = await getHighQualityByCateAPI(cate, limit)
+      setPlaylist(playlists)
+    } catch (error) {}
+  }
+
   const onOpenChange = keys => {
     const latestOpenKey = keys.find(key => openKeys.indexOf(key) === -1)
     if (Category.indexOf(latestOpenKey) === -1) {
@@ -41,33 +67,24 @@ export default memo(function Playlist() {
       setOpenKeys(latestOpenKey ? [latestOpenKey] : [])
     }
   }
-  const dispatch = useDispatch()
-  //获取playlist store中的歌单分类 和当前选中的歌单详情
-  const { playlistCate, playlist } = useSelector(state => {
-    return {
-      playlistCate: state.playlist.playlistCate,
-      playlist: state.playlist.playlist
-    }
-  })
-  //处理分类点击 查询加载数据
-  const handleMenuClick = useCallback(({ key }) => {
+  //分类点击 重新加载数据
+  const handleMenuClick = ({ key }) => {
     setKey(key)
-  }, [])
+  }
   const getCateByNum = useCallback(
     num => {
       return playlistCate.filter(item => item.category === num)
     },
     [playlistCate]
   )
-  //监听 key值 一旦发生变化就重新加载数据
+  //监听 key值 一旦发生变化就重新加载歌单数据
   useEffect(() => {
-    dispatch(setPlaylistByCate({ cate: key }))
+    getAllPlaylistByCate({ cate: key })
   }, [key])
-  //加载所有歌单分类 只需要在渲染阶段执行一次 所以传入一个空数组
+  //加载所有歌单分类 只需要在渲染阶段执行一次
   useEffect(() => {
-    dispatch(setPlaylistCate())
+    getAllPlaylistCate()
   }, [])
-
   return (
     <div className='playlist-conatiner'>
       <div className='playlist-content w-1200'>

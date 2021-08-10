@@ -1,8 +1,7 @@
 import React, { memo, useEffect, useCallback, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import ConditionQuery from 'components/Common/conditionQuery'
 import MvCover from 'components/Mv/mvCover'
-import { setMv } from './store/actionCreators'
+import { getMv as getMvAPI } from '@/api/mv'
 import './index.less'
 //地区筛选条件
 const Area = [
@@ -73,20 +72,26 @@ const Order = [
     order: '最新'
   }
 ]
-
 export default memo(function Singer() {
+  //mv列表
+  const [mvList, setMvList] = useState([])
+  //获取mv列表
+  const getMv = async ({ area, initial, type }) => {
+    try {
+      const {
+        data: { data }
+      } = await getMvAPI(area, initial, type)
+      setMvList(data)
+    } catch (error) {}
+  }
   //混合查询条件 因为可以多个参数一起查询
   const [combineCondition, setCombineCondition] = useState({
+    //按热度查询
     order: '',
+    //按地区查询
     area: '',
+    //按类型查询
     type: ''
-  })
-  const dispatch = useDispatch()
-  //获取mv store中的 mvList state
-  const { mvList } = useSelector(state => {
-    return {
-      mvList: state.mv.mvList
-    }
   })
   //切换查询条件会重新加载数据
   const switchCondition = useCallback((condition, value) => {
@@ -96,7 +101,7 @@ export default memo(function Singer() {
     }))
   }, [])
   useEffect(() => {
-    dispatch(setMv(combineCondition))
+    getMv(combineCondition)
   }, [combineCondition])
   return (
     <div className='mv-container'>

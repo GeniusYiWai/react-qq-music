@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState, useCallback } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import {
@@ -46,15 +46,15 @@ export default memo(function User() {
   //用户微博
   const [weibo, setWeibo] = useState('')
   //获取用户信息
-  const getUserInfo = useCallback(async () => {
+  const getUserInfo = async () => {
     try {
       const { data } = await getUserInfoAPI(id)
       setUserInfo(data)
       setWeibo(getWeibo(data.bindings)[0].url)
     } catch (error) {}
-  }, [id])
+  }
   //获取用户动态
-  const getUserEvent = useCallback(async () => {
+  const getUserEvent = async () => {
     try {
       const {
         data: { events }
@@ -62,9 +62,9 @@ export default memo(function User() {
 
       setUserEvents(events)
     } catch (error) {}
-  }, [id])
+  }
   //获取用户关注 关注没有返回总数 只能判断返回值的length
-  const getUserFollows = useCallback(async () => {
+  const getUserFollows = async () => {
     try {
       const {
         data: { follow }
@@ -72,27 +72,27 @@ export default memo(function User() {
 
       setUserFollows(follow)
     } catch (error) {}
-  }, [id])
+  }
   //获取用户粉丝总数
-  const getUserFans = useCallback(async () => {
+  const getUserFans = async () => {
     try {
       const {
         data: { size }
       } = await getUserFansAPI(id)
       setUserFans(size)
     } catch (error) {}
-  }, [id])
+  }
   //获取用户最近常听
-  const getUserListenSongs = useCallback(async () => {
+  const getUserListenSongs = async () => {
     try {
       const {
         data: { weekData }
       } = await getUserListenSongsAPI(id)
       setUserListenSongs(weekData)
     } catch (error) {}
-  }, [id])
+  }
   //获取用户创建歌单
-  const getUserCreatePlaylist = useCallback(async () => {
+  const getUserCreatePlaylist = async () => {
     try {
       const {
         data: { playlist }
@@ -106,9 +106,9 @@ export default memo(function User() {
       })
       setUserCreatePlaylists(newArr)
     } catch (error) {}
-  }, [id])
+  }
   //获取用户收藏歌单
-  const getUserCollectPlaylist = useCallback(async () => {
+  const getUserCollectPlaylist = async () => {
     try {
       const {
         data: { playlist }
@@ -122,7 +122,7 @@ export default memo(function User() {
       })
       setUserCollectPlaylists(newArr)
     } catch (error) {}
-  }, [id])
+  }
   useEffect(() => {
     getUserInfo()
     getUserEvent()

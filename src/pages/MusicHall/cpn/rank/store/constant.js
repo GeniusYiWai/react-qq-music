@@ -1,6 +1,0 @@
-//设置所有排行榜分类
-const SET_ALLRANK_REC = 'SET_ALLRANK_REC'
-//设置排行榜详情
-const SET_RANKBYID_REC = 'SET_RANKBYID_REC'
-
-export { SET_ALLRANK_REC,SET_RANKBYID_REC }

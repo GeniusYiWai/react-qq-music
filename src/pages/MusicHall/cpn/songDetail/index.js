@@ -1,18 +1,18 @@
-import React, { memo, useCallback, useEffect, useState, useRef } from 'react'
+import React, { memo, useEffect, useState, useRef } from 'react'
 import { useParams } from 'react-router'
 import { toTree } from '@/utils/tools'
 import Comment from 'components/Comment'
 import PublishComment from 'components/Comment/cpn/publishComment'
 import { getSongDeatil as getSongDeatilAPI } from '@/api/song'
 import { handleSinger } from '@/utils/tools'
-import './index.less'
 import LyricParser from 'lyric-parser'
 import LazyLoadImg from 'components/Common/lazyloadImg'
 import Actions from 'components/Actions'
 import { ScrollTop } from '@/utils/tools'
-
 import { getLyric as getLyricAPI } from '@/api/player'
 import { getSongComment as getSongCommentAPI } from '@/api/comment'
+import './index.less'
+
 //资源类型 0代表歌曲
 const resourceType = 0
 export default memo(function SongDetail() {
@@ -31,8 +31,9 @@ export default memo(function SongDetail() {
   const [totalComments, setTotalComments] = useState([])
   //评论总数
   const [totalNum, setTotalNum] = useState(0)
+  const [collect, setCollect] = useState(0)
   //获取歌曲下的评论
-  const getSongComment = useCallback(async () => {
+  const getSongComment = async () => {
     try {
       const {
         data: { comments, hotComments, total }
@@ -41,18 +42,18 @@ export default memo(function SongDetail() {
       setHotComments(toTree(hotComments, 0))
       setTotalComments(toTree(comments, 0))
     } catch (error) {}
-  }, [id])
+  }
   //获取歌曲详情
-  const getSongDeatil = useCallback(async () => {
+  const getSongDeatil = async () => {
     try {
       const {
         data: { songs }
       } = await getSongDeatilAPI(id)
       setSongDetail(songs[0])
     } catch (error) {}
-  }, [id])
+  }
   //获取歌词
-  const getLyric = useCallback(async () => {
+  const getLyric = async () => {
     try {
       const {
         data: { nolyric, lrc }
@@ -63,11 +64,11 @@ export default memo(function SongDetail() {
         setLyric(new LyricParser(lrc.lyric))
       }
     } catch (error) {}
-  }, [id])
+  }
   //滚动到评论区域
-  const ScrollToComment = useCallback(() => {
+  const ScrollToComment = () => {
     ScrollTop(commentRef.current.offsetTop, 600)
-  }, [])
+  }
   useEffect(() => {
     getSongDeatil()
     getLyric()
@@ -93,8 +94,8 @@ export default memo(function SongDetail() {
         </div>
         <Actions
           totalNum={totalNum}
-          // collect={collect}
-          // setCollect={setCollect}
+          collect={collect}
+          setCollect={setCollect}
           songDetail={songDetail}
           id={id}
           resourceType={resourceType}

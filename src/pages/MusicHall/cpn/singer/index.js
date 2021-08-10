@@ -4,12 +4,11 @@ import BgImage from '@/assets/img/bg_singer.jpg'
 import ConditionQuery from 'components/Common/conditionQuery'
 import SingerCover from 'components/Singer/singerCover'
 import SingerItem from 'components/Singer/singerItem'
-
 import {
-  setSinger,
-  setHotSinger,
-  setCollectSingerDispatch
-} from './store/actionCreators'
+  getSinger as getSingerAPI,
+  getHotSinger as getHotSingerAPI
+} from '@/api/singer'
+import { getCollectSinger as getCollectSingerAPI } from '@/api/profile'
 import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
 import { Carousel } from 'antd'
 import { LeftOutlined, RightOutlined } from '@ant-design/icons'
@@ -93,8 +92,15 @@ const Type = [
 const newCollectSingerArray = []
 const pageSize = 5
 export default memo(function Singer() {
-  const carouselRef = useRef()
   const dispatch = useDispatch()
+  //获取轮播图引用
+  const carouselRef = useRef()
+  //下方热门歌手
+  const [hotSinger, setHotSinger] = useState([])
+  //歌手
+  const [singer, setSinger] = useState([])
+  //用户收藏歌手
+  const [collectSinger, setCollectSinger] = useState([])
   //混合查询条件 因为可以多个参数一起查询
   const [combineCondition, setCombineCondition] = useState({
     //按首字母查询
@@ -104,20 +110,39 @@ export default memo(function Singer() {
     //按类型查询
     type: ''
   })
-  //singer 上面展示的按分类查询的歌手数据
-  //hotSinger 下方展示的热门歌手数据
   //isLogin 用户登录状态
-  const { singer, hotSinger, isLogin, collectSingerList } = useSelector(
-    state => {
-      return {
-        singer: state.singer.singerList,
-        hotSinger: state.singer.hotSingerList,
-        isLogin: state.user.isLogin,
-        collectSingerList: state.singer.collectSingerList
-      }
-    },
-    shallowEqual
-  )
+  const { isLogin } = useSelector(state => {
+    return {
+      isLogin: state.user.isLogin
+    }
+  }, shallowEqual)
+  //获取歌手
+  const getSinger = async ({ area, initial, type }) => {
+    try {
+      const {
+        data: { artists }
+      } = await getSingerAPI(area, initial, type)
+      setSinger(artists.slice(0, 10))
+    } catch (error) {}
+  }
+  //获取下方热门歌手
+  const getHotSinger = async ({ limit, offset }) => {
+    try {
+      const {
+        data: { artists }
+      } = await getHotSingerAPI(limit, offset)
+      setHotSinger(artists)
+    } catch (error) {}
+  }
+  //获取登录后收藏的歌手
+  const getCollectSinger = async () => {
+    try {
+      const {
+        data: { data }
+      } = await getCollectSingerAPI()
+      setCollectSinger(data)
+    } catch (error) {}
+  }
   //切换查询条件 将新的查询条件与之前的进行对比 新的替代旧的
   const switchCondition = useCallback((condition, value) => {
     setCombineCondition(combineCondition => ({
@@ -128,27 +153,29 @@ export default memo(function Singer() {
   //监听combineCondition的改变 一旦切换查询条件 就会重新触发加载数据
   useEffect(() => {
     //第一次加载 会先加载默认的全部数据
-    dispatch(setSinger(combineCondition))
+    getSinger(combineCondition)
     //加载下方的热门歌手
-    dispatch(setHotSinger({}))
+    getHotSinger({})
   }, [combineCondition])
   //这个函数用来获取走马灯展示的数据
   //因为直接遍历关注歌手列表 走马灯一页只能显示一张图片
-  //所以通过创建一个新数组 将原来的歌手列表按5个一组查询排序 这样一个走马灯页面就可以显示5张图片
+  //所以通过创建一个新数组 将原来的歌手列表按5个一组重新排序 这样一个走马灯页面就可以显示5张图片
   const spliceList = useCallback(() => {
-    const totalPage = Math.ceil(collectSingerList.length / pageSize)
+    console.log(collectSinger)
+    const totalPage = Math.ceil(collectSinger.length / pageSize)
     for (let i = 0; i < totalPage; i++) {
-      newCollectSingerArray[i] = collectSingerList.slice(
+      newCollectSingerArray[i] = collectSinger.slice(
         i * pageSize,
         i * pageSize + pageSize
       )
     }
-  }, [collectSingerList])
+  }, [collectSinger])
   spliceList()
+
   //这里监听用户登录状态的变更 如果用户登录了就重新发送请求 加载用户关注的歌手
   useEffect(() => {
     if (isLogin) {
-      dispatch(setCollectSingerDispatch())
+      getCollectSinger()
     }
   }, [isLogin])
   const handleClick = id => {
@@ -180,7 +207,6 @@ export default memo(function Singer() {
                           <img src={item.picUrl} alt='' />
                           <p onClick={() => handleClick(item.id)}>
                             {item.name}
-                          
                           </p>
                         </div>
                       )

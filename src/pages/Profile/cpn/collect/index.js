@@ -1,10 +1,9 @@
-import React, { memo, useEffect, useState, useCallback } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import {
   getCollectSongs as getCollectSongsAPI,
   getCollectPlaylist as getCollectPlaylistAPI,
   getCollectMv as getCollectMvAPI,
-  getCollectAlbum as getCollectAlbumAPI,
-
+  getCollectAlbum as getCollectAlbumAPI
 } from '@/api/profile'
 import { getMusicById } from '@/api/player'
 import PlaylistCover from 'components/Playlist/playlistCover'
@@ -34,9 +33,9 @@ export default memo(function Collect(props) {
   //当前二级分类的索引
   const [currentIndex, setCurrentIndex] = useState(0)
   //切换当前二级分类
-  const switchTabs = useCallback(index => {
+  const switchTabs = index => {
     setCurrentIndex(index)
-  }, [])
+  }
   //用户喜欢的歌曲
   const [likeSongs, setlikeSongs] = useState([])
   //用户喜欢的歌单
@@ -46,16 +45,23 @@ export default memo(function Collect(props) {
   //用户喜欢的mv
   const [likeMvs, setlikeMvs] = useState([])
   //获取用户收藏歌曲
-  const getCollectSongs = useCallback(() => {
-    getCollectSongsAPI(userId).then(({ data: { ids } }) => {
-      getMusicById(ids).then(({ data: { songs } }) => {
-        setlikeSongs(songs)
-      })
-    })
-  }, [userId])
+  const getCollectSongs = async () => {
+    try {
+      const {
+        data: { ids }
+      } = await getCollectSongsAPI(userId)
+      const {
+        data: { songs }
+      } = await getMusicById(ids)
+      setlikeSongs(songs)
+    } catch (error) {}
+  }
   //获取用户收藏歌单
-  const getCollectPlaylist = useCallback(() => {
-    getCollectPlaylistAPI(userId).then(({ data: { playlist } }) => {
+  const getCollectPlaylist = async () => {
+    try {
+      const {
+        data: { playlist }
+      } = await getCollectPlaylistAPI(userId)
       const newArr = []
       playlist.forEach(e => {
         if (e.creator.userId != userId) {
@@ -63,20 +69,26 @@ export default memo(function Collect(props) {
         }
       })
       setlikePlaylists(newArr)
-    })
-  }, [userId])
+    } catch (error) {}
+  }
   //获取用户收藏专辑
-  const getCollectAlbum = useCallback(() => {
-    getCollectAlbumAPI(userId).then(({ data: { data } }) => {
+  const getCollectAlbum = async () => {
+    try {
+      const {
+        data: { data }
+      } = await getCollectAlbumAPI(userId)
       setlikeAlbums(data)
-    })
-  }, [userId])
+    } catch (error) {}
+  }
   //获取用户收藏mv
-  const getCollectMv = useCallback(() => {
-    getCollectMvAPI().then(({ data: { data } }) => {
+  const getCollectMv = async () => {
+    try {
+      const {
+        data: { data }
+      } = await getCollectMvAPI(userId)
       setlikeMvs(data)
-    })
-  }, [])
+    } catch (error) {}
+  }
   useEffect(() => {
     switch (currentIndex) {
       case 0:
@@ -94,7 +106,7 @@ export default memo(function Collect(props) {
       default:
         break
     }
-  }, [currentIndex, getCollectSongs, getCollectPlaylist, getCollectMv, getCollectAlbum])
+  }, [currentIndex])
   return (
     <div>
       <Category

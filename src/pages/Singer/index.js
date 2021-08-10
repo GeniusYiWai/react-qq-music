@@ -1,6 +1,6 @@
-import React, { memo, useEffect, useState, useCallback } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { getSingerInfo } from '@/api/singer'
+import { getSingerInfo as getSingerInfoAPI } from '@/api/singer'
 import LazyLoadImg from 'components/Common/lazyloadImg'
 import Category from 'components/Common/category'
 import { getSingerSongs, getSingerAlbums, getSingerMvs } from '@/api/singer'
@@ -9,6 +9,7 @@ import MvCover from 'components/Mv/mvCover'
 
 import SongCover from 'components/Album/albumDetailCover'
 import './index.less'
+//一级分类
 const Tabs = [
   {
     categoryName: '单曲'
@@ -21,40 +22,53 @@ const Tabs = [
   }
 ]
 export default memo(function Singer() {
+  //当前分类索引
   const [currentIndex, setCurrentIndex] = useState(0)
+  //歌手信息
   const [singer, setsinger] = useState({})
+  //歌手歌曲
   const [singerSongs, setSingerSongs] = useState([])
+  //歌手专辑
   const [singerAlbums, setSingerAlbums] = useState([])
+  //歌手mv
   const [singerMvs, setSingerMvs] = useState([])
   const params = useParams()
   const { id } = params
   //切换当前新碟上架的分类
-  const switchTabs = useCallback(index => {
+  const switchTabs = index => {
     setCurrentIndex(index)
-  }, [])
-  useEffect(() => {
-    getSingerInfo(id).then(
-      ({
+  }
+  //获取歌手信息
+  const getSingerInfo = async () => {
+    try {
+      const {
         data: {
           data: { artist }
         }
-      }) => {
-        setsinger(artist)
-      }
-    )
-  }, [id])
+      } = await getSingerInfoAPI(id)
+      console.log(artist)
+      setsinger(artist)
+    } catch (error) {}
+  }
   useEffect(() => {
+    getSingerInfo()
+  }, [])
+  useEffect(() => {
+    //判断索引切换 加载相应的数据
     switch (currentIndex) {
+      //加载单曲
       case 0:
         getSingerSongs(id).then(({ data: { songs } }) => {
           setSingerSongs(songs)
         })
         break
+      //加载专辑
       case 1:
         getSingerAlbums(id).then(({ data: { hotAlbums } }) => {
           setSingerAlbums(hotAlbums)
         })
         break
+      //加载mv
       case 2:
         getSingerMvs(id).then(({ data: { mvs } }) => {
           setSingerMvs(mvs)

@@ -6,6 +6,7 @@ import recLogin from '@/assets/img/rec_login.png'
 import './index.less'
 export default memo(function UnLogin() {
   const dispatch = useDispatch()
+  //展示登录弹出层
   const handleLogin = useCallback(() => {
     dispatch(showLoginBoxDispatch(true))
   }, [])

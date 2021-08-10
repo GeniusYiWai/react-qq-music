@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState, useCallback } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import {
   getCollectSinger as getCollectSingerAPI,
   getUserFollow as getUserFollowAPI
@@ -21,25 +21,31 @@ export default memo(function Collect(props) {
   //当前二级分类的索引
   const [currentIndex, setCurrentIndex] = useState(0)
   //切换当前二级分类
-  const switchTabs = useCallback(index => {
+  const switchTabs = index => {
     setCurrentIndex(index)
-  }, [])
+  }
   //用户关注的用户
   const [userFollow, setUserFollow] = useState([])
   //用户关注的歌手
   const [singerFollow, setSingerFollow] = useState([])
   //获取用户关注的用户
-  const getUserFollow = useCallback(() => {
-    getUserFollowAPI(userId).then(({ data: { follow } }) => {
+  const getUserFollow = async () => {
+    try {
+      const {
+        data: { follow }
+      } = await getUserFollowAPI(userId)
       setUserFollow(follow)
-    })
-  }, [userId])
+    } catch (error) {}
+  }
   //获取用户关注的歌手
-  const getCollectSinger = useCallback(() => {
-    getCollectSingerAPI().then(({ data: { data } }) => {
+  const getCollectSinger = async () => {
+    try {
+      const {
+        data: { data }
+      } = await getCollectSingerAPI(userId)
       setSingerFollow(data)
-    })
-  }, [])
+    } catch (error) {}
+  }
 
   useEffect(() => {
     switch (currentIndex) {
@@ -52,7 +58,7 @@ export default memo(function Collect(props) {
       default:
         break
     }
-  }, [currentIndex, getUserFollow, getCollectSinger])
+  }, [currentIndex])
   return (
     <div>
       <Category

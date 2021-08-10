@@ -1,7 +1,5 @@
-import React, { memo, useEffect, useState, useCallback } from 'react'
-import { useDispatch, useSelector, shallowEqual } from 'react-redux'
+import React, { memo, useEffect, useState } from 'react'
 import RankType from 'components/Rank/rankType'
-import { setAllRank, setRankById } from './store/actionCreators'
 import { Button } from 'antd'
 import {
   PlayCircleOutlined,
@@ -11,41 +9,51 @@ import {
   CommentOutlined
 } from '@ant-design/icons'
 import { playRank } from '@/utils/player'
+import {
+  getAllRank as getAllRankAPI,
+  getRankById as getRankByIdAPI
+} from '@/api/rank'
 
 import { handleDate } from '@/utils/tools'
 import RankDetail from 'components/Rank/rankDetail'
 import './index.less'
 export default memo(function Rank() {
-  const dispatch = useDispatch()
   //切换排行榜
   const [currentIndex, setcurrentIndex] = useState(0)
-
-  //从rank store中获取排行榜分类和排行榜详情
-  const { rankList, rankDetail } = useSelector(state => {
-    return {
-      rankList: state.rank.rankList,
-      rankDetail: state.rank.rankDetail
-    }
-  }, shallowEqual)
-  const handlePlay = useCallback(() => {
+  //排行榜列表
+  const [rankList, setRankList] = useState([])
+  //排行榜详情
+  const [rankDetail, setRankDetail] = useState({})
+  //获取排行榜列表
+  const getAllRank = async () => {
+    const {
+      data: { list }
+    } = await getAllRankAPI()
+    setRankList(list)
+    //这里直接在排行榜加载完成之后直接获取第一个排行榜的详情
+    getRankById(list[0].id)
+  }
+  //获取排行榜详情
+  const getRankById = async id => {
+    const {
+      data: { playlist }
+    } = await getRankByIdAPI(id)
+    setRankDetail(playlist)
+  }
+  //处理点击播放
+  const handlePlay = () => {
     playRank(rankDetail.tracks)
-  }, [rankDetail])
+  }
   //通过排行榜id获取详情
-  const getRanlDetailByID = useCallback(
-    index => {
-      //切换当前选中的排行榜
-      setcurrentIndex(index)
-      //手动调用获取排行榜详情的dispatch
-      dispatch(setRankById(rankList[index].id))
-    },
-    [rankList]
-  )
+  const getRanlDetailByID = index => {
+    //切换当前选中的排行榜
+    setcurrentIndex(index)
+    //手动调用获取排行榜详情的dispatch
+    getRankById(rankList[index].id)
+  }
   //第一次加载页面 手动加载第一个排行榜分类下的数据
   useEffect(() => {
-    window.scrollTo(0, 0)
-    //这里进行了处理 在加载完成排行榜之后手动抛出了获取第一个排行榜详情的dispatch 所以只需要执行一次
-    //这里不能监听currentIndex的改变取请求排行榜详情 因为 dispatch(setRankById(rankList[currentIndex].id)) 直接执行是会报错的 rankList此时还没有获取到
-    dispatch(setAllRank())
+    getAllRank()
   }, [])
 
   return (

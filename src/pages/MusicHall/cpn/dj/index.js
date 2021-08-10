@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect, useCallback } from 'react'
+import React, { memo, useState, useEffect } from 'react'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { setDjByCate } from './store/actionCreators'
@@ -54,16 +54,15 @@ export default memo(function Dj() {
   const { djList } = useSelector(state => {
     return { djList: state.dj.djList }
   })
-
   //选择分类 歌单页面到分类下的列表
-  const handleSelectCate = useCallback(index => {
+  const handleSelectCate = index => {
     setcurretnIndex(index)
     //获取点击的分类距离顶部的距离
     const offsetTop =
       document.querySelector('.dj-list' + index) &&
       document.querySelector('.dj-list' + index).offsetTop - 10
     ScrollTop(offsetTop, 600)
-  }, [])
+  }
 
   useEffect(() => {
     //监听页面滚动

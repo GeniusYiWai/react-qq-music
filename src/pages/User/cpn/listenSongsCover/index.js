@@ -2,6 +2,7 @@ import React, { memo } from 'react'
 import { handleSinger } from '@/utils/tools'
 import './index.less'
 export default memo(function ListenSongs(props) {
+  //listenSongs 用户最近听歌
   const { listenSongs } = props
   return (
     <div className='listen-songs-container'>
@@ -16,7 +17,7 @@ export default memo(function ListenSongs(props) {
             <p>{index + 1}.</p>
             <p className='song-info'>
               <span>{item.song.name}</span>
-              <span >  - {handleSinger(item.song.ar)}</span>
+              <span> - {handleSinger(item.song.ar)}</span>
             </p>
           </div>
         )

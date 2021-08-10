@@ -31,7 +31,6 @@ export default memo(function Player() {
       currentPlayMusic: state.player.currentPlayMusic
     }
   })
-
   return (
     <div
       className='player-container'

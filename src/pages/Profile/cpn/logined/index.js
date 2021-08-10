@@ -1,5 +1,4 @@
-import React, { memo, useEffect, useState, useCallback } from 'react'
-
+import React, { memo, useEffect, useState } from 'react'
 import {
   getCollectPlaylist as getCollectPlaylistAPI,
   getUserFan as getUserFanAPI,
@@ -12,7 +11,6 @@ import Collect from '../collect'
 import Follow from '../follow'
 import Empty from 'components/Common/empty'
 import ListenSongs from '@/pages/User/cpn/listenSongsCover'
-
 import './index.less'
 const Tabs = [
   {
@@ -32,6 +30,11 @@ const Tabs = [
   }
 ]
 export default memo(function CollectList(props) {
+  //userid 用户id
+  //backgroundUrl 背景图
+  //avatarUrl 头像
+  //nickname 昵称
+  //signature 个性签名
   const { userId, backgroundUrl, avatarUrl, nickname, signature } =
     props.userInfo
   //当前展示的一级索引
@@ -40,14 +43,18 @@ export default memo(function CollectList(props) {
   const [userCreatePlaylist, setUserCreatePlaylist] = useState([])
   //用户粉丝列表
   const [userFan, setUserFan] = useState([])
+  //用户最近常听
   const [userListenSongs, setUserListenSongs] = useState([])
   //切换当前一级分类
-  const switchTabs = useCallback(index => {
+  const switchTabs = index => {
     setCurrentIndex(index)
-  }, [])
+  }
   //获取用户创建歌单
-  const getUserCreatePlaylist = useCallback(() => {
-    getCollectPlaylistAPI(userId).then(({ data: { playlist } }) => {
+  const getUserCreatePlaylist = async () => {
+    try {
+      const {
+        data: { playlist }
+      } = await getCollectPlaylistAPI(userId)
       const newArr = []
       playlist.forEach(e => {
         if (e.creator.userId == userId) {
@@ -55,37 +62,44 @@ export default memo(function CollectList(props) {
         }
       })
       setUserCreatePlaylist(newArr)
-    })
-  }, [userId])
+    } catch (error) {}
+  }
   //获取用户粉丝列表
-  const getUserFan = useCallback(() => {
-    getUserFanAPI(userId).then(({ data: { followeds } }) => {
+  const getUserFan = async () => {
+    try {
+      const {
+        data: { followeds }
+      } = await getUserFanAPI(userId)
       setUserFan(followeds)
-    })
-  }, [userId])
-  const getUserListenSongs = useCallback(async () => {
+    } catch (error) {}
+  }
+  //获取用户最近常听
+  const getUserListenSongs = async () => {
     try {
       const {
         data: { weekData }
       } = await getUserListenSongsAPI(userId)
       setUserListenSongs(weekData)
     } catch (error) {}
-  }, [userId])
+  }
   useEffect(() => {
     switch (currentIndex) {
+      //1 用户创建的歌单
       case 1:
         getUserCreatePlaylist()
         break
+      //用户的粉丝
       case 3:
         getUserFan()
         break
+      //用户最近常听
       case 4:
         getUserListenSongs()
         break
       default:
         break
     }
-  }, [currentIndex, getUserCreatePlaylist, getUserFan, getUserListenSongs])
+  }, [currentIndex])
   return (
     <div>
       <div
