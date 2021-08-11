@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useEffect, useState, useCallback } from 'react'
 import {
   getCollectSinger as getCollectSingerAPI,
   getUserFollow as getUserFollowAPI
@@ -21,9 +21,9 @@ export default memo(function Collect(props) {
   //当前二级分类的索引
   const [currentIndex, setCurrentIndex] = useState(0)
   //切换当前二级分类
-  const switchTabs = index => {
+  const switchTabs = useCallback(index => {
     setCurrentIndex(index)
-  }
+  }, [])
   //用户关注的用户
   const [userFollow, setUserFollow] = useState([])
   //用户关注的歌手

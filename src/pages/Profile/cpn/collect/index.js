@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useEffect, useState, useCallback } from 'react'
 import {
   getCollectSongs as getCollectSongsAPI,
   getCollectPlaylist as getCollectPlaylistAPI,
@@ -33,9 +33,9 @@ export default memo(function Collect(props) {
   //当前二级分类的索引
   const [currentIndex, setCurrentIndex] = useState(0)
   //切换当前二级分类
-  const switchTabs = index => {
+  const switchTabs = useCallback(index => {
     setCurrentIndex(index)
-  }
+  }, [])
   //用户喜欢的歌曲
   const [likeSongs, setlikeSongs] = useState([])
   //用户喜欢的歌单

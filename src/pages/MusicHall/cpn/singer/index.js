@@ -89,7 +89,6 @@ const Type = [
     type: '3'
   }
 ]
-const newCollectSingerArray = []
 const pageSize = 5
 export default memo(function Singer() {
   const dispatch = useDispatch()
@@ -101,6 +100,7 @@ export default memo(function Singer() {
   const [singer, setSinger] = useState([])
   //用户收藏歌手
   const [collectSinger, setCollectSinger] = useState([])
+  const [newCollectSingerArray, setNewCollectSingerArray] = useState([])
   //混合查询条件 因为可以多个参数一起查询
   const [combineCondition, setCombineCondition] = useState({
     //按首字母查询
@@ -141,6 +141,7 @@ export default memo(function Singer() {
         data: { data }
       } = await getCollectSingerAPI()
       setCollectSinger(data)
+      spliceList(data)
     } catch (error) {}
   }
   //切换查询条件 将新的查询条件与之前的进行对比 新的替代旧的
@@ -160,18 +161,14 @@ export default memo(function Singer() {
   //这个函数用来获取走马灯展示的数据
   //因为直接遍历关注歌手列表 走马灯一页只能显示一张图片
   //所以通过创建一个新数组 将原来的歌手列表按5个一组重新排序 这样一个走马灯页面就可以显示5张图片
-  const spliceList = useCallback(() => {
-    console.log(collectSinger)
-    const totalPage = Math.ceil(collectSinger.length / pageSize)
+  const spliceList = data => {
+    const arr = []
+    const totalPage = Math.ceil(data.length / pageSize)
     for (let i = 0; i < totalPage; i++) {
-      newCollectSingerArray[i] = collectSinger.slice(
-        i * pageSize,
-        i * pageSize + pageSize
-      )
+      arr[i] = data.slice(i * pageSize, i * pageSize + pageSize)
     }
-  }, [collectSinger])
-  spliceList()
-
+    setNewCollectSingerArray(arr)
+  }
   //这里监听用户登录状态的变更 如果用户登录了就重新发送请求 加载用户关注的歌手
   useEffect(() => {
     if (isLogin) {

@@ -1,11 +1,10 @@
 import React, { memo, useEffect, useState, useCallback } from 'react'
-import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import BigTitle from 'components/Home/bigTitle'
 import MVCover from 'components/Mv/mvCover'
 import Category from 'components/Common/category'
 import SwitchPage from 'components/Home/switchPage'
 import DotsContainer from 'components/Home/dotsContainer'
-import { setNewMVRec } from '../store/actionCreators'
+import { getRecommendMV } from '@/api/home'
 import './index.less'
 //MV选项卡
 const Tabs = [
@@ -18,16 +17,17 @@ const Tabs = [
 //每页展示MV数量
 const PAGESIZE = 10
 export default memo(function MVRec() {
-  //redux hooks
-  //获取dispatch
-  const dispatch = useDispatch()
-  //获取home下的state的MVRec
-  let { mv } = useSelector(
-    state => ({
-      mv: state.home.newMVRec
-    }),
-    shallowEqual
-  )
+  //mv数据
+  const [mv, setMv] = useState([])
+  //获取mv数据
+  const getRecMv = async area => {
+    try {
+      const {
+        data: { data }
+      } = await getRecommendMV(area)
+      setMv(data)
+    } catch (error) {}
+  }
   //当前mv分类的索引 默认是第一个 对应上方的mv选项卡
   const [currentIndex, setCurrentIndex] = useState(0)
   //当前mv展示数据的页码
@@ -50,9 +50,9 @@ export default memo(function MVRec() {
   )
   //react hooks
   useEffect(() => {
-    //每当MV分类被切换 就会重新抛出dispatch 请求数据
+    //每当MV分类被切换 就会重新请求数据
     //第一次加载页面默认请求第一个分类下的数据
-    dispatch(setNewMVRec(Tabs[currentIndex].area))
+    getRecMv(Tabs[currentIndex].area)
     //手动把页码变成第一页
     setCurrentPage(0)
   }, [currentIndex])

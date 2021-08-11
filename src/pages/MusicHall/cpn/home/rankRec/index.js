@@ -1,30 +1,25 @@
 import React, { memo, useEffect, useState } from 'react'
-import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import BigTitle from 'components/Home/bigTitle'
 import RankCover from 'components/Rank/rankCover'
-
-import { setNewRankRec } from '../store/actionCreators'
-
+import { getRecommendRank } from '@/api/home'
 import './index.less'
-
 export default memo(function RankRec() {
-  //redux hooks
-  //获取dispatch
-  const dispatch = useDispatch()
-  //获取home下的state的rankRec
-  let { rank } = useSelector(
-    state => ({
-      rank: state.home.newRankRec
-    }),
-    shallowEqual
-  )
-  //react hooks
-
+  //排行榜数据
+  const [rank, setRank] = useState([])
+  const getRecRank = async () => {
+    try {
+      const {
+        data: { list }
+      } = await getRecommendRank()
+      //因为后面的排行榜数据都是空的 为了凑够5个排行榜 手动把第一个排行榜给又添加一遍
+      let arr = list.slice(0, 4)
+      arr.push(list[0])
+      setRank(arr)
+    } catch (error) {}
+  }
   useEffect(() => {
-    //调用dispatch 请求排行榜数据 存入home state
-    dispatch(setNewRankRec())
-  }, [dispatch])
-
+    getRecRank()
+  }, [])
   return (
     <div className='rank-container'>
       <BigTitle title='排行榜' />

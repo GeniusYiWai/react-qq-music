@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useEffect, useState,useCallback } from 'react'
 import {
   getCollectPlaylist as getCollectPlaylistAPI,
   getUserFan as getUserFanAPI,
@@ -46,9 +46,9 @@ export default memo(function CollectList(props) {
   //用户最近常听
   const [userListenSongs, setUserListenSongs] = useState([])
   //切换当前一级分类
-  const switchTabs = index => {
+  const switchTabs = useCallback(index => {
     setCurrentIndex(index)
-  }
+  }, [])
   //获取用户创建歌单
   const getUserCreatePlaylist = async () => {
     try {

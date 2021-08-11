@@ -1,11 +1,11 @@
 import React, { memo, useState, useEffect, useCallback } from 'react'
-import { useDispatch, useSelector, shallowEqual } from 'react-redux'
-import { setPlaylistRec } from '../store/actionCreators'
 import PlaylistCover from 'components/Playlist/playlistCover'
 import BigTitle from 'components/Home/bigTitle'
 import DotsContainer from 'components/Home/dotsContainer'
 import Category from 'components/Common/category'
 import SwitchPage from 'components/Home/switchPage'
+import { getRecommendPlaylist } from '@/api/home'
+
 import './index.less'
 //歌单推荐选项卡
 const Tabs = [
@@ -19,14 +19,17 @@ const Tabs = [
 //每页展示歌单数量
 const PAGESIZE = 5
 export default memo(function PlaylistRec() {
-  const dispatch = useDispatch()
-  //获取home下的state的playlistRec数据
-  let { playlist } = useSelector(
-    state => ({
-      playlist: state.home.playlistRec
-    }),
-    shallowEqual
-  )
+  //歌单数据
+  const [playlist, setPlaylist] = useState([])
+  //获取歌单数据
+  const getRecPlaylist = async categoryId => {
+    try {
+      const {
+        data: { playlists }
+      } = await getRecommendPlaylist(categoryId)
+      setPlaylist(playlists)
+    } catch (error) {}
+  }
   //当前歌单分类的索引 默认是第一个 对应上方的歌单推荐选项卡
   const [currentIndex, setCurrentIndex] = useState(0)
   //当前歌单分类展示数据的页码
@@ -48,9 +51,9 @@ export default memo(function PlaylistRec() {
     [playlist]
   )
   useEffect(() => {
-    //每当歌单分类被切换 就会重新抛出dispatch 请求歌单数据
+    //每当歌单分类被切换 就会重新请求歌单数据
     //第一次加载页面默认请求第一个分类下的数据
-    dispatch(setPlaylistRec(Tabs[currentIndex].name))
+    getRecPlaylist(Tabs[currentIndex].name)
     //手动把页码变成第一页
     setCurrentPage(0)
   }, [currentIndex])

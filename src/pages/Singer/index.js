@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useEffect, useState, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import { getSingerInfo as getSingerInfoAPI } from '@/api/singer'
 import LazyLoadImg from 'components/Common/lazyloadImg'
@@ -35,9 +35,9 @@ export default memo(function Singer() {
   const params = useParams()
   const { id } = params
   //切换当前新碟上架的分类
-  const switchTabs = index => {
+  const switchTabs = useCallback(index => {
     setCurrentIndex(index)
-  }
+  }, [])
   //获取歌手信息
   const getSingerInfo = async () => {
     try {
