@@ -9,7 +9,6 @@ import SingerCover from 'components/Singer/singerCover'
 import PlaylistCover from 'components/Playlist/playlistCover'
 import MvCover from 'components/Mv/mvCover'
 import './index.less'
-
 const Types = [
   {
     value: '单曲',
