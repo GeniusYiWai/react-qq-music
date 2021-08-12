@@ -5,6 +5,8 @@ import {
   getAllPlaylistCate as getAllPlaylistCateAPI,
   getHighQualityByCate as getHighQualityByCateAPI
 } from '@/api/playlist'
+import PlaylistSkeleton from 'components/Skeleton/playlistSkeleton'
+
 import { Menu } from 'antd'
 const { SubMenu } = Menu
 //歌单分类 写死
@@ -79,6 +81,7 @@ export default memo(function Playlist() {
   )
   //监听 key值 一旦发生变化就重新加载歌单数据
   useEffect(() => {
+    setPlaylist([])
     getAllPlaylistByCate({ cate: key })
   }, [key])
   //加载所有歌单分类 只需要在渲染阶段执行一次
@@ -110,6 +113,7 @@ export default memo(function Playlist() {
         </div>
 
         <div className='playlist-list'>
+          {playlist.length === 0 ? <PlaylistSkeleton /> : null}
           {playlist.map((item, index) => {
             return <PlaylistCover playlist={item} key={item.id} />
           })}

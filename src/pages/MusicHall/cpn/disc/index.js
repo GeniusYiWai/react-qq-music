@@ -2,6 +2,8 @@ import React, { memo, useState, useEffect, useCallback } from 'react'
 import NewAlbumCover from 'components/Album/newAlbumCover'
 import Category from 'components/Common/category'
 import { getRecommendNewAlbum } from '@/api/home'
+import MVSkeleton from 'components/Skeleton/mvSkeleton'
+
 import './index.less'
 //新碟上架选项卡 用于传入到category组件中
 const Tabs = [
@@ -31,6 +33,7 @@ export default memo(function NewAlbumRec() {
     setCurrentIndex(index)
   }, [])
   useEffect(() => {
+    setNewAlbum([])
     //调用dispatch 请求歌单数据 存入home state 第一次加载页面 手动加载第一个分类下的数据
     getRecAlbum(Tabs[currentIndex].area)
   }, [currentIndex])
@@ -42,6 +45,7 @@ export default memo(function NewAlbumRec() {
           switchTabs={switchTabs}
           currentIndex={currentIndex}
         />
+        {newAlbum.length === 0 ? <MVSkeleton /> : null}
         <div className='newalbum-content'>
           {newAlbum.slice(0, PAGESIZE).map((item, index) => {
             return <NewAlbumCover album={item} key={index} />

@@ -38,25 +38,23 @@ export default memo(function PublishComment(props) {
       return
     }
     if (value === '') return
-    publishComment(commentType, resourceType, id, value)
+    publishComments(commentType, resourceType, id, value)
   }
   //发表评论
-  const publishComment = useCallback(
-    async (commentType, resourceType, id, value) => {
-      const {
-        data: { comment }
-      } = await sendComment(commentType, resourceType, id, value)
-      //找了半天才发现为什么发表的评论不能添加到评论列表中 原来是因为这里返回的结果里没有parentCommentId 需要自己带上 草
-      //适当添加到所有评论的最顶部
-      totalComments.unshift({ ...comment, parentCommentId: 0 })
-      setValue('')
-      //修改所有评论数据
-      setTotalComments(totalComments)
-      //修改评论总数
-      setTotalNum(totalNum + 1)
-    },
-    []
-  )
+  const publishComments = async (commentType, resourceType, id, value) => {
+    const {
+      data: { comment }
+    } = await sendComment(commentType, resourceType, id, value)
+    //找了半天才发现为什么发表的评论不能添加到评论列表中 原来是因为这里返回的结果里没有parentCommentId 需要自己带上 草
+    //适当添加到所有评论的最顶部
+    totalComments.unshift({ ...comment, parentCommentId: 0 })
+    setValue('')
+    //修改所有评论数据
+    setTotalComments(totalComments)
+    //修改评论总数
+    setTotalNum(totalNum + 1)
+  }
+
   return (
     <div className='comment-box'>
       <p>

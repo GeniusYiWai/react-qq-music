@@ -109,7 +109,12 @@ export default memo(function SearchInput() {
     getHotKeywords().then(({ data: { data } }) => {
       setHotKeywords(data.slice(0, 5))
     })
+    //点击window 隐藏全部
+    window.addEventListener('click', () => {
+      hideAll()
+    })
   }, [])
+
   return (
     <div className='search-container' ref={searchBoxRef}>
       <Search
@@ -117,6 +122,10 @@ export default memo(function SearchInput() {
         allowClear
         onFocus={e => {
           handleFocus(e.target.value)
+        }}
+        //阻止事件冒泡
+        onClick={e => {
+          e.stopPropagation()
         }}
         onChange={e => {
           handleChange(e.target.value)

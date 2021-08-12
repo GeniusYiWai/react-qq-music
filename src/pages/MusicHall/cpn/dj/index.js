@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setDjByCate } from './store/actionCreators'
 import DjCover from 'components/Dj/djCover'
 import { ScrollTop, getScrollTop } from '@/utils/tools'
+import DjSkeleton from 'components/Skeleton/djSkeleton'
+
 import './index.less'
 //dj的所有分类 写死
 //name 是展示的分类名称
@@ -114,6 +116,7 @@ export default memo(function Dj() {
         </ul>
       </div>
       <div className='right'>
+        {djList.length === 0 ? <DjSkeleton /> : null}
         {djList.map((item, index) => {
           return (
             <div className={`dj-list dj-list${index}`} key={index}>

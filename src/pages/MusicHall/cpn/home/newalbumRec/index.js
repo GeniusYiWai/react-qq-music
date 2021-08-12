@@ -4,6 +4,8 @@ import BigTitle from 'components/Home/bigTitle'
 import DotsContainer from 'components/Home/dotsContainer'
 import Category from 'components/Common/category'
 import SwitchPage from 'components/Home/switchPage'
+import AlbumRecSkeleton from 'components/Skeleton/albumRecSkeleton'
+
 import { getRecommendNewAlbum } from '@/api/home'
 import './index.less'
 //新碟上架选项卡
@@ -48,6 +50,7 @@ export default memo(function NewAlbumRec() {
     [newAlbum]
   )
   useEffect(() => {
+    setNewAlbum([])
     //每当新碟上架分类被切换 就会重新请求数据
     //第一次加载页面默认请求第一个分类下的数据
     getRecAlbum(Tabs[currentIndex].area)
@@ -64,6 +67,7 @@ export default memo(function NewAlbumRec() {
           switchTabs={switchTabs}
           currentIndex={currentIndex}
         />
+        {newAlbum.length === 0 ? <AlbumRecSkeleton limit={10} /> : null}
         <div className='newalbum-content'>
           {newAlbum
             .slice(currentPage * PAGESIZE, currentPage * PAGESIZE + PAGESIZE)

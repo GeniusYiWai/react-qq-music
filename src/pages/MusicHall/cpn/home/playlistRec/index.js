@@ -5,6 +5,7 @@ import DotsContainer from 'components/Home/dotsContainer'
 import Category from 'components/Common/category'
 import SwitchPage from 'components/Home/switchPage'
 import { getRecommendPlaylist } from '@/api/home'
+import PlaylistRecSkeleton from 'components/Skeleton/playlistRecSkeleton'
 
 import './index.less'
 //歌单推荐选项卡
@@ -51,6 +52,7 @@ export default memo(function PlaylistRec() {
     [playlist]
   )
   useEffect(() => {
+    setPlaylist([])
     //每当歌单分类被切换 就会重新请求歌单数据
     //第一次加载页面默认请求第一个分类下的数据
     getRecPlaylist(Tabs[currentIndex].name)
@@ -67,6 +69,7 @@ export default memo(function PlaylistRec() {
           switchTabs={switchTabs}
           currentIndex={currentIndex}
         />
+        {playlist.length === 0 ? <PlaylistRecSkeleton limit={5} /> : null}
         <div className='playlist-content'>
           {playlist
             .slice(currentPage * PAGESIZE, currentPage * PAGESIZE + PAGESIZE)
