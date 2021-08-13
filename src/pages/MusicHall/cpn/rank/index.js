@@ -13,9 +13,9 @@ import {
   getAllRank as getAllRankAPI,
   getRankById as getRankByIdAPI
 } from '@/api/rank'
-
 import { handleDate } from '@/utils/tools'
 import RankDetail from 'components/Rank/rankDetail'
+import RankSkeleton from 'components/Skeleton/rankSkeleton'
 import './index.less'
 export default memo(function Rank() {
   //切换排行榜
@@ -58,6 +58,8 @@ export default memo(function Rank() {
 
   return (
     <div className='rank-container'>
+      {rankList.length === 0 ? <RankSkeleton /> : null}
+
       <div className='rank-content w-1200'>
         <div className='rank-left'>
           {rankList.map((item, index) => {
@@ -78,7 +80,6 @@ export default memo(function Rank() {
             <div className='rank-right-left'>
               <img src={rankDetail.coverImgUrl} alt='' />
             </div>
-
             <div className='rank-right-right'>
               <p className='name'>{rankDetail.name}</p>
               <p className='updateTime'>

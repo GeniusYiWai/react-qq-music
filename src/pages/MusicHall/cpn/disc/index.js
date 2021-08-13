@@ -3,6 +3,7 @@ import NewAlbumCover from 'components/Album/newAlbumCover'
 import Category from 'components/Common/category'
 import { getRecommendNewAlbum } from '@/api/home'
 import MVSkeleton from 'components/Skeleton/mvSkeleton'
+import { Pagination } from 'antd'
 
 import './index.less'
 //新碟上架选项卡 用于传入到category组件中
@@ -12,24 +13,30 @@ const Tabs = [
   { categoryName: '日本', area: 'JP' },
   { categoryName: '韩国', area: 'KR' }
 ]
-//每页展示歌单数量
-const PAGESIZE = 20
+
 export default memo(function NewAlbumRec() {
   //新碟数据
   const [newAlbum, setNewAlbum] = useState([])
+  const [pageSize, setPageSize] = useState(20)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [total, setTotal] = useState(0)
+
   //获取新碟数据
   const getRecAlbum = async area => {
     try {
       const {
         data: { monthData }
       } = await getRecommendNewAlbum(area)
-      setNewAlbum(monthData.slice(0, 20))
+      setNewAlbum(monthData)
+      setTotal(monthData.length)
     } catch (error) {}
   }
   //自定义当前选项卡的索引
   const [currentIndex, setCurrentIndex] = useState(0)
   //切换当前选项卡的索引 一旦切换就会重新加载数据
   const switchTabs = useCallback(index => {
+    setCurrentPage(1)
+
     setCurrentIndex(index)
   }, [])
   useEffect(() => {
@@ -37,6 +44,9 @@ export default memo(function NewAlbumRec() {
     //调用dispatch 请求歌单数据 存入home state 第一次加载页面 手动加载第一个分类下的数据
     getRecAlbum(Tabs[currentIndex].area)
   }, [currentIndex])
+  const handlePageChange = current => {
+    setCurrentPage(current)
+  }
   return (
     <div className='newalbum-container'>
       <div className='w-1200'>
@@ -47,10 +57,21 @@ export default memo(function NewAlbumRec() {
         />
         {newAlbum.length === 0 ? <MVSkeleton /> : null}
         <div className='newalbum-content'>
-          {newAlbum.slice(0, PAGESIZE).map((item, index) => {
-            return <NewAlbumCover album={item} key={index} />
-          })}
+          {newAlbum
+            .slice((currentPage - 1) * pageSize, pageSize * currentPage)
+            .map((item, index) => {
+              return <NewAlbumCover album={item} key={index} />
+            })}
         </div>
+      </div>
+      <div className='pagination'>
+        <Pagination
+          current={currentPage}
+          total={total}
+          pageSize={pageSize}
+          onChange={current => handlePageChange(current)}
+          showSizeChanger={false}
+        />
       </div>
     </div>
   )

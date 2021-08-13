@@ -6,7 +6,7 @@ import {
   getHighQualityByCate as getHighQualityByCateAPI
 } from '@/api/playlist'
 import PlaylistSkeleton from 'components/Skeleton/playlistSkeleton'
-
+import Pagination from 'components/Common/pagination'
 import { Menu } from 'antd'
 const { SubMenu } = Menu
 //歌单分类 写死
@@ -32,6 +32,7 @@ const Category = [
     num: 4
   }
 ]
+
 export default memo(function Playlist() {
   //鼠标悬浮显示分类详情
   const [openKeys, setOpenKeys] = useState([])
@@ -41,38 +42,55 @@ export default memo(function Playlist() {
   const [playlist, setPlaylist] = useState([])
   //切换歌单分类
   const [key, setKey] = useState('全部')
+  //歌单总数
+  const [total, setTotal] = useState(0)
+  //混合查询条件 因为可以多个参数一起查询
+  const [combineCondition, setCombineCondition] = useState({
+    //歌单分类
+    cate: key,
+    //偏移量
+    offset: 0,
+    //每页数据条数
+    limit: 20
+  })
   //获取所有歌单分类
   const getAllPlaylistCate = async () => {
     try {
       const {
-        data: { tags }
+        data: { sub }
       } = await getAllPlaylistCateAPI()
-
-      setPlaylistCate(tags)
+      setPlaylistCate(sub)
     } catch (error) {}
   }
   //通过歌单分类获取歌单详情
-  const getAllPlaylistByCate = async ({ cate = '全部', limit = 20 }) => {
+  const getPlaylistByCate = async ({ cate, limit, offset }) => {
     try {
       const {
-        data: { playlists }
-      } = await getHighQualityByCateAPI(cate, limit)
+        data: { playlists, total }
+      } = await getHighQualityByCateAPI(cate, limit, offset)
+      //设置歌单总数
+      setTotal(total)
       setPlaylist(playlists)
     } catch (error) {}
   }
-
-  const onOpenChange = keys => {
-    const latestOpenKey = keys.find(key => openKeys.indexOf(key) === -1)
-    if (Category.indexOf(latestOpenKey) === -1) {
-      setOpenKeys(keys)
-    } else {
-      setOpenKeys(latestOpenKey ? [latestOpenKey] : [])
-    }
-  }
+  const onOpenChange = useCallback(
+    keys => {
+      const latestOpenKey = keys.find(key => openKeys.indexOf(key) === -1)
+      if (Category.indexOf(latestOpenKey) === -1) {
+        setOpenKeys(keys)
+      } else {
+        setOpenKeys(latestOpenKey ? [latestOpenKey] : [])
+      }
+    },
+    [openKeys]
+  )
   //分类点击 重新加载数据
-  const handleMenuClick = ({ key }) => {
-    setKey(key)
-  }
+  const handleMenuClick = useCallback(({ key }) => {
+    setCombineCondition(combineCondition => ({
+      ...combineCondition,
+      cate: key
+    }))
+  }, [])
   const getCateByNum = useCallback(
     num => {
       return playlistCate.filter(item => item.category === num)
@@ -81,13 +99,13 @@ export default memo(function Playlist() {
   )
   //监听 key值 一旦发生变化就重新加载歌单数据
   useEffect(() => {
-    setPlaylist([])
-    getAllPlaylistByCate({ cate: key })
-  }, [key])
+    getPlaylistByCate({ ...combineCondition })
+  }, [combineCondition])
   //加载所有歌单分类 只需要在渲染阶段执行一次
   useEffect(() => {
     getAllPlaylistCate()
   }, [])
+
   return (
     <div className='playlist-conatiner'>
       <div className='playlist-content w-1200'>
@@ -117,6 +135,7 @@ export default memo(function Playlist() {
           {playlist.map((item, index) => {
             return <PlaylistCover playlist={item} key={item.id} />
           })}
+          <Pagination setCombineCondition={setCombineCondition} total={total} />
         </div>
       </div>
     </div>

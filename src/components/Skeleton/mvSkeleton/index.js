@@ -4,7 +4,7 @@ import './index.less'
 export default memo(function MvSkeleton(props) {
   const { limit = 20 } = props
   return (
-    <div className='skeleton-container'>
+    <div className='mv-skeleton-container'>
       {Array(limit)
         .fill()
         .map((item, index) => {

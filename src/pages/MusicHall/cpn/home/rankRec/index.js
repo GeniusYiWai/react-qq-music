@@ -2,6 +2,8 @@ import React, { memo, useEffect, useState } from 'react'
 import BigTitle from 'components/Home/bigTitle'
 import RankCover from 'components/Rank/rankCover'
 import { getRecommendRank } from '@/api/home'
+import RankRecSkeleton from 'components/Skeleton/rankRecSkeleton'
+
 import './index.less'
 export default memo(function RankRec() {
   //排行榜数据
@@ -23,6 +25,7 @@ export default memo(function RankRec() {
   return (
     <div className='rank-container'>
       <BigTitle title='排行榜' />
+      {rank.length === 0 ? <RankRecSkeleton /> : null}
       <div className='rank-content w-1200'>
         {rank.map((item, index) => {
           return <RankCover rank={item} key={index} index={index} />

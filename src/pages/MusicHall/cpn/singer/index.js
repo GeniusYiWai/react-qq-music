@@ -12,6 +12,9 @@ import { getCollectSinger as getCollectSingerAPI } from '@/api/profile'
 import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
 import { Carousel } from 'antd'
 import { LeftOutlined, RightOutlined } from '@ant-design/icons'
+import LoadMore from 'components/Common/loadMore'
+
+import SingerSkeleton from 'components/Skeleton/singerSkeleton'
 import './index.less'
 //首字母查询
 const Initials = [
@@ -101,6 +104,20 @@ export default memo(function Singer() {
   //用户收藏歌手
   const [collectSinger, setCollectSinger] = useState([])
   const [newCollectSingerArray, setNewCollectSingerArray] = useState([])
+
+  const [limit, setLimit] = useState(50)
+  const [offset, setOffset] = useState(0)
+  const [loading, setLoading] = useState(false)
+  const [hasMore, setHasMore] = useState(true)
+
+  //热门歌手分页加载参数
+  const [hotSingerParams, setHotSingerParams] = useState({
+    //
+    limit,
+    //
+    offset
+  })
+
   //混合查询条件 因为可以多个参数一起查询
   const [combineCondition, setCombineCondition] = useState({
     //按首字母查询
@@ -127,12 +144,25 @@ export default memo(function Singer() {
   }
   //获取下方热门歌手
   const getHotSinger = async ({ limit, offset }) => {
+    //上锁
+    setLoading(true)
+    setHasMore(false)
     try {
       const {
-        data: { artists }
+        data: { artists, more }
       } = await getHotSingerAPI(limit, offset)
-      setHotSinger(artists)
-    } catch (error) {}
+      //设置loading为false
+      setLoading(false)
+      //设置hasMore为后台返回的hasMore字段
+      setHasMore(more)
+      setHotSinger(hotSinger => {
+        return hotSinger.concat(artists)
+      })
+    } catch (error) {
+      //如果请求出错 设置loading为true hasmore为false
+      setLoading(true)
+      setHasMore(false)
+    }
   }
   //获取登录后收藏的歌手
   const getCollectSinger = async () => {
@@ -146,6 +176,7 @@ export default memo(function Singer() {
   }
   //切换查询条件 将新的查询条件与之前的进行对比 新的替代旧的
   const switchCondition = useCallback((condition, value) => {
+    setSinger([])
     setCombineCondition(combineCondition => ({
       ...combineCondition,
       [condition]: value
@@ -155,9 +186,10 @@ export default memo(function Singer() {
   useEffect(() => {
     //第一次加载 会先加载默认的全部数据
     getSinger(combineCondition)
-    //加载下方的热门歌手
-    getHotSinger({})
   }, [combineCondition])
+  useEffect(() => {
+    getHotSinger({ ...hotSingerParams })
+  }, [hotSingerParams])
   //这个函数用来获取走马灯展示的数据
   //因为直接遍历关注歌手列表 走马灯一页只能显示一张图片
   //所以通过创建一个新数组 将原来的歌手列表按5个一组重新排序 这样一个走马灯页面就可以显示5张图片
@@ -253,6 +285,7 @@ export default memo(function Singer() {
         Category={Type}
         switchCondition={switchCondition}
       />
+      {singer.length === 0 ? <SingerSkeleton /> : null}
       <div className='singer-hot-list w-1200'>
         {singer.map(item => {
           return <SingerCover singer={item} key={item.id} />
@@ -263,6 +296,17 @@ export default memo(function Singer() {
           return <SingerItem singer={item} key={index} />
         })}
       </div>
+      {loading ? <h1>111</h1> : null}
+
+      <LoadMore
+        setCombineCondition={setHotSingerParams}
+        loading={loading}
+        hasMore={hasMore}
+        setHasMore={setHasMore}
+        limit={limit}
+        offset={offset}
+        setLoading={setLoading}
+      />
     </div>
   )
 })

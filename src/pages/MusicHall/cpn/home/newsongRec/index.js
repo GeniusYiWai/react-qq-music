@@ -5,7 +5,7 @@ import DotsContainer from 'components/Home/dotsContainer'
 import Category from 'components/Common/category'
 import SwitchPage from 'components/Home/switchPage'
 import { getRecommendNewSong } from '@/api/home'
-
+import SongRecSkeleton from 'components/Skeleton/songRecSkeleton'
 import './index.less'
 //新歌首发选项卡
 const Tabs = [
@@ -34,6 +34,7 @@ export default memo(function NewSongRec() {
   const [currentPage, setCurrentPage] = useState(0)
   //切换当前新歌首发的分类
   const switchTabs = useCallback(index => {
+    setNewSong([])
     setCurrentIndex(index)
   }, [])
   //切换当前新歌首发展示数据的页码
@@ -65,6 +66,8 @@ export default memo(function NewSongRec() {
           switchTabs={switchTabs}
           currentIndex={currentIndex}
         />
+        {newSong.length === 0 ? <SongRecSkeleton /> : null}
+
         <div className='newsong-content'>
           {newSong
             .slice(currentPage * PAGESIZE, currentPage * PAGESIZE + PAGESIZE)

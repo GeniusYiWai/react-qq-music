@@ -1,10 +1,10 @@
 import React, { memo } from 'react'
 import { Skeleton } from 'antd'
 import './index.less'
-export default memo(function AlbumRecSkeleton(props) {
+export default memo(function MvRecSkeleton(props) {
   const { limit = 20 } = props
   return (
-    <div className='album-rec-skeleton-container'>
+    <div className='mv-rec-skeleton-container'>
       {Array(limit)
         .fill()
         .map((item, index) => {

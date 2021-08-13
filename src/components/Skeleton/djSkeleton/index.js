@@ -4,7 +4,7 @@ import './index.less'
 export default memo(function DjSkeleton(props) {
   const { limit = 20 } = props
   return (
-    <div className='skeleton-container'>
+    <div className='dj-skeleton-container'>
       {Array(limit)
         .fill()
         .map((item, index) => {

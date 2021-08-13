@@ -5,6 +5,9 @@ import Category from 'components/Common/category'
 import SwitchPage from 'components/Home/switchPage'
 import DotsContainer from 'components/Home/dotsContainer'
 import { getRecommendMV } from '@/api/home'
+
+import MvRecSkeleton from 'components/Skeleton/mvRecSkeleton'
+
 import './index.less'
 //MV选项卡
 const Tabs = [
@@ -34,6 +37,7 @@ export default memo(function MVRec() {
   const [currentPage, setCurrentPage] = useState(0)
   //切换当前mv的分类
   const switchTabs = useCallback(index => {
+    setMv([])
     setCurrentIndex(index)
   }, [])
   //切换当前推荐mv展示数据的页码
@@ -65,6 +69,8 @@ export default memo(function MVRec() {
         switchTabs={switchTabs}
         currentIndex={currentIndex}
       />
+
+      {mv.length === 0 ? <MvRecSkeleton limit={10} /> : null}
       <div className='mv-content w-1200'>
         {mv
           .slice(PAGESIZE * currentPage, PAGESIZE * currentPage + PAGESIZE)

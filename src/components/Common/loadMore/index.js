@@ -11,7 +11,7 @@ export default memo(function LoadMore(props) {
     offset
   } = props
   const [selfOffset, setSelfOffset] = useState(offset)
-  const fetchData = () => {
+  const fetchData = debounce(() => {
     // 文档内容实际高度（包括超出视窗的溢出部分）
     const scrollHeight = document.documentElement.scrollHeight
     //滚动条滚动距离
@@ -22,9 +22,6 @@ export default memo(function LoadMore(props) {
     if (clientHeight + scrollTop >= scrollHeight) {
       //先判断是否已经在请求数据以及是否还有更多数据 如果都true 才会请求新数据
       if (!loading && hasMore) {
-        //上锁
-        setLoading(true)
-        setHasMore(false)
         setSelfOffset(selfOffset => {
           //新的偏移量等于之前的偏移量加每页数据大小
           let newOffset = selfOffset + limit
@@ -37,7 +34,7 @@ export default memo(function LoadMore(props) {
         })
       }
     }
-  }
+  }, 1000)
   useEffect(() => {
     window.addEventListener('scroll', fetchData)
   }, [])

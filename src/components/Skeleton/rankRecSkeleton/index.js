@@ -1,17 +1,17 @@
 import React, { memo } from 'react'
 import { Skeleton } from 'antd'
 import './index.less'
-export default memo(function AlbumRecSkeleton(props) {
-  const { limit = 20 } = props
+export default memo(function RankSkeleton(props) {
+  const { limit = 5 } = props
   return (
-    <div className='album-rec-skeleton-container'>
+    <div className='rank-rec-skeleton-container'>
       {Array(limit)
         .fill()
         .map((item, index) => {
           return (
             <Skeleton.Avatar
               active={true}
-              style={{ width: '150px', height: '150px' }}
+              style={{ width: '216px', height: '500px' }}
               size={'large'}
               shape={'default'}
               key={index}

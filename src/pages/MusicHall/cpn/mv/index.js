@@ -88,8 +88,6 @@ export default memo(function Singer() {
   //获取mv列表
   const getMv = async combineCondition => {
     try {
-      setLoading(true)
-      setHasMore(false)
       const {
         data: { data, hasMore }
       } = await getMvAPI({ ...combineCondition })
@@ -102,8 +100,9 @@ export default memo(function Singer() {
         return mvList.concat(data)
       })
     } catch (error) {
-      //如果请求出错 设置loading为true
+      //如果请求出错 设置loading为true hasmore为false
       setLoading(true)
+      setHasMore(false)
     }
   }
   //混合查询条件 因为可以多个参数一起查询
@@ -123,7 +122,6 @@ export default memo(function Singer() {
   const switchCondition = useCallback((condition, value) => {
     //切换查询条件之前 先把之前的mv数据清空 防止切换之后的新数据和之前的数据合并
     setMvList([])
-    setLoading(true)
     setCombineCondition(combineCondition => ({
       ...combineCondition,
       [condition]: value
