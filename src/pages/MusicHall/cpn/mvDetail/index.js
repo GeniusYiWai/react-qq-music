@@ -14,6 +14,7 @@ import {
   getSimiMv as getSimiMvAPI
 } from '@/api/mv'
 import Actions from 'components/Actions'
+import Empty from 'components//Common/empty'
 import { ScrollTop } from '@/utils/tools'
 //资源类型 1代表mv
 const resourceType = 1
@@ -126,7 +127,8 @@ export default memo(function MvDetail() {
           setTotalNum={setTotalNum}
           resourceType={resourceType}
         />
-        <h3>热门评论</h3>
+
+        {hotComments.length !== 0 ? <h3>热门评论</h3> : null}
         {hotComments.map(item => {
           return (
             <Comment
@@ -138,6 +140,9 @@ export default memo(function MvDetail() {
           )
         })}
         <h3>{`共${totalNum}条评论`}</h3>
+        {totalComments.length === 0 ? (
+          <Empty text='暂无评论' showBtn={false} />
+        ) : null}
         {totalComments.map(item => {
           return (
             <Comment

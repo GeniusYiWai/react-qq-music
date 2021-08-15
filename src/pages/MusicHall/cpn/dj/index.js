@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setDjByCate } from './store/actionCreators'
 import DjCover from 'components/Dj/djCover'
 import { ScrollTop, getScrollTop } from '@/utils/tools'
-import DiscSkeleton from 'components/Skeleton/discSkeleton'
+import DjSkeleton from 'components/Skeleton/djSkeleton'
 
 import './index.less'
 //dj的所有分类 写死
@@ -65,7 +65,6 @@ export default memo(function Dj() {
       document.querySelector('.dj-list' + index).offsetTop - 10
     ScrollTop(offsetTop, 600)
   }
-
   useEffect(() => {
     //监听页面滚动
     const handleScroll = () => {
@@ -96,6 +95,8 @@ export default memo(function Dj() {
     djCateList.forEach(e => {
       dispatch(setDjByCate(e.id))
     })
+    ScrollTop(0, 600)
+    setcurretnIndex(0)
   }, [])
 
   return (
@@ -116,7 +117,7 @@ export default memo(function Dj() {
         </ul>
       </div>
       <div className='right'>
-        {djList.length === 0 ? <DiscSkeleton /> : null}
+        {djList.length === 0 ? <DjSkeleton /> : null}
         {djList.map((item, index) => {
           return (
             <div className={`dj-list dj-list${index}`} key={index}>

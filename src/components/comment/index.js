@@ -7,6 +7,7 @@ import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
 import { likeComment as likeCommentAPI } from '@/api/comment'
 import { LikeOutlined, LikeFilled } from '@ant-design/icons'
 import ReplyComment from './cpn/replyComment'
+
 export default memo(function CommentList(props) {
   //id 父组件传递的当前评论的资源id
   //resourceType 当前评论的资源类型
@@ -109,6 +110,8 @@ export default memo(function CommentList(props) {
   }
   return (
     <div className='comment-container w-1200'>
+
+    
       <Comment
         actions={actions(comment)}
         author={comment.user && comment.user.nickname}

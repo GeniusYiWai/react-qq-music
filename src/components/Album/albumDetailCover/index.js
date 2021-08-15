@@ -2,12 +2,19 @@ import React, { memo } from 'react'
 import { handleSinger, formatMinuteSecond } from '@/utils/tools'
 import { PlayCircleOutlined } from '@ant-design/icons'
 import { playMusic } from '@/utils/player'
+import { useHistory } from 'react-router-dom'
 import './index.less'
 export default memo(function AlbumDetailCover(props) {
   const { song } = props
   const handlePlay = index => {
     const { id, name, ar, dt, duration } = song[index]
     playMusic(id, name, ar, dt || duration)
+  }
+  const showAlbumDetail = index => {
+    const {
+      al: { id: albumId }
+    } = song[index]
+    window.open(`/musichall/album/detail/${albumId}`)
   }
   return (
     <div>
@@ -40,7 +47,14 @@ export default memo(function AlbumDetailCover(props) {
                 </p>
                 <p className='text-nowrap'>{handleSinger(ar || artists)}</p>
                 {al ? (
-                  <p className='text-nowrap'>{al && al.name}</p>
+                  <p
+                    className='text-nowrap'
+                    onClick={() => {
+                      showAlbumDetail(index)
+                    }}
+                  >
+                    {al && al.name}
+                  </p>
                 ) : (
                   <p className='text-nowrap'>{album && album.name}</p>
                 )}

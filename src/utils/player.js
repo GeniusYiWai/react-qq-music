@@ -4,6 +4,8 @@ import { getItem, setItem, getMusicById } from '@/utils/storage'
 import { CheckCanPlay } from '@/api/player'
 import { getPlaylistDeatil } from '@/api/playlist'
 import { getMusicById as getMusicByIdApi } from '@/api/player'
+import { getAlbumDeatil } from '@/api/album'
+
 //通用新歌封面
 //name 歌曲名称
 //artists 歌曲作者
@@ -43,6 +45,7 @@ export const playMusic = (id, name, artists, duration) => {
     }
   )
 }
+//播放全部歌单
 export const playPlaylist = id => {
   getPlaylistDeatil(id)
     .then(({ data }) => {
@@ -77,7 +80,7 @@ export const playPlaylist = id => {
       message.warning('请登录后尝试!')
     })
 }
-
+//播放全部排行榜
 export const playRank = tracks => {
   //格式化播放列表
   const playlist = tracks.reduce((init, val) => {
@@ -98,4 +101,39 @@ export const playRank = tracks => {
   setItem('currentPlayMusicId', playlist[0].id)
   //跳转到歌曲播放页面
   window.open('/player', 'alwaysRaised=yes')
+}
+//播放全部专辑
+export const playAlbum = id => {
+  getAlbumDeatil(id)
+    .then(({ data }) => {
+      if (data.code === 200) {
+        //获取歌单下的所有歌曲的id
+        const trackIds = data.songs.map(item => item.id).join(',')
+        //将歌曲id放在一起请求
+        getMusicByIdApi(trackIds).then(({ data }) => {
+          //格式化播放列表
+          const playlist = data.songs.reduce((init, val) => {
+            let { id, name, ar: artists, dt: duration } = val
+            artists = handleSinger(val.ar)
+            duration = formatMinuteSecond(val.dt)
+            init.push({
+              id,
+              name,
+              artists,
+              duration
+            })
+            return init
+          }, [])
+          //将播放列表存入缓存
+          setItem('playlist', playlist)
+          //将当前播放的歌曲id存入缓存 默认是播放列表的第一个
+          setItem('currentPlayMusicId', playlist[0].id)
+          //跳转到歌曲播放页面
+          window.open('/player', 'alwaysRaised=yes')
+        })
+      }
+    })
+    .catch(error => {
+      message.warning('请登录后尝试!')
+    })
 }

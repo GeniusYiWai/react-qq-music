@@ -12,9 +12,13 @@ import { getCollectSinger as getCollectSingerAPI } from '@/api/profile'
 import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
 import { Carousel } from 'antd'
 import { LeftOutlined, RightOutlined } from '@ant-design/icons'
-import LoadMore from 'components/Common/loadMore'
-
+import { Spin } from 'antd'
 import SingerSkeleton from 'components/Skeleton/singerSkeleton'
+import Pagination from 'components/Common/pagination'
+import { ScrollTop } from '@/utils/tools'
+
+import InfiniteScroll from 'react-infinite-scroller'
+import Empty from 'components/Common/empty'
 import './index.less'
 //首字母查询
 const Initials = [
@@ -99,34 +103,45 @@ export default memo(function Singer() {
   const carouselRef = useRef()
   //下方热门歌手
   const [hotSinger, setHotSinger] = useState([])
-  //歌手
-  const [singer, setSinger] = useState([])
-  //用户收藏歌手
-  const [collectSinger, setCollectSinger] = useState([])
-  const [newCollectSingerArray, setNewCollectSingerArray] = useState([])
-
+  //下方热门歌手limit
   const [limit, setLimit] = useState(50)
+  //下方热门歌手offset
   const [offset, setOffset] = useState(0)
+  //下方热门歌手是否正在加载新数据
   const [loading, setLoading] = useState(false)
+  //下方热门歌手是否还有更多数据
   const [hasMore, setHasMore] = useState(true)
-
-  //热门歌手分页加载参数
+  //判断是否是第一次加载页面
+  const [flag, setFlag] = useState(true)
+  //热门歌手加载数据需要的参数
   const [hotSingerParams, setHotSingerParams] = useState({
     //
     limit,
     //
     offset
   })
-
-  //混合查询条件 因为可以多个参数一起查询
+  //歌手
+  const [singer, setSinger] = useState([])
+  //歌手是否正在加载新数据
+  const [singerLoading, setSingerLoading] = useState(false)
+  //歌手是否还有更多数据
+  const [singerHasMore, setSingerHasMore] = useState(true)
+  //页码
+  const [currentPage, setCurrentPage] = useState(1)
+  // 歌手加载数据需要的参数
   const [combineCondition, setCombineCondition] = useState({
     //按首字母查询
     initial: '',
     //按地区查询
     area: '',
     //按类型查询
-    type: ''
+    type: '',
+    limit: 10,
+    offset: 0
   })
+  //用户收藏歌手
+  const [collectSinger, setCollectSinger] = useState([])
+  const [newCollectSingerArray, setNewCollectSingerArray] = useState([])
   //isLogin 用户登录状态
   const { isLogin } = useSelector(state => {
     return {
@@ -134,32 +149,34 @@ export default memo(function Singer() {
     }
   }, shallowEqual)
   //获取歌手
-  const getSinger = async ({ area, initial, type }) => {
+  const getSinger = async ({ area, initial, type, limit, offset }) => {
     try {
       const {
-        data: { artists }
-      } = await getSingerAPI(area, initial, type)
-      setSinger(artists.slice(0, 10))
+        data: { artists, more }
+      } = await getSingerAPI(area, initial, type, limit, offset)
+      setSinger(artists)
+      setSingerHasMore(more)
     } catch (error) {}
   }
   //获取下方热门歌手
   const getHotSinger = async ({ limit, offset }) => {
-    //上锁
-    setLoading(true)
-    setHasMore(false)
     try {
+      //上锁
+      setLoading(true)
       const {
         data: { artists, more }
       } = await getHotSingerAPI(limit, offset)
-      //设置loading为false
       setLoading(false)
-      //设置hasMore为后台返回的hasMore字段
       setHasMore(more)
       setHotSinger(hotSinger => {
         return hotSinger.concat(artists)
       })
+      //取反第一次加载页面
+      setFlag(false)
+      //设置偏移量
+      setOffset(offset + limit)
     } catch (error) {
-      //如果请求出错 设置loading为true hasmore为false
+      //如果请求出错 关锁
       setLoading(true)
       setHasMore(false)
     }
@@ -176,10 +193,12 @@ export default memo(function Singer() {
   }
   //切换查询条件 将新的查询条件与之前的进行对比 新的替代旧的
   const switchCondition = useCallback((condition, value) => {
+    setCurrentPage(1)
     setSinger([])
     setCombineCondition(combineCondition => ({
       ...combineCondition,
-      [condition]: value
+      [condition]: value,
+      offset: 0
     }))
   }, [])
   //监听combineCondition的改变 一旦切换查询条件 就会重新触发加载数据
@@ -203,6 +222,7 @@ export default memo(function Singer() {
   }
   //这里监听用户登录状态的变更 如果用户登录了就重新发送请求 加载用户关注的歌手
   useEffect(() => {
+    ScrollTop(0, 600)
     if (isLogin) {
       getCollectSinger()
     }
@@ -210,6 +230,11 @@ export default memo(function Singer() {
   const handleClick = id => {
     window.open(`/profile/singer/${id}`)
   }
+  const loadMore = useCallback(() => {
+    // 如果是第一次加载页面 不执行loadMore
+    if (flag) return
+    getHotSinger({ ...hotSingerParams, offset })
+  }, [flag, hotSingerParams, offset])
   return (
     <div className='singer-container'>
       <div className='singer-bg' style={{ backgroundImage: `url(${BgImage})` }}>
@@ -285,28 +310,39 @@ export default memo(function Singer() {
         Category={Type}
         switchCondition={switchCondition}
       />
-      {singer.length === 0 ? <SingerSkeleton /> : null}
+      {singer.length === 0 && singerHasMore ? <SingerSkeleton /> : null}
+      {!singerHasMore ? <Empty text='什么都没有了' /> : null}
       <div className='singer-hot-list w-1200'>
         {singer.map(item => {
           return <SingerCover singer={item} key={item.id} />
         })}
-      </div>
-      <div className='w-1200 singer-list'>
-        {hotSinger.map((item, index) => {
-          return <SingerItem singer={item} key={index} />
-        })}
-      </div>
-      {loading ? <h1>111</h1> : null}
 
-      <LoadMore
-        setCombineCondition={setHotSingerParams}
-        loading={loading}
-        hasMore={hasMore}
-        setHasMore={setHasMore}
-        limit={limit}
-        offset={offset}
-        setLoading={setLoading}
-      />
+        <Pagination
+          setCombineCondition={setCombineCondition}
+          limit={10}
+          total={10000}
+          showSizeChanger={false}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          showQuickJumper={true}
+          setData={setSinger}
+        />
+      </div>
+      <InfiniteScroll
+        initialLoad={false}
+        pageStart={0}
+        loadMore={loadMore}
+        hasMore={!loading && hasMore}
+        useWindow={true}
+      >
+        <div className='w-1200 singer-list'>
+          {hotSinger.map((item, index) => {
+            return <SingerItem singer={item} key={index} />
+          })}
+        </div>
+        <div className='loading'>{loading ? <Spin size='large' /> : null}</div>
+      </InfiniteScroll>
+      {!hasMore ? <Empty text='已经到底了' /> : null}
     </div>
   )
 })

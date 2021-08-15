@@ -11,7 +11,7 @@ const initState = {
   //是否显示登录弹出层
   showLoginBox: false,
   //当前登录用户的信息
-  userInfo: getItem('userInfo')
+  userInfo: getItem('userInfo') || {}
 }
 function reducer(state = initState, action) {
   switch (action.type) {

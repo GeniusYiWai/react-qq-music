@@ -38,6 +38,7 @@ request.interceptors.response.use(
   // 然后根据返回的状态码进行一些操作，例如登录过期提示，错误提示等等
   // 下面列举几个常见的操作，其他需求可自行扩展
   error => {
+    console.log(error);
     if (error.response.status) {
       switch (error.response.status) {
         // 401: 未登录

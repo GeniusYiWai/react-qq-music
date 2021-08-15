@@ -2,7 +2,7 @@ import React, { memo } from 'react'
 import LazyLoadImg from 'components/Common/lazyloadImg'
 import PlayImg from 'components/Common/playImg'
 import { handleSinger } from '@/utils/tools'
-import { playPlaylist } from '@/utils/player'
+import { playAlbum } from '@/utils/player'
 
 import './index.less'
 //通用专辑封面
@@ -15,7 +15,7 @@ export default memo(function NewAlbumCover(props) {
     album: { id, picUrl, artists, name }
   } = props
   const handlePlay = () => {
-    playPlaylist(id)
+    playAlbum(id)
   }
   const showAlbumDetail = id => {
     window.open(`/musichall/album/detail/${id}`)

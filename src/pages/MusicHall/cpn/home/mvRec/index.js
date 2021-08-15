@@ -5,9 +5,7 @@ import Category from 'components/Common/category'
 import SwitchPage from 'components/Home/switchPage'
 import DotsContainer from 'components/Home/dotsContainer'
 import { getRecommendMV } from '@/api/home'
-
 import MvRecSkeleton from 'components/Skeleton/mvRecSkeleton'
-
 import './index.less'
 //MV选项卡
 const Tabs = [
@@ -77,13 +75,13 @@ export default memo(function MVRec() {
           .map(item => {
             return <MVCover mv={item} key={item.id} />
           })}
-        <DotsContainer
-          length={mv.length}
-          PAGESIZE={PAGESIZE}
-          currentPage={currentPage}
-          switchPage={switchPage}
-        />
       </div>
+      <DotsContainer
+        length={mv.length}
+        PAGESIZE={PAGESIZE}
+        currentPage={currentPage}
+        switchPage={switchPage}
+      />
     </div>
   )
 })

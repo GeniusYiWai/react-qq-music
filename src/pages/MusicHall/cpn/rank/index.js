@@ -16,6 +16,8 @@ import {
 import { handleDate } from '@/utils/tools'
 import RankDetail from 'components/Rank/rankDetail'
 import RankSkeleton from 'components/Skeleton/rankSkeleton'
+import { ScrollTop } from '@/utils/tools'
+
 import './index.less'
 export default memo(function Rank() {
   //切换排行榜
@@ -53,6 +55,7 @@ export default memo(function Rank() {
   }
   //第一次加载页面 手动加载第一个排行榜分类下的数据
   useEffect(() => {
+    ScrollTop(0,600)
     getAllRank()
   }, [])
 

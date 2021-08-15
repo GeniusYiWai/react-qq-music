@@ -3,9 +3,15 @@ import request from '../utils/request'
 //type 性别
 //area 地区
 //initial 姓名首字母
-export const getSinger = (area = '', initial = '', type = '') => {
+export const getSinger = (
+  area = '',
+  initial = '',
+  type = '',
+  limit,
+  offset
+) => {
   return request.get(
-    `/artist/list?type=${type}&area=${area}&initial=${initial}`
+    `/artist/list?type=${type}&area=${area}&initial=${initial}&limit=${limit}&offset=${offset}`
   )
 }
 //获取歌手热门歌手
@@ -26,13 +32,12 @@ export const getSingerSongs = id => {
   return request.get(`/artist/songs?id=${id}`)
 }
 
-//歌手热门歌曲
 
 //歌曲专辑
-export const getSingerAlbums = (id, limit = 30) => {
-  return request.get(`/artist/album?id=${id}&limit=${limit}`)
+export const getSingerAlbums = ({ id, limit, offset }) => {
+  return request.get(`/artist/album?id=${id}&limit=${limit}&offset=${offset}`)
 }
 //歌手mv
-export const getSingerMvs = id => {
-  return request.get(`/artist/mv?id=${id}`)
+export const getSingerMvs = ({ id, limit, offset }) => {
+  return request.get(`/artist/mv?id=${id}&limit=${limit}&offset=${offset}`)
 }

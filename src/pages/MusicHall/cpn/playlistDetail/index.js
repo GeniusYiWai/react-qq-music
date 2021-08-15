@@ -10,6 +10,7 @@ import LazyLoadImg from 'components/Common/lazyloadImg'
 import PublishComment from 'components/Comment/cpn/publishComment'
 import Actions from 'components/Actions'
 import { ScrollTop } from '@/utils/tools'
+import Empty from 'components//Common/empty'
 import './index.less'
 //资源类型 2代表歌单
 const resourceType = 2
@@ -120,7 +121,8 @@ export default memo(function PlaylistDetail() {
           resourceType={resourceType}
         />
       </div>
-      <h3>热门评论</h3>
+
+      {hotComments.length !== 0 ? <h3>热门评论</h3> : null}
       {hotComments.map(item => {
         return (
           <Comment
@@ -132,6 +134,9 @@ export default memo(function PlaylistDetail() {
         )
       })}
       <h3>{`共${totalNum}条评论`}</h3>
+      {totalComments.length === 0 ? (
+        <Empty text='暂无评论' showBtn={false} />
+      ) : null}
       {totalComments.map(item => {
         return (
           <Comment

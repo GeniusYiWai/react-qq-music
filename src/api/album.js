@@ -5,3 +5,4 @@ import request from '../utils/request'
 export const getAlbumDeatil = id => {
   return request.get(`/album/?id=${id}`)
 }
+

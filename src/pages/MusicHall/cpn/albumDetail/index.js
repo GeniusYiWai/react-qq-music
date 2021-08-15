@@ -6,11 +6,11 @@ import { toTree } from '@/utils/tools'
 import Comment from 'components/Comment'
 import PublishComment from 'components/Comment/cpn/publishComment'
 import { getAlbumComment as getAlbumCommentAPI } from '@/api/comment'
-import Empty from 'components/Common/empty'
 import LazyLoadImg from 'components/Common/lazyloadImg'
 import { getAlbumDeatil as getAlbumDeatilAPI } from '@/api/album'
 import Actions from 'components/Actions'
 import { ScrollTop } from '@/utils/tools'
+import Empty from 'components/Common/empty'
 import './index.less'
 //资源类型 3代表专辑
 const resourceType = 3
@@ -104,39 +104,31 @@ export default memo(function AlbumDetail() {
           setTotalNum={setTotalNum}
           resourceType={resourceType}
         />
-        {hotComments.length > 0 ? (
-          <div>
-            <h3>热门评论</h3>
-
-            {hotComments.map(item => {
-              return (
-                <Comment
-                  comment={item}
-                  id={id}
-                  key={item.time}
-                  resourceType={resourceType}
-                />
-              )
-            })}
-          </div>
+        {hotComments.length !== 0 ? <h3>热门评论</h3> : null}
+        {hotComments.map(item => {
+          return (
+            <Comment
+              comment={item}
+              id={id}
+              key={item.time}
+              resourceType={resourceType}
+            />
+          )
+        })}
+        <h3>{`共${totalNum}条评论`}</h3>
+        {totalComments.length === 0 ? (
+          <Empty text='暂无评论' showBtn={false} />
         ) : null}
-        {totalComments.length > 0 ? (
-          <div>
-            <h3>{`共${totalNum}条评论`}</h3>
-            {totalComments.map(item => {
-              return (
-                <Comment
-                  comment={item}
-                  id={id}
-                  key={item.time}
-                  resourceType={resourceType}
-                />
-              )
-            })}
-          </div>
-        ) : (
-          <Empty showBtn={false} text={'还没有人发表评论呢'} />
-        )}
+        {totalComments.map(item => {
+          return (
+            <Comment
+              comment={item}
+              id={id}
+              key={item.time}
+              resourceType={resourceType}
+            />
+          )
+        })}
       </div>
     </div>
   )

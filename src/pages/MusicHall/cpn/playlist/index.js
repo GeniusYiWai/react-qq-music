@@ -44,6 +44,9 @@ export default memo(function Playlist() {
   const [key, setKey] = useState('全部')
   //歌单总数
   const [total, setTotal] = useState(0)
+
+  //页码
+  const [currentPage, setCurrentPage] = useState(1)
   //混合查询条件 因为可以多个参数一起查询
   const [combineCondition, setCombineCondition] = useState({
     //歌单分类
@@ -86,9 +89,12 @@ export default memo(function Playlist() {
   )
   //分类点击 重新加载数据
   const handleMenuClick = useCallback(({ key }) => {
+    setCurrentPage(1)
+    setPlaylist([])
     setCombineCondition(combineCondition => ({
       ...combineCondition,
-      cate: key
+      cate: key,
+      offset: 0
     }))
   }, [])
   const getCateByNum = useCallback(
@@ -135,7 +141,14 @@ export default memo(function Playlist() {
           {playlist.map((item, index) => {
             return <PlaylistCover playlist={item} key={item.id} />
           })}
-          <Pagination setCombineCondition={setCombineCondition} total={total} />
+          <Pagination
+            setCombineCondition={setCombineCondition}
+            total={total}
+            limit={20}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            setData={setPlaylist}
+          />
         </div>
       </div>
     </div>
