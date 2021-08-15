@@ -1,6 +1,6 @@
 import React, { memo, Suspense } from 'react'
 import { renderRoutes } from 'react-router-config'
-import { BrowserRouter as Router } from 'react-router-dom'
+import { HashRouter as Router } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import routes from './route'
 import store from './store'

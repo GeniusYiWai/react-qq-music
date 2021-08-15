@@ -1,6 +1,9 @@
 import React, { memo, useEffect, useState, useRef, useCallback } from 'react'
 import { Input } from 'antd'
-import { getHotKeywords, getSearchSuggest } from '@/api/search'
+import {
+  getHotKeywords as getHotKeywordsAPI,
+  getSearchSuggest
+} from '@/api/search'
 import HotKeywordsList from './cpn/hotKeywordsList'
 import SearchSuggestion from './cpn/searchSuggestion'
 import HistorySearch from './cpn/historySearch'
@@ -104,11 +107,19 @@ export default memo(function SearchInput() {
       }
     }
   }, [])
+  const getHotKeywords = async () => {
+    try {
+      const {
+        data: { data }
+      } = await getHotKeywordsAPI()
+      setHotKeywords(data.slice(0, 5))
+    } catch (error) {
+      setHotKeywords([])
+    }
+  }
   useEffect(() => {
     //获取热门搜索关键字
-    getHotKeywords().then(({ data: { data } }) => {
-      setHotKeywords(data.slice(0, 5))
-    })
+    getHotKeywords()
     //点击window 隐藏全部
     window.addEventListener('click', () => {
       hideAll()
