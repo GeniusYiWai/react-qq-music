@@ -32,11 +32,12 @@ export default memo(function Player() {
     }
   })
   useEffect(() => {
+    //监听页面进入 重新从缓存中取当前的播放列表和播放音乐的id
     document.addEventListener('visibilitychange', function () {
       var isHidden = document.hidden
-      console.log(document.visibilityState)
       if (!isHidden) {
         setPlaylist(getItem('playlist'))
+        setCurrentPlayMusicId(getItem('currentPlayMusicId'))
       }
     })
   }, [])

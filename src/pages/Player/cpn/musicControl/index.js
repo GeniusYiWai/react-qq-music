@@ -1,5 +1,5 @@
 import React, { memo, useState, useCallback, useRef, useEffect } from 'react'
-import { Slider, Tooltip } from 'antd'
+import { Slider, Tooltip, Modal } from 'antd'
 import {
   StepBackwardOutlined,
   StepForwardOutlined,
@@ -34,6 +34,19 @@ const mode = [
   }
 ]
 export default memo(function Progress(props) {
+  const [isModalVisible, setIsModalVisible] = useState(true)
+  const showModal = () => {
+    setIsModalVisible(true)
+  }
+
+  const handleOk = () => {
+    setIsModalVisible(false)
+    audioRef.current.play()
+  }
+
+  const handleCancel = () => {
+    setIsModalVisible(false)
+  }
   //获取缓存中的播放列表 用于切换歌曲
   const playlist = getItem('playlist')
   //isPlaying, 音乐播放状态
@@ -200,11 +213,20 @@ export default memo(function Progress(props) {
     dispatch(setCurrentPlayMusic(currentPlayMusicId))
     //请求数据获取当前播放音乐的url地址
     audioRef.current.src = getPlaySong(currentPlayMusicId)
-    audioRef.current.play()
+    // audioRef.current.play()
   }, [currentPlayMusicId])
 
   return (
     <div className='progress-container'>
+      <Modal
+        title='QQMusic提醒您'
+        visible={isModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        cancelText={''}
+      >
+        <p>由于您的浏览器设置，音乐无法自动播放，请手动点击播放。</p>
+      </Modal>
       <audio
         autoPlay
         controls
