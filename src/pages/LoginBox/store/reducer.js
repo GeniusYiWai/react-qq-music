@@ -3,15 +3,14 @@ import {
   SHOW_LOGIN_BOX,
   SET_USER_INFO
 } from './constant'
-import { getItem } from '@/utils/storage'
 
 const initState = {
   //用户是否登录
-  isLogin: getItem('login'),
+  isLogin: false,
   //是否显示登录弹出层
   showLoginBox: false,
   //当前登录用户的信息
-  userInfo: getItem('userInfo') || {}
+  userInfo: {}
 }
 function reducer(state = initState, action) {
   switch (action.type) {

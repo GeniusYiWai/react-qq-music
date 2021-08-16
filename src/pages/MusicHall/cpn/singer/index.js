@@ -228,7 +228,7 @@ export default memo(function Singer() {
     }
   }, [isLogin])
   const handleClick = id => {
-    window.open(`/profile/singer/${id}`)
+    window.open(`/#/profile/singer/${id}`)
   }
   const loadMore = useCallback(() => {
     // 如果是第一次加载页面 不执行loadMore

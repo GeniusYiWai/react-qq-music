@@ -1,10 +1,8 @@
-import React, { memo, useRef, useState } from 'react'
+import React, { memo, useRef, useState, useEffect } from 'react'
 import { message } from 'antd'
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { logout } from '@/api/login'
-import { clearItem } from '@/utils/storage'
 import { userLoginDispatch } from '@/pages/LoginBox/store/actionCreators'
-
 import { CloseOutlined } from '@ant-design/icons'
 import './index.less'
 export default memo(function Logout() {
@@ -23,20 +21,27 @@ export default memo(function Logout() {
       if (data.code === 200) {
         message.success('退出成功')
         dispatch(userLoginDispatch(false))
-        clearItem('login')
-        clearItem('userInfo')
       } else {
         message.error('退出失败')
       }
     })
   }
-
+  const showUserInfo = e => {
+    e.stopPropagation()
+    setShow(true)
+  }
+  useEffect(() => {
+    //点击window 隐藏个人信息
+    window.addEventListener('click', () => {
+      setShow(false)
+    })
+  }, [])
   return (
     <div className='logout-container'>
       <div
         className='user-info-box'
         ref={avatarRef}
-        onClick={() => setShow(true)}
+        onClick={e => showUserInfo(e)}
       >
         <img
           src={userInfo && userInfo.avatarUrl}
@@ -45,14 +50,9 @@ export default memo(function Logout() {
         />
         <p>{userInfo && userInfo.nickname}</p>
       </div>
-
       {show ? (
         <div className='logout-box' ref={loginBox}>
           <div className='logout-box-top'>
-            <CloseOutlined
-              className='close-logout-box'
-              onClick={() => setShow(false)}
-            />
             <img src={userInfo && userInfo.avatarUrl} alt='' />
             <span>{userInfo && userInfo.nickname}</span>
           </div>

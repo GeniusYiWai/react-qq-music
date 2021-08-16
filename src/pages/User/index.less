@@ -1,3 +1,4 @@
+@theme-color: #31c27c;
 .user {
   background-color: #f3f3f3;
 }
@@ -33,6 +34,13 @@
         align-items: center;
         border-bottom: 1px solid #ddd;
         padding-bottom: 15px;
+        p {
+          font-size: 18px;
+        }
+        .lv {
+          color: @theme-color;
+          margin: 0 10px;
+        }
       }
       .user-info-middle {
         display: flex;
@@ -43,6 +51,8 @@
           border-right: none;
         }
         & > div {
+          cursor: pointer;
+
           display: flex;
           flex-direction: column;
           justify-content: center;
@@ -95,6 +105,19 @@
       & > div {
         margin: 10px;
       }
+    }
+  }
+  .follow-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .fan-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    .pagination-container {
+      margin-top: 20px;
     }
   }
 }

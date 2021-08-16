@@ -9,6 +9,7 @@ import { Skeleton, BackTop } from 'antd'
 import LoginBox from './pages/LoginBox'
 import '@/assets/css/common.less'
 export default memo(function App() {
+  // console.log(window.location.hash);
   return (
     <Provider store={store}>
       <Router>
@@ -26,7 +27,7 @@ export default memo(function App() {
           }
         >
           {/* 头部 */}
-          {window.location.pathname === '/player' ? null : <Header />}
+          {window.location.hash === '#/player' ? null : <Header />}
           {renderRoutes(routes)}
           {/* 登录弹出层 需要在全局展示 所以放在这里 */}
           <LoginBox />

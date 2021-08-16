@@ -18,7 +18,7 @@ export default memo(function PlaylistCover(props) {
   }
   //查看歌单详情
   const showPlaylistDetail = id => {
-    window.open(`/musichall/playlist/detail/${id}`)
+    window.open(`/#/musichall/playlist/detail/${id}`)
   }
   return (
     <div className='playlist-cover-wrapper'>

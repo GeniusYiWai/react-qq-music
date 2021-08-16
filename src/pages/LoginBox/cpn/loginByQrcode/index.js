@@ -70,6 +70,7 @@ export default memo(function LoginByQRCode(props) {
   useEffect(() => {
     getQRCode()
     return () => {
+      console.log(111)
       //关闭弹出层 销毁定时器 防止继续发送网络请求
       clearInterval(timer)
     }

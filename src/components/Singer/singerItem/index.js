@@ -4,7 +4,7 @@ import './index.less'
 export default memo(function SingerItem(props) {
   const { name, id } = props.singer
   const handleClick = () => {
-    window.open(`/profile/singer/${id}`)
+    window.open(`/#/profile/singer/${id}`)
   }
   return (
     <div className='singer-item' onClick={() => handleClick()}>

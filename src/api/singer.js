@@ -28,10 +28,9 @@ export const getSingerInfo = id => {
 }
 
 //歌手全部歌曲
-export const getSingerSongs = id => {
-  return request.get(`/artist/songs?id=${id}`)
+export const getSingerSongs = ({ id, limit, offset }) => {
+  return request.get(`/artist/songs?id=${id}&limit=${limit}&offset=${offset}`)
 }
-
 
 //歌曲专辑
 export const getSingerAlbums = ({ id, limit, offset }) => {

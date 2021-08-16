@@ -38,7 +38,7 @@ export const playMusic = (id, name, artists, duration) => {
       }
       setItem('playlist', playlist)
       //跳转到歌曲播放页面
-      window.open('/player', 'alwaysRaised=yes')
+      window.open('/#/player', 'alwaysRaised=yes')
     },
     () => {
       message.warning('抱歉，这首歌曲暂时不能播放。')
@@ -72,7 +72,7 @@ export const playPlaylist = id => {
           //将当前播放的歌曲id存入缓存 默认是播放列表的第一个
           setItem('currentPlayMusicId', playlist[0].id)
           //跳转到歌曲播放页面
-          window.open('/player', 'alwaysRaised=yes')
+          window.open('/#/player', 'alwaysRaised=yes')
         })
       }
     })
@@ -100,7 +100,7 @@ export const playRank = tracks => {
   //将当前播放的歌曲id存入缓存 默认是播放列表的第一个
   setItem('currentPlayMusicId', playlist[0].id)
   //跳转到歌曲播放页面
-  window.open('/player', 'alwaysRaised=yes')
+  window.open('/#/player', 'alwaysRaised=yes')
 }
 //播放全部专辑
 export const playAlbum = id => {
@@ -129,7 +129,7 @@ export const playAlbum = id => {
           //将当前播放的歌曲id存入缓存 默认是播放列表的第一个
           setItem('currentPlayMusicId', playlist[0].id)
           //跳转到歌曲播放页面
-          window.open('/player', 'alwaysRaised=yes')
+          window.open('/#/player', 'alwaysRaised=yes')
         })
       }
     })

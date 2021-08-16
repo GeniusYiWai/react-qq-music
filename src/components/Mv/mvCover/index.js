@@ -21,10 +21,10 @@ export default memo(function MVCover(props) {
     }
   } = props
   const handlePlay = () => {
-    window.open(`/musichall/mv/detail/${id || vid}`)
+    window.open(`/#/musichall/mv/detail/${id || vid}`)
   }
   const handleClick = () => {
-    window.open(`/profile/singer/${artist ? artist.id : artistId}`)
+    window.open(`/#/profile/singer/${artist ? artist.id : artistId}`)
   }
   return (
     <div className='mv-cover-container'>

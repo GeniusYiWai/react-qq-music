@@ -25,10 +25,10 @@ export default memo(function RankDetail(props) {
   }
 
   const handleSingerClick = () => {
-    window.open(`/profile/singer/${ar[0].id}`)
+    window.open(`/#/profile/singer/${ar[0].id}`)
   }
   const handleNameClick = () => {
-    window.open(`/musichall/song/detail/${id}`)
+    window.open(`/#/musichall/song/detail/${id}`)
   }
   return (
     <div className={`rank-detail-container ${index % 2 === 0 ? 'zebra' : ''}`}>

@@ -20,7 +20,6 @@ export default memo(function LoginByEmail(props) {
         if (data.code === 200) {
           message.success('登录成功')
           //更新state中的用户登录状态 以及缓存中的用户登录状态 销毁弹出层
-
           handleLoginSuccess(true)
           setVisible(false)
         } else if (data.code === 502) {

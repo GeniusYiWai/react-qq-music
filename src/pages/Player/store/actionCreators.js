@@ -1,7 +1,8 @@
 import {
   SET_CURRENT_MUSIC,
   SET_MUSIC_STATUS,
-  SET_CURRENT_MUSIC_ID
+  SET_CURRENT_MUSIC_ID,
+  SET_CURRENT_PLAYLIST
 } from './constant'
 import { getMusicById } from '@/api/player'
 
@@ -24,7 +25,15 @@ const setCurrentPlayMusicIdAction = id => {
     }
   }
 }
-
+//设置当前播放音乐列表 action
+const setCurrentPlaylistAction = playlist => {
+  return {
+    type: SET_CURRENT_PLAYLIST,
+    playlist: {
+      currentPlaylist: playlist
+    }
+  }
+}
 //设置当前播放音乐的信息 dispatch
 export const setCurrentPlayMusic = id => {
   return dispatch => {
@@ -48,5 +57,12 @@ export const setCurrentPlayMusicStatus = status => {
 export const setCurrentPlayMusicId = id => {
   return dispatch => {
     dispatch(setCurrentPlayMusicIdAction(id))
+  }
+}
+
+//设置当前播放列表
+export const setCurrentPlaylist = playlist => {
+  return dispatch => {
+    dispatch(setCurrentPlaylistAction(playlist))
   }
 }

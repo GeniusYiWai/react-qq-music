@@ -1,4 +1,4 @@
-import React, { memo, useState, useRef } from 'react'
+import React, { memo, useState, useRef, useEffect } from 'react'
 import './index.less'
 import MusicPlaylist from './cpn/musicPlaylist'
 import MusicControl from './cpn/musicControl'
@@ -31,6 +31,15 @@ export default memo(function Player() {
       currentPlayMusic: state.player.currentPlayMusic
     }
   })
+  useEffect(() => {
+    document.addEventListener('visibilitychange', function () {
+      var isHidden = document.hidden
+      console.log(document.visibilityState)
+      if (!isHidden) {
+        setPlaylist(getItem('playlist'))
+      }
+    })
+  }, [])
   return (
     <div
       className='player-container'

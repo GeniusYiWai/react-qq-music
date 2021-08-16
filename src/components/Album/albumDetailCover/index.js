@@ -2,7 +2,6 @@ import React, { memo } from 'react'
 import { handleSinger, formatMinuteSecond } from '@/utils/tools'
 import { PlayCircleOutlined } from '@ant-design/icons'
 import { playMusic } from '@/utils/player'
-import { useHistory } from 'react-router-dom'
 import './index.less'
 export default memo(function AlbumDetailCover(props) {
   const { song } = props
@@ -14,7 +13,7 @@ export default memo(function AlbumDetailCover(props) {
     const {
       al: { id: albumId }
     } = song[index]
-    window.open(`/musichall/album/detail/${albumId}`)
+    window.open(`/#/musichall/album/detail/${albumId}`)
   }
   return (
     <div>
@@ -24,7 +23,6 @@ export default memo(function AlbumDetailCover(props) {
         <p>专辑</p>
         <p>时长</p>
       </div>
-
       {song &&
         song.map(
           ({ name, artists, ar, album, dt, duration, id, al }, index) => {

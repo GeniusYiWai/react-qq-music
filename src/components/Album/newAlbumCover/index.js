@@ -18,10 +18,10 @@ export default memo(function NewAlbumCover(props) {
     playAlbum(id)
   }
   const showAlbumDetail = id => {
-    window.open(`/musichall/album/detail/${id}`)
+    window.open(`/#/musichall/album/detail/${id}`)
   }
   const handleClick = () => {
-    window.open(`/profile/singer/${artists[0].id}`)
+    window.open(`/#/profile/singer/${artists[0].id}`)
   }
   return (
     <div className='album-cover'>

@@ -1,12 +1,16 @@
-import React, { memo } from 'react'
+import React, { memo, useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
-import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
+import {
+  showLoginBoxDispatch,
+  userLoginDispatch,
+  setUserDispatch
+} from '@/pages/LoginBox/store/actionCreators'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import Search from 'components/Search'
 import Logout from '../logout'
 import logo from '@/assets/img/logo.png'
+import { getLoginStatus } from '@/api/login'
 import './index.less'
-
 //路由表
 const routes = [
   {
@@ -42,6 +46,26 @@ export default memo(function Header() {
       isLogin: state.user.isLogin
     }
   }, shallowEqual)
+  //登录成功 将登录态存入缓存 修改state中的用户登录状态
+  const getUserInfo = () => {
+    getLoginStatus().then(
+      ({
+        data: {
+          data: { profile }
+        }
+      }) => {
+        if (profile) {
+          //更改state中的用户登录状态
+          dispatch(userLoginDispatch(true))
+          //更改state中的用户信息
+          dispatch(setUserDispatch(profile))
+        }
+      }
+    )
+  }
+  useEffect(() => {
+    getUserInfo()
+  }, [])
 
   return (
     <div className='header'>

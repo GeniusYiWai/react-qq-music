@@ -106,7 +106,7 @@ export default memo(function CommentList(props) {
   }
   //跳转到用户详情
   const handleClick = id => {
-    window.open(`/profile/user/${id}`)
+    window.open(`/#/profile/user/${id}`)
   }
   return (
     <div className='comment-container w-1200'>

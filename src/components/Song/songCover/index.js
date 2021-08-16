@@ -24,10 +24,10 @@ export default memo(function NewSongCover(props) {
     playMusic(id, name, artists, duration)
   }
   const handleClick = () => {
-    window.open(`/profile/singer/${artists[0].id}`)
+    window.open(`/#/profile/singer/${artists[0].id}`)
   }
   const handleSongDetail = () => {
-    window.open(`/musichall/song/detail/${id}`)
+    window.open(`/#/musichall/song/detail/${id}`)
   }
   return (
     <div className='song-container text-nowrap'>
