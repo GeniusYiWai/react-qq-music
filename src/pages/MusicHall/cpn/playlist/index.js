@@ -7,7 +7,7 @@ import {
 } from '@/api/playlist'
 import PlaylistSkeleton from 'components/Skeleton/playlistSkeleton'
 import Pagination from 'components/Common/pagination'
-import { Menu } from 'antd'
+import { Menu, message } from 'antd'
 const { SubMenu } = Menu
 //歌单分类 写死
 const Category = [
@@ -62,7 +62,9 @@ export default memo(function Playlist() {
         data: { sub }
       } = await getAllPlaylistCateAPI()
       setPlaylistCate(sub)
-    } catch (error) {}
+    } catch (error) {
+      message.error('获取歌单分类失败!')
+    }
   }
   //通过歌单分类获取歌单详情
   const getPlaylistByCate = async ({ cate, limit, offset }) => {
@@ -73,7 +75,9 @@ export default memo(function Playlist() {
       //设置歌单总数
       setTotal(total)
       setPlaylist(playlists)
-    } catch (error) {}
+    } catch (error) {
+      message.error('获取歌单详情失败!')
+    }
   }
   const onOpenChange = useCallback(
     keys => {

@@ -2,7 +2,7 @@ import React, { memo, useState, useCallback, useEffect } from 'react'
 import { getSingerSongs as getSingerSongsAPI } from '@/api/singer'
 import SongCover from 'components/Album/albumDetailCover'
 import InfiniteScroll from 'react-infinite-scroller'
-import { Spin } from 'antd'
+import { Spin, message } from 'antd'
 export default memo(function SingerSong(props) {
   const { id } = props
   //歌手歌曲
@@ -29,19 +29,25 @@ export default memo(function SingerSong(props) {
     setSongLoading(true)
     try {
       const {
-        data: { songs, more }
+        data: { songs, more, code }
       } = await getSingerSongsAPI({ ...songCombineCondition })
-      //赋值歌曲数据 因为新数据是加到旧数据的后面 所以用concat方法
-      setSingerSongs(singerSongs => {
-        //开锁
-        setSongLoading(false)
-        setSongHasMore(more)
-        //将新数据与旧数据合并
-        return singerSongs.concat(songs)
-      })
-      //设置偏移量
-      setSongOffset(songOffset + songLimit)
-    } catch (error) {}
+      if (code === 200) {
+        //赋值歌曲数据 因为新数据是加到旧数据的后面 所以用concat方法
+        setSingerSongs(singerSongs => {
+          //开锁
+          setSongLoading(false)
+          setSongHasMore(more)
+          //将新数据与旧数据合并
+          return singerSongs.concat(songs)
+        })
+        //设置偏移量
+        setSongOffset(songOffset + songLimit)
+      } else {
+        throw new Error()
+      }
+    } catch (error) {
+      message.error('获取歌手单曲失败!')
+    }
   }
   const songLoadMore = useCallback(() => {
     if (!songHasMore) return

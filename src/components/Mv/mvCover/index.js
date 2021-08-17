@@ -2,6 +2,7 @@ import React, { memo } from 'react'
 import PlayImg from 'components/Common/playImg'
 import LazyLoadImg from 'components/Common/lazyloadImg'
 import './index.less'
+import { valid } from 'semver'
 //通用mv 封面
 //mv mv的信息
 export default memo(function MVCover(props) {
@@ -20,8 +21,15 @@ export default memo(function MVCover(props) {
       artist
     }
   } = props
+
   const handlePlay = () => {
-    window.open(`/#/musichall/mv/detail/${id || vid}`)
+    if (vid && vid.length > 10) {
+      window.open(`/#/musichall/video/detail/${vid}`)
+    } else if (vid && vid.length < 10) {
+      window.open(`/#/musichall/mv/detail/${vid}`)
+    } else {
+      window.open(`/#/musichall/mv/detail/${id}`)
+    }
   }
   const handleClick = () => {
     window.open(`/#/profile/singer/${artist ? artist.id : artistId}`)

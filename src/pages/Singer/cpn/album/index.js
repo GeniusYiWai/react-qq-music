@@ -2,7 +2,7 @@ import React, { memo, useState, useCallback, useEffect } from 'react'
 import { getSingerAlbums as getSingerAlbumsAPI } from '@/api/singer'
 import NewAlbumCover from 'components/Album/newAlbumCover'
 import InfiniteScroll from 'react-infinite-scroller'
-import { Spin } from 'antd'
+import { Spin, message } from 'antd'
 import MVSkeleton from 'components/Skeleton/mvSkeleton'
 export default memo(function SingerAlbum(props) {
   const { id } = props
@@ -30,19 +30,25 @@ export default memo(function SingerAlbum(props) {
     setAlbumLoading(true)
     try {
       const {
-        data: { hotAlbums, more }
+        data: { hotAlbums, more, code }
       } = await getSingerAlbumsAPI({ ...albumCombineCondition })
-      //赋值mv数据 因为新数据是加到旧数据的后面 所以用concat方法
-      setSingerAlbums(singerAlbums => {
-        //开锁
-        setAlbumLoading(false)
-        setAlbumHasMore(more)
-        //将新数据与旧数据合并
-        return singerAlbums.concat(hotAlbums)
-      })
-      //设置偏移量
-      setAlbumOffset(albumOffset + albumLimit)
-    } catch (error) {}
+      if (code === 200) {
+        //赋值mv数据 因为新数据是加到旧数据的后面 所以用concat方法
+        setSingerAlbums(singerAlbums => {
+          //开锁
+          setAlbumLoading(false)
+          setAlbumHasMore(more)
+          //将新数据与旧数据合并
+          return singerAlbums.concat(hotAlbums)
+        })
+        //设置偏移量
+        setAlbumOffset(albumOffset + albumLimit)
+      } else {
+        throw new Error()
+      }
+    } catch (error) {
+      message.error('获取歌手专辑失败!')
+    }
   }
   const albumLoadMore = useCallback(() => {
     if (!albumHasMore) return

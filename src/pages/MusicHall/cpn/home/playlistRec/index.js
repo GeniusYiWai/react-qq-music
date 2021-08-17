@@ -6,7 +6,7 @@ import Category from 'components/Common/category'
 import SwitchPage from 'components/Home/switchPage'
 import { getRecommendPlaylist } from '@/api/home'
 import PlaylistRecSkeleton from 'components/Skeleton/playlistRecSkeleton'
-
+import { message } from 'antd'
 import './index.less'
 //歌单推荐选项卡
 const Tabs = [
@@ -29,7 +29,9 @@ export default memo(function PlaylistRec() {
         data: { playlists }
       } = await getRecommendPlaylist(categoryId)
       setPlaylist(playlists)
-    } catch (error) {}
+    } catch (error) {
+      message.error('获取推荐歌单失败!')
+    }
   }
   //当前歌单分类的索引 默认是第一个 对应上方的歌单推荐选项卡
   const [currentIndex, setCurrentIndex] = useState(0)

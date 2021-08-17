@@ -3,7 +3,7 @@ import BigTitle from 'components/Home/bigTitle'
 import RankCover from 'components/Rank/rankCover'
 import { getRecommendRank } from '@/api/home'
 import RankRecSkeleton from 'components/Skeleton/rankRecSkeleton'
-
+import { message } from 'antd'
 import './index.less'
 export default memo(function RankRec() {
   //排行榜数据
@@ -17,7 +17,9 @@ export default memo(function RankRec() {
       let arr = list.slice(0, 4)
       arr.push(list[0])
       setRank(arr)
-    } catch (error) {}
+    } catch (error) {
+      message.error('获取排行榜失败!')
+    }
   }
   useEffect(() => {
     getRecRank()

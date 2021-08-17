@@ -159,6 +159,7 @@ export const parseParam = params => {
     init[foo[0]] = foo[1]
     return init
   }, {})
+
   return obj
 }
 //arr 要遍历的数组

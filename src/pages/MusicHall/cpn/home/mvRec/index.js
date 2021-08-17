@@ -6,6 +6,7 @@ import SwitchPage from 'components/Home/switchPage'
 import DotsContainer from 'components/Home/dotsContainer'
 import { getRecommendMV } from '@/api/home'
 import MvRecSkeleton from 'components/Skeleton/mvRecSkeleton'
+import { message } from 'antd'
 import './index.less'
 //MV选项卡
 const Tabs = [
@@ -27,7 +28,9 @@ export default memo(function MVRec() {
         data: { data }
       } = await getRecommendMV(area)
       setMv(data)
-    } catch (error) {}
+    } catch (error) {
+      message.error('获取推荐mv失败!')
+    }
   }
   //当前mv分类的索引 默认是第一个 对应上方的mv选项卡
   const [currentIndex, setCurrentIndex] = useState(0)

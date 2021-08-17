@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useState, useCallback, useMemo } from 'react'
 import { useLocation, useHistory } from 'react-router-dom'
-import { getSearchResult } from '@/api/search'
+import { getSearchResult as getSearchResultAPI } from '@/api/search'
 import { parseParam } from '@/utils/tools'
 import bgSearch from '@/assets/img/bg_search.jpg'
 import SongCover from 'components/Album/albumDetailCover'
@@ -8,6 +8,7 @@ import AlbumCover from 'components/Album/albumCover'
 import SingerCover from 'components/Singer/singerCover'
 import PlaylistCover from 'components/Playlist/playlistCover'
 import MvCover from 'components/Mv/mvCover'
+import { message, Pagination } from 'antd'
 import './index.less'
 const Types = [
   {
@@ -65,20 +66,91 @@ export default memo(function Search() {
   }, [field])
   const [index, setIndex] = useState(i)
   const [result, setResult] = useState([])
-  const switchType = useCallback(
-    index => {
-      setIndex(index)
-      const { field } = Types[index]
-      history.push(`/musichall/search?k=${keyword}&t=${field}`)
-    },
-    [history, keyword]
-  )
-  useEffect(() => {
-    getSearchResult(keyword, type).then(({ data: { result } }) => {
+  const [page, setPage] = useState(1)
+  const [total, setToal] = useState(50)
+  const switchType = index => {
+    setPage(1)
+    setIndex(index)
+    const { field } = Types[index]
+    setCombineCondition(combineCondition => {
+      return {
+        ...combineCondition,
+        type: Types[index].type,
+        offset: 0,
+        keyword
+      }
+    })
+    history.push(`/musichall/search?k=${keyword}&t=${field}`)
+  }
+
+  const getSearchResult = async combineCondition => {
+    try {
+      const {
+        data: { result }
+      } = await getSearchResultAPI({ ...combineCondition })
+      switch (i) {
+        case 0:
+          setToal(result.songCount)
+          break
+        case 1:
+          setToal(result.albumCount)
+          break
+
+        case 2:
+          setToal(result.artistCount)
+          break
+
+        case 3:
+          setToal(result.playlistCount)
+          break
+
+        case 4:
+          setToal(result.userprofileCount)
+          break
+
+        case 5:
+          setToal(result.mvCount)
+          break
+
+        case 6:
+          setToal(result.videoCount)
+          break
+
+        default:
+          break
+      }
       setResult(result[field])
       setIndex(i)
+    } catch (error) {
+      setIndex(i)
+      message.error('获取搜索结果失败,请检查网络连接!')
+    }
+  }
+
+  const [combineCondition, setCombineCondition] = useState({
+    limit: 10,
+    offset: 0,
+    type,
+    keyword
+  })
+
+  useEffect(() => {
+    getSearchResult(combineCondition)
+  }, [combineCondition])
+  //这里会执行2次同样的方法 目前想不出来解决方法
+  useEffect(() => {
+    switchType(0)
+  }, [keyword])
+  const onChange = useCallback(page => {
+    setPage(page)
+    setCombineCondition(combineCondition => {
+      return {
+        ...combineCondition,
+        offset: (page - 1) * 10
+      }
     })
-  }, [keyword, field, type, i])
+  }, [])
+
   return (
     <div className='search-box'>
       <div
@@ -140,6 +212,14 @@ export default memo(function Search() {
               })}
             </div>
           ) : null}
+        </div>
+        <div className='pagination'>
+          <Pagination
+            total={total}
+            showSizeChanger={false}
+            onChange={page => onChange(page)}
+            current={page}
+          />
         </div>
       </div>
     </div>

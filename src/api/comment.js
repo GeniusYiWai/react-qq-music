@@ -3,32 +3,41 @@ import request from '../utils/request'
 const timestamp = new Date().getTime()
 //获取歌单评论
 //id 歌单id
-export const getPlaylistComment = (id, limit = 20) => {
+export const getPlaylistComment = ({ id, limit, offset }) => {
   return request.get(
-    `/comment/playlist?id=${id}&limit=${limit}&timestamp=${timestamp}`
+    `/comment/playlist?id=${id}&limit=${limit}&offset=${offset}&timestamp=${timestamp}`
   )
 }
 //获取歌曲评论
 //id 歌曲id
-export const getSongComment = (id, limit = 20) => {
+export const getSongComment = ({ id, limit, offset }) => {
   return request.get(
-    `/comment/music?id=${id}&limit=${limit}&timestamp=${timestamp}`
+    `/comment/music?id=${id}&limit=${limit}&offset=${offset}&timestamp=${timestamp}`
   )
 }
 //获取mv评论
 //id mvid
-export const getMvComment = (id, limit = 20) => {
+export const getMvComment = ({ id, limit, offset }) => {
   return request.get(
-    `/comment/mv?id=${id}&limit=${limit}&timestamp=${timestamp}`
+    `/comment/mv?id=${id}&limit=${limit}&offset=${offset}&timestamp=${timestamp}`
   )
 }
 //获取专辑评论
 //id mvid
-export const getAlbumComment = (id, limit = 20) => {
+export const getAlbumComment = ({ id, limit, offset }) => {
   return request.get(
-    `/comment/album?id=${id}&limit=${limit}&timestamp=${timestamp}`
+    `/comment/album?id=${id}&limit=${limit}&offset=${offset}&timestamp=${timestamp}`
   )
 }
+
+//获取video评论
+//id video id
+export const getVideoComment = ({ id, limit, offset }) => {
+  return request.get(
+    `/comment/video?id=${id}&limit=${limit}&offset=${offset}&timestamp=${timestamp}`
+  )
+}
+
 //评论点赞
 // cid : 评论 id
 // t : 是否点赞 ,1 为点赞 ,0 为取消点赞

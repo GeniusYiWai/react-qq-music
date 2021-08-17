@@ -1,9 +1,7 @@
-import React, { memo, useEffect, useState, useCallback } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Drawer, message } from 'antd'
 import SingerCover from 'components/Singer/singerCover'
-import InfiniteScroll from 'react-infinite-scroller'
-
 import {
   getUserInfo as getUserInfoAPI,
   getUserEvent as getUserEventAPI,
@@ -29,12 +27,6 @@ const handleGender = gender => {
     return '保密'
   }
 }
-//处理微博
-const getWeibo = bindings => {
-  return bindings.filter(item => {
-    return item.url !== ''
-  })
-}
 export default memo(function User() {
   const params = useParams()
   //获取用户id
@@ -55,8 +47,6 @@ export default memo(function User() {
   const [userCreatePlaylists, setUserCreatePlaylists] = useState([])
   //用户收藏歌单
   const [userCollectPlaylists, setUserCollectPlaylists] = useState([])
-  //用户微博
-  const [weibo, setWeibo] = useState('')
   const [followsVisible, setFollowsVisible] = useState(false)
   //每页大小
   const [fansLimit, setFansLimit] = useState(10)
@@ -90,19 +80,29 @@ export default memo(function User() {
   const getUserInfo = async () => {
     try {
       const { data } = await getUserInfoAPI(id)
-      setUserInfo(data)
-      setWeibo(getWeibo(data.bindings)[0].url)
-    } catch (error) {}
+      if (data.code === 200) {
+        setUserInfo(data)
+      } else {
+        throw new Error()
+      }
+    } catch (error) {
+      message.error('用户不存在!')
+    }
   }
   //获取用户动态
   const getUserEvent = async () => {
     try {
       const {
-        data: { events }
+        data: { events, code }
       } = await getUserEventAPI(id)
-
-      setUserEvents(events)
-    } catch (error) {}
+      if (code === 200) {
+        setUserEvents(events)
+      } else {
+        throw new Error()
+      }
+    } catch (error) {
+      message.error('获取用户动态失败')
+    }
   }
   //获取用户关注 关注没有返回总数 只能判断返回值的length
   const getUserFollows = async () => {
@@ -111,12 +111,13 @@ export default memo(function User() {
         data: { follow }
       } = await getUserFollowsAPI(id)
       setUserFollows(follow)
-    } catch (error) {}
+    } catch (error) {
+      message.error('获取用户关注列表失败')
+    }
   }
   //获取用户粉丝总数
   const getUserFans = async fansCombineCondition => {
     setFansLoading(true)
-
     try {
       const {
         data: { followeds, size }
@@ -131,6 +132,7 @@ export default memo(function User() {
       //设置偏移量
       setFansOffset(fansOffset + fansLimit)
     } catch (error) {
+      message.error('获取用户粉丝列表失败')
       //如果请求出错 关锁
       setFansLoading(false)
     }
@@ -238,10 +240,6 @@ export default memo(function User() {
     getUserFans(fansCombineCondition)
   }, [fansCombineCondition])
 
-  //跳转到微博
-  const goToWeibo = () => {
-    window.open(weibo)
-  }
   return (
     <div className='user'>
       <div className='user-info-container'>
@@ -263,7 +261,13 @@ export default memo(function User() {
             </div>
             <div className='user-info-middle'>
               <div>
-                <span>{userEvents.length}</span>
+                <span
+                  onClick={() => {
+                    message.error('没做')
+                  }}
+                >
+                  {userEvents.length}
+                </span>
                 <p>动态</p>
               </div>
               <div onClick={() => showFollows()}>
@@ -277,14 +281,6 @@ export default memo(function User() {
             </div>
             <div className='user-info-bottom'>
               <p>个人介绍: {userInfo.profile && userInfo.profile.signature}</p>
-
-              <p>
-                社交网络:
-                <WeiboCircleOutlined
-                  className='weibo'
-                  onClick={() => goToWeibo()}
-                />
-              </p>
             </div>
           </div>
         </div>
@@ -378,13 +374,13 @@ export default memo(function User() {
         >
           <div className='fan-list'>
             {fansLoading ? <SingerSkeleton /> : null}
-            {userFans.length !== 0
-              ? userFans.map((item, index) => {
-                  return (
-                    <SingerCover singer={item} key={index} useLazy={false} />
-                  )
-                })
-              : null}
+            {userFans.length !== 0 ? (
+              userFans.map((item, index) => {
+                return <SingerCover singer={item} key={index} useLazy={false} />
+              })
+            ) : (
+              <Empty text='这里空空如也' showBtn={false} />
+            )}
             <Pagination
               setCombineCondition={setFansCombineCondition}
               total={userFansSize}

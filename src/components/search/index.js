@@ -1,8 +1,8 @@
 import React, { memo, useEffect, useState, useRef, useCallback } from 'react'
-import { Input } from 'antd'
+import { Input, message } from 'antd'
 import {
   getHotKeywords as getHotKeywordsAPI,
-  getSearchSuggest
+  getSearchSuggest as getSearchSuggestAPI
 } from '@/api/search'
 import HotKeywordsList from './cpn/hotKeywordsList'
 import SearchSuggestion from './cpn/searchSuggestion'
@@ -57,16 +57,24 @@ export default memo(function SearchInput() {
       getSuggestion(value)
     }
   }
-  const getSuggestion = value => {
-    //调用获取搜索联想建议的接口
-    getSearchSuggest(value).then(({ data: { result } }) => {
+  const getSearchSuggest = async value => {
+    try {
+      const {
+        data: { result }
+      } = await getSearchSuggestAPI(value)
       //赋值搜索联想数据
       setSearchSuggestion(result)
       //隐藏热门搜索
       setShowHotKey(false)
       //展示搜索联想
       setShowSearchSuggestion(true)
-    })
+    } catch (error) {
+      message.error('获取搜索联想建议失败,请检查网络连接!')
+    }
+  }
+  const getSuggestion = value => {
+    //调用获取搜索联想建议的接口
+    getSearchSuggest(value)
   }
   //用户按下enter键 将关键字存入缓存 跳转到搜索页面
   const handlePress = e => {
@@ -114,7 +122,7 @@ export default memo(function SearchInput() {
       } = await getHotKeywordsAPI()
       setHotKeywords(data.slice(0, 5))
     } catch (error) {
-      setHotKeywords([])
+      message.error('获取热门搜索失败,请检查网络连接!')
     }
   }
   useEffect(() => {
@@ -125,7 +133,6 @@ export default memo(function SearchInput() {
       hideAll()
     })
   }, [])
-
   return (
     <div className='search-container' ref={searchBoxRef}>
       <Search

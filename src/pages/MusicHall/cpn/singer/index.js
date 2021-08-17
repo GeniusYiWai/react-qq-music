@@ -16,7 +16,7 @@ import { Spin } from 'antd'
 import SingerSkeleton from 'components/Skeleton/singerSkeleton'
 import Pagination from 'components/Common/pagination'
 import { ScrollTop } from '@/utils/tools'
-
+import { message } from 'antd'
 import InfiniteScroll from 'react-infinite-scroller'
 import Empty from 'components/Common/empty'
 import './index.less'
@@ -122,8 +122,6 @@ export default memo(function Singer() {
   })
   //歌手
   const [singer, setSinger] = useState([])
-  //歌手是否正在加载新数据
-  const [singerLoading, setSingerLoading] = useState(false)
   //歌手是否还有更多数据
   const [singerHasMore, setSingerHasMore] = useState(true)
   //页码
@@ -156,7 +154,9 @@ export default memo(function Singer() {
       } = await getSingerAPI(area, initial, type, limit, offset)
       setSinger(artists)
       setSingerHasMore(more)
-    } catch (error) {}
+    } catch (error) {
+      message.error('获取热门歌手失败!')
+    }
   }
   //获取下方热门歌手
   const getHotSinger = async ({ limit, offset }) => {
@@ -179,6 +179,7 @@ export default memo(function Singer() {
       //如果请求出错 关锁
       setLoading(true)
       setHasMore(false)
+      message.error('获取推荐歌手失败!')
     }
   }
   //获取登录后收藏的歌手
@@ -189,7 +190,9 @@ export default memo(function Singer() {
       } = await getCollectSingerAPI()
       setCollectSinger(data)
       spliceList(data)
-    } catch (error) {}
+    } catch (error) {
+      message.error('获取关注歌手失败!')
+    }
   }
   //切换查询条件 将新的查询条件与之前的进行对比 新的替代旧的
   const switchCondition = useCallback((condition, value) => {

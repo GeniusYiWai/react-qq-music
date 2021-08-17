@@ -5,7 +5,7 @@ import {
   SET_CURRENT_PLAYLIST
 } from './constant'
 import { getMusicById } from '@/api/player'
-
+import {message} from 'antd'
 //设置当前播放音乐的信息 action
 const setCurrentPlayMusicAction = music => {
   return {
@@ -39,6 +39,8 @@ export const setCurrentPlayMusic = id => {
   return dispatch => {
     getMusicById(id).then(({ data }) => {
       dispatch(setCurrentPlayMusicAction(data.songs[0]))
+    }).catch(error=>{
+      message.error('播放出错!')
     })
   }
 }

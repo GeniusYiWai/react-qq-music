@@ -1,6 +1,6 @@
 import React, { memo, useState } from 'react'
 import { Button, Form, Input, message } from 'antd'
-import { logibByPhone } from '@/api/login'
+import { loginbByPhone as loginbByPhoneAPI } from '@/api/login'
 export default memo(function LoginByPhone(props) {
   const [form] = Form.useForm()
   const { setVisible, handleLoginSuccess } = props
@@ -10,27 +10,27 @@ export default memo(function LoginByPhone(props) {
   const onReset = () => {
     form.resetFields()
   }
+  //手机号登录
+  const loginbByPhone = async (phoneNumber, password) => {
+    try {
+      const { data } = await loginbByPhoneAPI(phoneNumber, password)
+      if (data.code === 200) {
+        //更新state中的用户登录状态 以及缓存中的用户登录状态 销毁弹出层
+        handleLoginSuccess(true)
+        setVisible(false)
+      } else if (data.code === 502) {
+        message.error(data.message)
+      }
+      setLoading(false)
+    } catch (error) {
+      message.error('登录失败!')
+      setLoading(false)
+    }
+  }
   //手机号和密码校验通过触发该方法
   const handleLogin = ({ phoneNumber, password }) => {
     setLoading(true)
-    logibByPhone(phoneNumber, password).then(
-      ({ data }) => {
-        if (data.code === 200) {
-          message.success('登录成功')
-          //更新state中的用户登录状态 以及缓存中的用户登录状态 销毁弹出层
-          handleLoginSuccess(true)
-          setVisible(false)
-        } else if (data.code === 502) {
-          message.error(data.message)
-        }
-        setLoading(false)
-      },
-      error => {
-        console.log(error)
-        message.error('登录失败!')
-        setLoading(false)
-      }
-    )
+    loginbByPhone(phoneNumber, password)
   }
   //自定义校验规则 校验手机号
   const handleCheckPhone = (rule, value) => {

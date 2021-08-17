@@ -3,7 +3,7 @@ import NewAlbumCover from 'components/Album/newAlbumCover'
 import Category from 'components/Common/category'
 import { getRecommendNewAlbum } from '@/api/home'
 import MVSkeleton from 'components/Skeleton/mvSkeleton'
-import { Pagination } from 'antd'
+import { Pagination, message } from 'antd'
 
 import './index.less'
 //新碟上架选项卡 用于传入到category组件中
@@ -29,7 +29,9 @@ export default memo(function NewAlbumRec() {
       } = await getRecommendNewAlbum(area)
       setNewAlbum(monthData)
       setTotal(monthData.length)
-    } catch (error) {}
+    } catch (error) {
+      message.error('获取新碟数据失败!')
+    }
   }
   //自定义当前选项卡的索引
   const [currentIndex, setCurrentIndex] = useState(0)

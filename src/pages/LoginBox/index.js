@@ -7,6 +7,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import { showLoginBoxDispatch, userLoginDispatch } from './store/actionCreators'
 import { setUserDispatch } from './store/actionCreators'
 import { getLoginStatus } from '@/api/login'
+
+import { message } from 'antd'
 const { TabPane } = Tabs
 export default memo(function LoginBox() {
   const dispatch = useDispatch()
@@ -30,6 +32,7 @@ export default memo(function LoginBox() {
   }
   //登录成功 刷新页面
   const handleLoginSuccess = () => {
+    message.success('登录成功')
     window.location.reload()
   }
   return (

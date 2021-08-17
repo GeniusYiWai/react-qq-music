@@ -12,8 +12,9 @@ function reducer(state = initState, action) {
     case SETDJCATE:
       return { ...state, ...action.dj }
     case SET_DJ_BY_CATE:
-      state.djList.push(action.dj)
-      return { ...state }
+      const djList = [...state.djList]
+      djList.push(action.dj)
+      return { ...state, djList }
     default:
       return state
   }

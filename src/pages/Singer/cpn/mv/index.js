@@ -2,7 +2,7 @@ import React, { memo, useState, useCallback, useEffect } from 'react'
 import { getSingerMvs as getSingerMvsAPI } from '@/api/singer'
 import MvCover from 'components/Mv/mvCover'
 import InfiniteScroll from 'react-infinite-scroller'
-import { Spin } from 'antd'
+import { Spin, message } from 'antd'
 import MVSkeleton from 'components/Skeleton/mvSkeleton'
 export default memo(function SingerMv(props) {
   const { id } = props
@@ -30,19 +30,23 @@ export default memo(function SingerMv(props) {
     setMvLoading(true)
     try {
       const {
-        data: { mvs, hasMore }
+        data: { mvs, hasMore, code }
       } = await getSingerMvsAPI({ ...mvCombineCondition })
-      //赋值mv数据 因为新数据是加到旧数据的后面 所以用concat方法
-      setSingerMvs(singerMvs => {
-        //开锁
-        setMvLoading(false)
-        setMvHasMore(hasMore)
-        //将新数据与旧数据合并
-        return singerMvs.concat(mvs)
-      })
-      //设置偏移量
-      setMvOffset(mvOffset + mvLimit)
-    } catch (error) {}
+      if (code === 200) {
+        //赋值mv数据 因为新数据是加到旧数据的后面 所以用concat方法
+        setSingerMvs(singerMvs => {
+          //开锁
+          setMvLoading(false)
+          setMvHasMore(hasMore)
+          //将新数据与旧数据合并
+          return singerMvs.concat(mvs)
+        })
+        //设置偏移量
+        setMvOffset(mvOffset + mvLimit)
+      }
+    } catch (error) {
+      message.error('获取歌手mv失败!')
+    }
   }
   const mvLoadMore = useCallback(() => {
     if (!mvHasMore) return

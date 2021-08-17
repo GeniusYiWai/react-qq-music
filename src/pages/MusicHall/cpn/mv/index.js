@@ -4,7 +4,7 @@ import MvCover from 'components/Mv/mvCover'
 import { getMv as getMvAPI } from '@/api/mv'
 import MVSkeleton from 'components/Skeleton/mvSkeleton'
 import InfiniteScroll from 'react-infinite-scroller'
-import { Spin } from 'antd'
+import { Spin, message } from 'antd'
 import Empty from 'components/Common/empty'
 import { ScrollTop } from '@/utils/tools'
 import './index.less'
@@ -112,6 +112,7 @@ export default memo(function Singer() {
       //取反第一次加载页面
       setFlag(false)
     } catch (error) {
+      message.error('获取mv数据失败!')
       //如果请求出错 关锁
       setLoading(true)
       setHasMore(false)

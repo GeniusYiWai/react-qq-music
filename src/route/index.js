@@ -57,6 +57,12 @@ const routes = [
         exact: true,
         component: lazy(() => import('../pages/MusicHall/cpn/mvDetail'))
       },
+      //video详情
+      {
+        path: '/musichall/video/detail/:id',
+        exact: true,
+        component: lazy(() => import('../pages/MusicHall/cpn/videoDetail'))
+      },
       //mv
       {
         path: '/musichall/mv',

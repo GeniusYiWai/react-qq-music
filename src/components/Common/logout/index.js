@@ -1,9 +1,8 @@
 import React, { memo, useRef, useState, useEffect } from 'react'
 import { message } from 'antd'
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
-import { logout } from '@/api/login'
+import { logout as logoutAPI } from '@/api/login'
 import { userLoginDispatch } from '@/pages/LoginBox/store/actionCreators'
-import { CloseOutlined } from '@ant-design/icons'
 import './index.less'
 export default memo(function Logout() {
   const dispatch = useDispatch()
@@ -16,15 +15,20 @@ export default memo(function Logout() {
       userInfo: state.user.userInfo
     }
   }, shallowEqual)
-  const handleLogout = () => {
-    logout().then(({ data }) => {
+  //退出登录
+  const logout = async () => {
+    try {
+      const { data } = await logoutAPI()
       if (data.code === 200) {
         message.success('退出成功')
         dispatch(userLoginDispatch(false))
-      } else {
-        message.error('退出失败')
       }
-    })
+    } catch (error) {
+      message.error('退出失败')
+    }
+  }
+  const handleLogout = () => {
+    logout()
   }
   const showUserInfo = e => {
     e.stopPropagation()

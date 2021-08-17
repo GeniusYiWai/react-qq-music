@@ -3,7 +3,7 @@ import md5 from 'js-md5'
 // 带上时间戳,防止缓存
 const timestamp = new Date().getTime()
 //手机号登录
-export const logibByPhone = (phoneNumber, password) => {
+export const loginbByPhone = (phoneNumber, password) => {
   const md5_password = md5(password)
   return request.post(
     `/login/cellphone?phone=${phoneNumber}&md5_password=${md5_password}`

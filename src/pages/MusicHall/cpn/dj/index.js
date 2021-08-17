@@ -1,11 +1,9 @@
 import React, { memo, useState, useEffect } from 'react'
-
 import { useDispatch, useSelector } from 'react-redux'
 import { setDjByCate } from './store/actionCreators'
 import DjCover from 'components/Dj/djCover'
 import { ScrollTop, getScrollTop } from '@/utils/tools'
 import DjSkeleton from 'components/Skeleton/djSkeleton'
-
 import './index.less'
 //dj的所有分类 写死
 //name 是展示的分类名称

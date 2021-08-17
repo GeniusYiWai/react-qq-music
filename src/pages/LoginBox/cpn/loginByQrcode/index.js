@@ -2,9 +2,12 @@ import React, { memo, useEffect, useState } from 'react'
 import { message } from 'antd'
 import QRGuide from '@/assets/img/qr_guide.png'
 import AuthorizingImg from '@/assets/img/Authorizing.jpg'
-import { getQRKey, getQRByKey, getQRStatus } from '@/api/login'
+import {
+  getQRKey as getQRKeyAPI,
+  getQRByKey as getQRByKeyAPI,
+  getQRStatus as getQRStatusAPI
+} from '@/api/login'
 import './index.less'
-
 export default memo(function LoginByQRCode(props) {
   let timer
   const { setVisible, handleLoginSuccess } = props
@@ -14,55 +17,73 @@ export default memo(function LoginByQRCode(props) {
   const [QRValid, setQRValid] = useState(false)
   //二维码图片url地址
   const [QRImgUrl, setQRImgUrl] = useState()
-  //轮询二维码是否有效
-  const pollingQRStatus = key => {
-    //每隔2秒查询一次
-    timer = setInterval(() => {
-      getQRStatus(key).then(({ data }) => {
-        //状态码800 说明二维码已经失效 隐藏之前的二维码图片 清除定时器
-        if (data.code === 800) {
-          setQRValid(false)
-          setAuthorizing(false)
-          clearInterval(timer)
-        } else if (data.code === 802) {
-          //展示授权中页面
-          setAuthorizing(true)
-        } else if (data.code === 803) {
-          setVisible(false)
-          //清除定时器
-          clearInterval(timer)
-          message.success('登录成功')
-          //更新state中的用户登录状态 以及缓存中的用户登录状态 销毁弹出层
-          handleLoginSuccess(true)
-        }
-      })
-    }, 2000)
+  //轮询获取二维码状态 检查是否有效
+  const getQRStatus = async key => {
+    try {
+      const { data } = await getQRStatusAPI(key)
+      //状态码800 说明二维码已经失效 隐藏之前的二维码图片 清除定时器
+      if (data.code === 800) {
+        setQRValid(false)
+        setAuthorizing(false)
+        clearInterval(timer)
+      } else if (data.code === 802) {
+        //展示授权中页面
+        setAuthorizing(true)
+      } else if (data.code === 803) {
+        setVisible(false)
+        //清除定时器
+        clearInterval(timer)
+        //更新state中的用户登录状态 以及缓存中的用户登录状态 销毁弹出层
+        handleLoginSuccess(true)
+      }
+    } catch (error) {
+      message.error('获取二维码状态失败,请检查网络连接!')
+    }
   }
-
-  const getQRCode = () => {
-    getQRKey().then(({ data }) => {
+  //获取二维码key
+  const getQRKey = async () => {
+    try {
+      const { data } = await getQRKeyAPI()
       if (data.code === 200) {
         const {
           data: { unikey }
         } = data
-
         //通过key生成二维码
-        getQRByKey(unikey).then(({ data }) => {
-          if (data.code === 200) {
-            const {
-              data: { qrimg }
-            } = data
-            //展示二维码
-            setQRImgUrl(qrimg)
-            setQRValid(true)
-            //轮询二维码是否有效
-            pollingQRStatus(unikey)
-          }
-        })
+        getQRByKey(unikey)
       }
-    })
+    } catch (error) {
+      message.error('获取二维码失败,请检查网络连接!')
+    }
   }
-  //二维码失效 刷新二维码
+  //通过key获取二维码
+  const getQRByKey = async unikey => {
+    try {
+      const { data } = await getQRByKeyAPI(unikey)
+      if (data.code === 200) {
+        const {
+          data: { qrimg }
+        } = data
+        //展示二维码
+        setQRImgUrl(qrimg)
+        setQRValid(true)
+        //轮询二维码是否有效
+        pollingQRStatus(unikey)
+      }
+    } catch (error) {
+      message.error('获取二维码失败,请检查网络连接!')
+    }
+  }
+  const pollingQRStatus = key => {
+    //每隔2秒查询一次
+    timer = setInterval(() => {
+      getQRStatus(key)
+    }, 2000)
+  }
+  //获取二维码
+  const getQRCode = () => {
+    getQRKey()
+  }
+  //刷新二维码
   const refreshQR = () => {
     getQRCode()
   }
@@ -70,7 +91,6 @@ export default memo(function LoginByQRCode(props) {
   useEffect(() => {
     getQRCode()
     return () => {
-      console.log(111)
       //关闭弹出层 销毁定时器 防止继续发送网络请求
       clearInterval(timer)
     }

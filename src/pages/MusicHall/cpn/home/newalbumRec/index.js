@@ -5,7 +5,7 @@ import DotsContainer from 'components/Home/dotsContainer'
 import Category from 'components/Common/category'
 import SwitchPage from 'components/Home/switchPage'
 import AlbumRecSkeleton from 'components/Skeleton/albumRecSkeleton'
-
+import { message } from 'antd'
 import { getRecommendNewAlbum } from '@/api/home'
 import './index.less'
 //新碟上架选项卡
@@ -27,7 +27,9 @@ export default memo(function NewAlbumRec() {
         data: { monthData }
       } = await getRecommendNewAlbum(area)
       setNewAlbum(monthData.slice(0, 20))
-    } catch (error) {}
+    } catch (error) {
+      message.error('获取推荐新碟失败!')
+    }
   }
   //当前新碟上架的索引 默认是第一个 对应上方的新碟上架选项卡
   const [currentIndex, setCurrentIndex] = useState(0)

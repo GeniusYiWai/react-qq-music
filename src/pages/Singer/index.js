@@ -3,9 +3,8 @@ import { useParams } from 'react-router-dom'
 import { getSingerInfo as getSingerInfoAPI } from '@/api/singer'
 import LazyLoadImg from 'components/Common/lazyloadImg'
 import Category from 'components/Common/category'
-import InfiniteScroll from 'react-infinite-scroller'
 import { ScrollTop } from '@/utils/tools'
-import { Spin } from 'antd'
+import { message } from 'antd'
 import SingerMv from './cpn/mv'
 import SingerAlbum from './cpn/album'
 import SingerSong from './cpn/song'
@@ -43,7 +42,9 @@ export default memo(function Singer() {
         }
       } = await getSingerInfoAPI(id)
       setsinger(artist)
-    } catch (error) {}
+    } catch (error) {
+      message.error('获取歌手信息失败!')
+    }
   }
   //获取歌手信息只执行一次
   useEffect(() => {
@@ -58,8 +59,8 @@ export default memo(function Singer() {
           <LazyLoadImg url={singer && singer.cover} width={200} height={200} />
         </div>
         <div className='singer-profile'>
-          <h1>{singer.name}</h1>
-          <p>{singer.briefDesc}</p>
+          <h1>{singer && singer.name}</h1>
+          <p>{singer && singer.briefDesc}</p>
         </div>
       </div>
       <div className='singer-category w-1200'>

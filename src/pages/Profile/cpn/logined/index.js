@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState,useCallback } from 'react'
+import React, { memo, useEffect, useState, useCallback } from 'react'
 import {
   getCollectPlaylist as getCollectPlaylistAPI,
   getUserFan as getUserFanAPI,
@@ -37,6 +37,7 @@ export default memo(function CollectList(props) {
   //signature 个性签名
   const { userId, backgroundUrl, avatarUrl, nickname, signature } =
     props.userInfo
+
   //当前展示的一级索引
   const [currentIndex, setCurrentIndex] = useState(0)
   //用户创建的歌单
@@ -49,27 +50,45 @@ export default memo(function CollectList(props) {
   const switchTabs = useCallback(index => {
     setCurrentIndex(index)
   }, [])
+  //获取用户收藏歌单参数
+  const [collectPlcombineCondition, setCollectPlCombineCondition] = useState({
+    //id
+    uid: userId,
+    //偏移量
+    offset: 0,
+    //每页数据条数
+    limit: 100
+  })
   //获取用户创建歌单
-  const getUserCreatePlaylist = async () => {
+  const getUserCreatePlaylist = async collectPlcombineCondition => {
     try {
       const {
         data: { playlist }
-      } = await getCollectPlaylistAPI(userId)
+      } = await getCollectPlaylistAPI({ ...collectPlcombineCondition })
       const newArr = []
+      //如果userId不等于用户id 那就是用户收藏的歌单
       playlist.forEach(e => {
-        if (e.creator.userId == userId) {
+        if (e.userId == userId) {
           newArr.push(e)
         }
       })
       setUserCreatePlaylist(newArr)
     } catch (error) {}
   }
+  //混合查询条件 因为可以多个参数一起查询
+  const [fansCombineCondition, setFansCombineCondition] = useState({
+    uid: userId,
+    //偏移量
+    offset: 0,
+    //每页数据条数
+    limit: 100
+  })
   //获取用户粉丝列表
-  const getUserFan = async () => {
+  const getUserFan = async fansCombineCondition => {
     try {
       const {
         data: { followeds }
-      } = await getUserFanAPI(userId)
+      } = await getUserFanAPI({ ...fansCombineCondition })
       setUserFan(followeds)
     } catch (error) {}
   }
@@ -86,11 +105,11 @@ export default memo(function CollectList(props) {
     switch (currentIndex) {
       //1 用户创建的歌单
       case 1:
-        getUserCreatePlaylist()
+        getUserCreatePlaylist(collectPlcombineCondition)
         break
       //用户的粉丝
       case 3:
-        getUserFan()
+        getUserFan(fansCombineCondition)
         break
       //用户最近常听
       case 4:
@@ -100,6 +119,9 @@ export default memo(function CollectList(props) {
         break
     }
   }, [currentIndex])
+  const goToUserDetail = () => {
+    window.open(`/profile/user/${userId}`)
+  }
   return (
     <div>
       <div
@@ -109,6 +131,7 @@ export default memo(function CollectList(props) {
         <img src={avatarUrl} alt='' />
         <p>{nickname}</p>
         <span>{signature}</span>
+        <button onClick={() => goToUserDetail()} className='showDetail'>查看用户详情</button>
       </div>
       <Category
         Tabs={Tabs}

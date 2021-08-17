@@ -56,15 +56,23 @@ export default memo(function Collect(props) {
       setlikeSongs(songs)
     } catch (error) {}
   }
+  const [collectPlcombineCondition, setCollectPlCombineCondition] = useState({
+    //id
+    uid: userId,
+    //偏移量
+    offset: 0,
+    //每页数据条数
+    limit: 100
+  })
   //获取用户收藏歌单
-  const getCollectPlaylist = async () => {
+  const getCollectPlaylist = async collectPlcombineCondition => {
     try {
       const {
         data: { playlist }
-      } = await getCollectPlaylistAPI(userId)
+      } = await getCollectPlaylistAPI({ ...collectPlcombineCondition })
       const newArr = []
       playlist.forEach(e => {
-        if (e.creator.userId != userId) {
+        if (e.userId != userId) {
           newArr.push(e)
         }
       })
@@ -95,7 +103,7 @@ export default memo(function Collect(props) {
         getCollectSongs()
         break
       case 1:
-        getCollectPlaylist()
+        getCollectPlaylist(collectPlcombineCondition)
         break
       case 2:
         getCollectAlbum()

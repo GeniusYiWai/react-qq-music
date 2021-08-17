@@ -6,6 +6,8 @@ import Category from 'components/Common/category'
 import SwitchPage from 'components/Home/switchPage'
 import { getRecommendNewSong } from '@/api/home'
 import SongRecSkeleton from 'components/Skeleton/songRecSkeleton'
+import { message } from 'antd'
+
 import './index.less'
 //新歌首发选项卡
 const Tabs = [
@@ -26,7 +28,9 @@ export default memo(function NewSongRec() {
         data: { data }
       } = await getRecommendNewSong(categoryId)
       setNewSong(data)
-    } catch (error) {}
+    } catch (error) {
+      message.error('获取推荐新歌失败!')
+    }
   }
   //当前新歌首发的索引 默认是第一个 对应上方的新歌首发选项卡
   const [currentIndex, setCurrentIndex] = useState(0)

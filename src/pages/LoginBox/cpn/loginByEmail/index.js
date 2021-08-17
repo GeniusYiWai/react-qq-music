@@ -1,6 +1,6 @@
 import React, { memo, useState } from 'react'
 import { Button, Form, Input, message } from 'antd'
-import { loginByEmail } from '@/api/login'
+import { loginByEmail as loginByEmailAPI } from '@/api/login'
 export default memo(function LoginByEmail(props) {
   //获取表单引用
   const [form] = Form.useForm()
@@ -12,27 +12,27 @@ export default memo(function LoginByEmail(props) {
   const onReset = () => {
     form.resetFields()
   }
+  //邮箱登录
+  const loginByEmail = async (email, password) => {
+    try {
+      const { data } = await loginByEmailAPI(email, password)
+      if (data.code === 200) {
+        //更新state中的用户登录状态 以及缓存中的用户登录状态 销毁弹出层
+        handleLoginSuccess(true)
+        setVisible(false)
+      } else if (data.code === 502) {
+        message.error(data.message)
+      }
+      setLoading(false)
+    } catch (error) {
+      message.error('登录失败')
+      setLoading(false)
+    }
+  }
   //邮箱和密码校验通过触发该方法
   const handleLogin = ({ email, password }) => {
     setLoading(true)
-    loginByEmail(email, password).then(
-      ({ data }) => {
-        if (data.code === 200) {
-          message.success('登录成功')
-          //更新state中的用户登录状态 以及缓存中的用户登录状态 销毁弹出层
-          handleLoginSuccess(true)
-          setVisible(false)
-        } else if (data.code === 502) {
-          message.error(data.message)
-        }
-        setLoading(false)
-      },
-      error => {
-        console.log(error)
-        message.error('登录失败')
-        setLoading(false)
-      }
-    )
+    loginByEmail(email, password)
   }
   //自定义校验规则 校验密码
   const handleCheckPassword = (rule, value) => {
