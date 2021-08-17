@@ -1,5 +1,5 @@
 import React, { memo, useState, useCallback, useRef, useEffect } from 'react'
-import { Slider, Tooltip, Modal } from 'antd'
+import { Slider, Tooltip, Modal, message } from 'antd'
 import {
   StepBackwardOutlined,
   StepForwardOutlined,
@@ -16,6 +16,8 @@ import {
   debounce
 } from '@/utils/tools'
 import { getItem, setItem } from '@/utils/storage'
+import { CheckCanPlay as CheckCanPlayAPI } from '@/api/player'
+
 import player from '@/assets/img/player.png'
 import './index.less'
 //0 -205px 列表循坏
@@ -61,6 +63,7 @@ export default memo(function Progress(props) {
     currentPlayMusicId,
     setCurrentPlayMusicId,
     changeLyricScroll,
+    pauseLyricScroll,
     changeLyricProgress
   } = props
   const dispatch = useDispatch()
@@ -70,6 +73,7 @@ export default memo(function Progress(props) {
       currentPlayMusic: state.player.currentPlayMusic
     }
   })
+  const [disabled, setDisabled] = useState(false)
   //设置当前播放方式 默认是0 列表循坏 1单曲循环 2随机播放
   const [playModeNum, setPlayModeNum] = useState(0)
   //设置音乐播放条的初始值
@@ -85,22 +89,19 @@ export default memo(function Progress(props) {
   const audioRef = useRef()
 
   //处理点击播放暂停图标 调用父元素的更新播放状态方法 音乐同步播放暂停
-  const changePlayStatus = useCallback(
-    status => {
-      setIsPlaying(status)
-      //调用父组件控制歌词组件是否滚动的方法
-      changeLyricScroll()
-      status ? audioRef.current.play() : audioRef.current.pause()
-    },
-    [setIsPlaying]
-  )
+  const changePlayStatus = status => {
+    setIsPlaying(status)
+    //调用父组件控制歌词组件是否滚动的方法
+    changeLyricScroll()
+    status ? audioRef.current.play() : audioRef.current.pause()
+  }
 
   //处理进度条点击完成修改音乐播放进度
-  const onProgressAfterChange = useCallback(() => {
+  const onProgressAfterChange = () => {
     //取消静音
     audioRef.current.muted = false
     changePlayStatus(true)
-  }, [changePlayStatus])
+  }
 
   //处理进度条点击修改进度条进度
   const onProgressChange = useCallback(
@@ -129,6 +130,22 @@ export default memo(function Progress(props) {
     setProgress((currentTime / duration) * 100)
   }, [currentTime, duration])
 
+  const CheckCanPlay = async id => {
+    try {
+      const {
+        data: { success }
+      } = await CheckCanPlayAPI(id)
+      if (success) {
+        debounce(() => {
+          setIsPlaying(true)
+          setCurrentPlayMusicId(id)
+          setItem('currentPlayMusicId', id)
+        }, 200)()
+      }
+    } catch (error) {
+      message.warning('抱歉，这首歌曲暂时不能播放。')
+    }
+  }
   //处理播放上一首或者下一首
   const switchSong = useCallback(
     type => {
@@ -159,7 +176,7 @@ export default memo(function Progress(props) {
           //这里必须手动修改音乐播放地址 因为currentPlayMusicId没有发生改变 不会触发useEffect重新加载数据
           audioRef.current.src = getPlaySong(currentPlayMusicId)
           break
-        //随机播放 继续播放当前这一首
+        //随机播放
         case 'random':
           //获取随机数
           newIndex = getRandomIndex(index, length)
@@ -168,11 +185,7 @@ export default memo(function Progress(props) {
           break
       }
       //这里对切换上一首或者下一首进行了防抖处理 防止用户快速切换歌曲 导致歌词组件无法及时清除上一个已经进行的歌词滚动 因为歌词滚动需要时间初始化 如果快速切换会导致清除函数无法及时生效 使得多个歌词滚动同时进行 歌词会来回跳跃
-      debounce(() => {
-        setIsPlaying(true)
-        setCurrentPlayMusicId(playlist[newIndex].id)
-        setItem('currentPlayMusicId', playlist[newIndex].id)
-      }, 200)()
+      CheckCanPlay(playlist[newIndex].id)
     },
     [setCurrentPlayMusicId, playlist, currentPlayMusicId, setIsPlaying]
   )
@@ -215,7 +228,14 @@ export default memo(function Progress(props) {
     audioRef.current.src = getPlaySong(currentPlayMusicId)
     // audioRef.current.play()
   }, [currentPlayMusicId])
-
+  const handleError = () => {
+    message.error('播放出错!')
+    setIsPlaying(false)
+    //调用父组件控制歌词组件是否滚动的方法
+    pauseLyricScroll()
+    audioRef.current.pause()
+    setDisabled(true)
+  }
   return (
     <div className='progress-container'>
       <Modal
@@ -235,6 +255,10 @@ export default memo(function Progress(props) {
         onEnded={() => onMusicEnded()}
         //监听音乐是否在播放 如果是 就修改播放图标的状态
         onPlay={() => setIsPlaying(true)}
+        onCanPlay={() => setDisabled(false)}
+        onError={() => {
+          handleError()
+        }}
         hidden
       ></audio>
       <div className='control'>
@@ -252,6 +276,7 @@ export default memo(function Progress(props) {
           onChange={value => onProgressChange(value)}
           onAfterChange={() => onProgressAfterChange()}
           tooltipVisible={false}
+          disabled={disabled}
         />
         <div className='song-info'>
           {currentPlayMusic.name}(

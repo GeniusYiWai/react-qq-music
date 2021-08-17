@@ -45,17 +45,17 @@ request.interceptors.response.use(
         // 在登录成功后返回当前页面，这一步需要在登录页操作。
         case 401:
           message.error({
-            content: 'Please log in and try again',
+            content: '请登录后再尝试!',
             duration: 1
           })
           break
         // 404请求不存在
-        case 404:
-          message.error({
-            content: 'Request does not exist',
-            duration: 1
-          })
-          break
+        // case 404:
+        //   message.error({
+        //     content: 'Request does not exist',
+        //     duration: 1
+        //   })
+        //   break
         // case 502:
         //   message.error({
         //     content: 'Server Error',

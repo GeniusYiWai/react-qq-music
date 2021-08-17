@@ -13,6 +13,10 @@ export default memo(function Player() {
   const changeLyricScroll = () => {
     childRef.current.changeLyricScroll()
   }
+  const pauseLyricScroll = () => {
+    childRef.current.pauseLyricScroll()
+  }
+  
   //这个方法用来手动控制歌词的滚动进度
   const changeLyricProgress = time => {
     childRef.current.changeLyricProgress(time)
@@ -76,6 +80,7 @@ export default memo(function Player() {
               isPlaying={isPlaying}
               setIsPlaying={setIsPlaying}
               changeLyricScroll={changeLyricScroll}
+              pauseLyricScroll={pauseLyricScroll}
               changeLyricProgress={changeLyricProgress}
             />
             <MusicLyric

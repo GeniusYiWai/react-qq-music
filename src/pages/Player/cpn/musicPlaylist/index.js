@@ -4,6 +4,8 @@ import './index.less'
 import { debounce } from '@/utils/tools'
 import { Modal, Tooltip } from 'antd'
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons'
+import { CheckCanPlay as CheckCanPlayAPI } from '@/api/player'
+import { message } from 'antd'
 import Wave from '@/assets/img/wave.gif'
 export default memo(function Playlist(props) {
   //从父元素中获取当前音乐是否正在播放和播放的音乐id  用于展示样式
@@ -14,14 +16,25 @@ export default memo(function Playlist(props) {
     playlist,
     setPlaylist
   } = props
-
+  const CheckCanPlay = async id => {
+    try {
+      const {
+        data: { success }
+      } = await CheckCanPlayAPI(id)
+      if (success) {
+        debounce(() => {
+          setCurrentPlayMusicId(id)
+          setItem('currentPlayMusicId', id)
+        }, 200)()
+      }
+    } catch (error) {
+      message.warning('抱歉，这首歌曲暂时不能播放。')
+    }
+  }
   //点击播放列表中的歌曲 修改当前播放的音乐id 存入store中
   const changePlayMusicID = id => {
+    CheckCanPlay(id)
     //这里对切换上一首或者下一首进行了防抖处理 防止用户快速切换歌曲 导致歌词组件无法及时清除上一个已经进行的歌词滚动 因为歌词滚动需要时间初始化 如果快速切换会导致清除函数无法及时生效 使得多个歌词滚动同时进行 歌词会来回跳跃
-    debounce(() => {
-      setCurrentPlayMusicId(id)
-      setItem('currentPlayMusicId', id)
-    }, 200)()
   }
   const [isModalVisible, setIsModalVisible] = useState(false)
   const showModal = () => {
@@ -114,7 +127,7 @@ export default memo(function Playlist(props) {
                   </div>
                 </div>
 
-                <div> {item.artists}</div>
+                <div className='text-nowrap'> {item.artists}</div>
                 <div>
                   {item.duration}
                   <span
