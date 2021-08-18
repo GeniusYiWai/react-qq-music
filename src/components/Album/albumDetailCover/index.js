@@ -4,12 +4,16 @@ import { PlayCircleOutlined } from '@ant-design/icons'
 import { playMusic } from '@/utils/player'
 import './index.less'
 export default memo(function AlbumDetailCover(props) {
+  //props
   const { song } = props
+  //fucntions
+  //处理点击播放
   const handlePlay = index => {
     const { id, name, ar, dt, duration } = song[index]
     playMusic(id, name, ar, dt || duration)
   }
-  const showAlbumDetail = index => {
+  //跳转到专辑详情
+  const goToAlbumDetail = index => {
     const {
       al: { id: albumId }
     } = song[index]
@@ -48,7 +52,7 @@ export default memo(function AlbumDetailCover(props) {
                   <p
                     className='text-nowrap'
                     onClick={() => {
-                      showAlbumDetail(index)
+                      goToAlbumDetail(index)
                     }}
                   >
                     {al && al.name}

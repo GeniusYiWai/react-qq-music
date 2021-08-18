@@ -2,8 +2,11 @@ import React, { memo } from 'react'
 import { handleSinger, dateFormat } from '@/utils/tools'
 import './index.less'
 export default memo(function AlbumDetailCover(props) {
+  //props
   const { album } = props
-  const showAlbumDetail = id => {
+  //functions
+  //跳转到专辑详情
+  const goToAlbumDetail = id => {
     window.open(`/#/musichall/album/detail/${id}`)
   }
   return (
@@ -18,7 +21,7 @@ export default memo(function AlbumDetailCover(props) {
           <div className='album-result-cover' key={index}>
             <p
               onClick={() => {
-                showAlbumDetail(id)
+                goToAlbumDetail(id)
               }}
             >
               <img src={picUrl} alt='' />

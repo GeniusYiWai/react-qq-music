@@ -1,4 +1,4 @@
-import React, { memo, createElement, useState, useEffect } from 'react'
+import React, { memo, createElement, useState } from 'react'
 import { Comment } from 'antd'
 import { Avatar, Image, message } from 'antd'
 import moment from 'moment'
@@ -7,33 +7,33 @@ import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
 import { likeComment as likeCommentAPI } from '@/api/comment'
 import { LikeOutlined, LikeFilled } from '@ant-design/icons'
 import ReplyComment from './cpn/replyComment'
-
 export default memo(function CommentList(props) {
+  //props
   //id 父组件传递的当前评论的资源id
   //resourceType 当前评论的资源类型
-  //  0: 歌曲
+  // 0: 歌曲
   // 1: mv
   // 2: 歌单
   // 3: 专辑
   // 4: 电台
   // 5: 视频
   // 6: 动态
-
   const { resourceType, id } = props
-  //获取用户登录状态
-  const { isLogin } = useSelector(state => {
-    return {
-      isLogin: state.user.isLogin
-    }
-  }, shallowEqual)
-  const dispatch = useDispatch()
+  //state
   //控制组件重新渲染
   const [flag, setFlag] = useState(false)
   //控制回复框的展示和隐藏
   const [showReplyComment, setShowReplyComment] = useState(false)
   //获取父组件传递过来的评论的数据
   const [comment, setComment] = useState(props.comment)
-
+  //redux
+  const dispatch = useDispatch()
+  //获取用户登录状态
+  const { isLogin } = useSelector(state => {
+    return {
+      isLogin: state.user.isLogin
+    }
+  }, shallowEqual)
   //actions渲染对评论进行的操作
   //commentId 评论的id
   //liked 是否点赞
@@ -59,15 +59,15 @@ export default memo(function CommentList(props) {
       </span>
     ]
   }
-  //点赞评论
+  //处理点赞和取消点赞评论
   const handleLike = commentId => {
     //先判断是否登录 如果没有登录 展示登录盒子
     if (!isLogin) {
       dispatch(showLoginBoxDispatch(true))
       return
     }
-    let arr = comment
-    getCommentById(arr, commentId)
+    //通过当前点赞的评论的id找到他的父id
+    getCommentById(comment, commentId)
     //用于点赞后重新渲染组件
     setFlag(!flag)
   }
@@ -75,37 +75,40 @@ export default memo(function CommentList(props) {
   const getCommentById = (comment, commentId) => {
     //如果当前传递过来的评论的commentId等于最外层的评论的commentId 就直接修改这个最外层的评论的点赞状态
     if (commentId === comment.commentId) {
-      likeComment(comment, commentId)
+      likeComment(comment, id, commentId, resourceType)
     } else {
       //否则 遍历最外层的评论的children 判断是否有children的commentId等于传递的commentID 如果有 修改这个评论的点赞状态
       comment.children.forEach(e => {
         if (commentId === e.commentId) {
-          e.liked = !e.liked
-          let type = e.liked ? 1 : 0
-          e.liked ? e.likedCount++ : e.likedCount--
-          //发送点赞请求
-          //id 资源id
-          //commentId 点赞的评论的commentId
-          //type 点赞类型 1是点赞 0 是取消点赞
-          //resourceType 资源类型
-          likeCommentAPI(id, commentId, type, resourceType)
+          likeComment(e, id, commentId, resourceType)
         }
       })
     }
-    //调用父组件的方法 查询渲染修改后的comment数据 好像不需要
-    // setComment(comment)
   }
-  //发送点赞请求
-  const likeComment = (comment, commentId) => {
-    //取反点赞状态
-    comment.liked = !comment.liked
-    //根据点赞状态更改点赞数量
-    comment.liked ? comment.likedCount++ : comment.likedCount--
-    let type = comment.liked ? 1 : 0
-    likeCommentAPI(id, commentId, type, resourceType)
+
+  //发送点赞评论请求
+  const likeComment = async (e, id, commentId, resourceType) => {
+    try {
+      e.liked = !e.liked
+      //获取操作类型 1是点赞 0是取消点赞
+      let type = e.liked ? 1 : 0
+      //重新计算点赞次数
+      e.liked ? e.likedCount++ : e.likedCount--
+      //发送点赞请求
+      //id 资源id
+      //commentId 点赞的评论的commentId
+      //type 点赞类型 1是点赞 0 是取消点赞
+      //resourceType 资源类型
+      const { data } = await likeCommentAPI(id, commentId, type, resourceType)
+      if (data.code === 200) {
+        message.success('操作成功')
+      }
+    } catch (error) {
+      message.error('操作失败!')
+    }
   }
   //跳转到用户详情
-  const handleClick = id => {
+  const goToUserDetail = id => {
     window.open(`/#/profile/user/${id}`)
   }
   return (
@@ -115,7 +118,7 @@ export default memo(function CommentList(props) {
         author={comment.user && comment.user.nickname}
         avatar={
           <Avatar
-            onClick={() => handleClick(comment.user.userId)}
+            onClick={() => goToUserDetail(comment.user.userId)}
             src={comment.user && comment.user.avatarUrl}
           />
         }
