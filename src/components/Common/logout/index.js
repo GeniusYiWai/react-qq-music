@@ -3,6 +3,7 @@ import { message } from 'antd'
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { logout as logoutAPI } from '@/api/login'
 import { userLoginDispatch } from '@/pages/LoginBox/store/actionCreators'
+import {clearItem} from '@/utils/storage'
 import './index.less'
 export default memo(function Logout() {
   const dispatch = useDispatch()
@@ -20,6 +21,7 @@ export default memo(function Logout() {
     try {
       const { data } = await logoutAPI()
       if (data.code === 200) {
+        clearItem('cookie')
         message.success('退出成功')
         dispatch(userLoginDispatch(false))
       }

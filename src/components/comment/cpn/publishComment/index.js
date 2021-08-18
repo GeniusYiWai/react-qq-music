@@ -1,6 +1,6 @@
 import React, { memo, useState, useCallback } from 'react'
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
-import { Input } from 'antd'
+import { Input, message } from 'antd'
 import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
 import { sendComment } from '@/api/comment'
 import './index.less'
@@ -42,17 +42,21 @@ export default memo(function PublishComment(props) {
   }
   //发表评论
   const publishComments = async (commentType, resourceType, id, value) => {
-    const {
-      data: { comment }
-    } = await sendComment(commentType, resourceType, id, value)
-    //找了半天才发现为什么发表的评论不能添加到评论列表中 原来是因为这里返回的结果里没有parentCommentId 需要自己带上 草
-    //适当添加到所有评论的最顶部
-    totalComments.unshift({ ...comment, parentCommentId: 0 })
-    setValue('')
-    //修改所有评论数据
-    setTotalComments(totalComments)
-    //修改评论总数
-    setTotalNum(totalNum + 1)
+    try {
+      const {
+        data: { comment }
+      } = await sendComment(commentType, resourceType, id, value)
+      //找了半天才发现为什么发表的评论不能添加到评论列表中 原来是因为这里返回的结果里没有parentCommentId 需要自己带上 草
+      //适当添加到所有评论的最顶部
+      totalComments.unshift({ ...comment, parentCommentId: 0 })
+      setValue('')
+      //修改所有评论数据
+      setTotalComments(totalComments)
+      //修改评论总数
+      setTotalNum(totalNum + 1)
+    } catch (error) {
+      message.success('发表成功!')
+    }
   }
 
   return (

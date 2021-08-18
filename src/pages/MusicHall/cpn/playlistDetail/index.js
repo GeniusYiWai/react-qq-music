@@ -4,7 +4,10 @@ import { toTree } from '@/utils/tools'
 import PlaylistDetailCover from 'components/Playlist/playlistDetailCover'
 import Comment from 'components/Comment'
 import { getPlaylistComment as getPlaylistCommentAPI } from '@/api/comment'
-import { getPlaylistDeatil as getPlaylistDeatilAPI } from '@/api/playlist'
+import {
+  getPlaylistDeatil as getPlaylistDeatilAPI,
+  getPlaylistStatus as getPlaylistStatusAPI
+} from '@/api/playlist'
 import { getMusicById } from '@/api/player'
 import LazyLoadImg from 'components/Common/lazyloadImg'
 import PublishComment from 'components/Comment/cpn/publishComment'
@@ -35,6 +38,19 @@ export default memo(function PlaylistDetail() {
   const [playlistSongs, setPlaylistSongs] = useState([])
   //歌单收藏状态
   const [collect, setCollect] = useState(false)
+  //获取歌单是否收藏
+  const getPlaylistStatus = async () => {
+    try {
+      const {
+        data: { subscribed, code }
+      } = await getPlaylistStatusAPI(id)
+      if (code === 200) {
+        setCollect(subscribed)
+      }
+    } catch (error) {
+      message.error('获取歌单收藏状态失败!')
+    }
+  }
   //获取歌单详情
   const getPlaylistDetail = async () => {
     try {
@@ -121,6 +137,7 @@ export default memo(function PlaylistDetail() {
     getPlaylistDetail()
     getPlaylistComment(combineCondition)
     getPlaylistHotComment()
+    getPlaylistStatus()
   }, [])
   //滚动到评论区域
   const ScrollToComment = useCallback(() => {
@@ -173,6 +190,7 @@ export default memo(function PlaylistDetail() {
         id={id}
         resourceType={resourceType}
         ScrollToComment={ScrollToComment}
+        playlistId={playlistDetail.creator && playlistDetail.creator.userId}
       />
       <div className='pl-songs-container'>
         {playlistSongs &&

@@ -4,8 +4,17 @@ import MusicPlaylist from './cpn/musicPlaylist'
 import MusicControl from './cpn/musicControl'
 import MusicLyric from './cpn/musicLyric'
 import { getItem } from '@/utils/storage'
-import { useSelector } from 'react-redux'
+import {
+  userLoginDispatch,
+  setUserDispatch
+} from '@/pages/LoginBox/store/actionCreators'
+import { useDispatch, useSelector } from 'react-redux'
+import { getLoginStatus as getLoginStatusAPI } from '@/api/login'
+import { setItem } from '@/utils/storage'
+
 export default memo(function Player() {
+  const dispatch = useDispatch()
+
   //获取歌词组件的引用
   const childRef = useRef()
   // changeLyricScroll就是子组件暴露给父组件的方法
@@ -13,6 +22,10 @@ export default memo(function Player() {
   const changeLyricScroll = () => {
     childRef.current.changeLyricScroll()
   }
+  const pauseLyricScroll = () => {
+    childRef.current.pauseLyricScroll()
+  }
+
   //这个方法用来手动控制歌词的滚动进度
   const changeLyricProgress = time => {
     childRef.current.changeLyricProgress(time)
@@ -31,16 +44,40 @@ export default memo(function Player() {
       currentPlayMusic: state.player.currentPlayMusic
     }
   })
+
+  //获取登录信息
+  const getLoginStatus = async () => {
+    try {
+      const {
+        data: {
+          data: { profile }
+        }
+      } = await getLoginStatusAPI()
+      if (profile) {
+        //更改state中的用户登录状态
+        dispatch(userLoginDispatch(true))
+        //更改state中的用户信息
+        dispatch(setUserDispatch(profile))
+        setItem('uid', profile.userId)
+      }
+    } catch (error) {}
+  }
+  //登录成功 将登录态存入缓存 修改state中的用户登录状态
+  const getUserInfo = () => {
+    getLoginStatus()
+  }
   useEffect(() => {
+    getUserInfo()
     //监听页面进入 重新从缓存中取当前的播放列表和播放音乐的id
     document.addEventListener('visibilitychange', function () {
       var isHidden = document.hidden
       if (!isHidden) {
-        setPlaylist(getItem('playlist'))
-        setCurrentPlayMusicId(getItem('currentPlayMusicId'))
+        setPlaylist(getItem('playlist')||[])
+        setCurrentPlayMusicId(getItem('currentPlayMusicId')||null)
       }
     })
   }, [])
+
   return (
     <div
       className='player-container'
@@ -76,6 +113,7 @@ export default memo(function Player() {
               isPlaying={isPlaying}
               setIsPlaying={setIsPlaying}
               changeLyricScroll={changeLyricScroll}
+              pauseLyricScroll={pauseLyricScroll}
               changeLyricProgress={changeLyricProgress}
             />
             <MusicLyric

@@ -7,8 +7,10 @@ import { useSelector, useDispatch } from 'react-redux'
 import { showLoginBoxDispatch, userLoginDispatch } from './store/actionCreators'
 import { setUserDispatch } from './store/actionCreators'
 import { getLoginStatus } from '@/api/login'
-
+import { setItem } from '@/utils/storage'
 import { message } from 'antd'
+import { getLoginStatus as getLoginStatusAPI } from '@/api/login'
+
 const { TabPane } = Tabs
 export default memo(function LoginBox() {
   const dispatch = useDispatch()
@@ -30,10 +32,29 @@ export default memo(function LoginBox() {
   const changeModal = flag => {
     dispatch(showLoginBoxDispatch(flag))
   }
+  //获取登录信息
+  const getLoginStatus = async () => {
+    try {
+      const {
+        data: {
+          data: { profile }
+        }
+      } = await getLoginStatusAPI()
+      if (profile) {
+        //更改state中的用户登录状态
+        dispatch(userLoginDispatch(true))
+        //更改state中的用户信息
+        dispatch(setUserDispatch(profile))
+        setItem('uid', profile.userId)
+      }
+    } catch (error) {}
+  }
   //登录成功 刷新页面
-  const handleLoginSuccess = () => {
+  const handleLoginSuccess = cookie => {
+    setItem('cookie', cookie)
     message.success('登录成功')
-    window.location.reload()
+    getLoginStatus()
+    // window.location.reload()
   }
   return (
     <Modal

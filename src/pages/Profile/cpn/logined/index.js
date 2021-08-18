@@ -120,7 +120,7 @@ export default memo(function CollectList(props) {
     }
   }, [currentIndex])
   const goToUserDetail = () => {
-    window.open(`/profile/user/${userId}`)
+    window.open(`/#/profile/user/${userId}`)
   }
   return (
     <div>

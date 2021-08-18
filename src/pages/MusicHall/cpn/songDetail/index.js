@@ -12,7 +12,7 @@ import { ScrollTop } from '@/utils/tools'
 import { getLyric as getLyricAPI } from '@/api/player'
 import { getSongComment as getSongCommentAPI } from '@/api/comment'
 import InfiniteScroll from 'react-infinite-scroller'
-import { message } from 'antd'
+import { message, Alert } from 'antd'
 import Empty from 'components//Common/empty'
 import './index.less'
 //资源类型 0代表歌曲
@@ -68,7 +68,7 @@ export default memo(function SongDetail() {
           return toTree(totalComments.concat(comments), 0)
         })
         //设置偏移量
-        setOffset(offset + limit+1)
+        setOffset(offset + limit + 1)
         //取反第一次加载页面
         setFlag(false)
       }
@@ -153,6 +153,10 @@ export default memo(function SongDetail() {
             {songDetail.al && songDetail.al.name}
           </p>
         </div>
+        <Alert
+          message='请注意,歌曲没有获取收藏状态的接口,所有歌曲默认都是未收藏,所以即使已经收藏也显示未收藏。'
+          type='warning'
+        />
         <Actions
           totalNum={totalNum}
           collect={collect}

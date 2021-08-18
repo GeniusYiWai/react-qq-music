@@ -1,13 +1,10 @@
 import React, { memo } from 'react'
 import { handleSinger, dateFormat } from '@/utils/tools'
-import { useHistory } from 'react-router-dom'
-
 import './index.less'
 export default memo(function AlbumDetailCover(props) {
-  const history = useHistory()
   const { album } = props
   const showAlbumDetail = id => {
-    history.push(`/musichall/album/detail/${id}`)
+    window.open(`/#/musichall/album/detail/${id}`)
   }
   return (
     <div>

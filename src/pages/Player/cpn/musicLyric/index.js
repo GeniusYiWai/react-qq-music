@@ -21,6 +21,9 @@ export default memo(
       changeLyricScroll: () => {
         Lyric && Lyric.togglePlay()
       },
+      pauseLyricScroll: () => {
+        Lyric && Lyric.stop()
+      },
       changeLyricProgress: time => {
         Lyric && Lyric.seek(time)
         Lyric && Lyric.togglePlay()
@@ -59,13 +62,16 @@ export default memo(
         if (data.nolyric) {
           setLyric([{ txt: '纯音乐,敬请欣赏!' }])
           setLineNum(0)
-        } else {
+        } else if (data.lrc) {
           //生成Lyric实例
           Lyric = new LyricParser(data.lrc.lyric, handleLyric)
           //调用播放方法 前提是音乐在播放
           isPlaying && Lyric.play()
           //获取所有歌词
           setLyric(Lyric.lines)
+        } else {
+          setLyric([{ txt: '暂无歌词!' }])
+          setLineNum(0)
         }
       })
       //这里一定要返回一个清除歌词滚动的方法 不然会生成多个Lyric同时调用

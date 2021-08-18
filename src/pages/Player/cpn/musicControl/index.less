@@ -51,14 +51,26 @@
     height: 10px;
     margin-top: -3px;
   }
+
   .music-action {
     flex: 1;
-    
+    display: flex;
+    align-items: center;
+    span{
+      margin-left: 10px;
+      font-size: 24px;
+      color: #fff
+    }
     .play-mode {
       width: 26px;
       height: 21px;
       cursor: pointer;
       margin-left: 20px;
     }
+  }
+}
+.ant-modal-footer {
+  & > button:first-child {
+    display: none !important;
   }
 }

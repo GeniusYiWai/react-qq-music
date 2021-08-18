@@ -9,7 +9,6 @@ import { Skeleton, BackTop } from 'antd'
 import LoginBox from './pages/LoginBox'
 import '@/assets/css/common.less'
 export default memo(function App() {
-  // console.log(window.location.hash);
   return (
     <Provider store={store}>
       <Router>

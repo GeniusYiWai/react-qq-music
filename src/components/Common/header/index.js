@@ -11,6 +11,7 @@ import Logout from '../logout'
 import logo from '@/assets/img/logo.png'
 import { getLoginStatus as getLoginStatusAPI } from '@/api/login'
 import { message } from 'antd'
+import { setItem } from '@/utils/storage'
 import './index.less'
 //路由表
 const routes = [
@@ -60,6 +61,8 @@ export default memo(function Header() {
         dispatch(userLoginDispatch(true))
         //更改state中的用户信息
         dispatch(setUserDispatch(profile))
+        setItem('uid', profile.userId)
+
       }
     } catch (error) {}
   }

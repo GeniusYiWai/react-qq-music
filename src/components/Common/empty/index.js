@@ -14,7 +14,9 @@ export default memo(function EmptyStatus(props) {
       description={<span>{text}</span>}
     >
       {showBtn ? (
-        <button type='primary' className='btn'>
+        <button type='primary' className='btn' onClick={()=>{
+          window.open('/#/musichall/home')
+        }}>
           去主页 发现更多精彩！
         </button>
       ) : null}

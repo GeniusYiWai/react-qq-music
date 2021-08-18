@@ -1,6 +1,6 @@
 import React, { memo, createElement, useState, useEffect } from 'react'
 import { Comment } from 'antd'
-import { Avatar, Image } from 'antd'
+import { Avatar, Image, message } from 'antd'
 import moment from 'moment'
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
@@ -110,8 +110,6 @@ export default memo(function CommentList(props) {
   }
   return (
     <div className='comment-container w-1200'>
-
-    
       <Comment
         actions={actions(comment)}
         author={comment.user && comment.user.nickname}
