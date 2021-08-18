@@ -1,5 +1,5 @@
 import React, { memo, useState, useCallback } from 'react'
-import { Form, Input } from 'antd'
+import { Form, Input, message } from 'antd'
 import { sendComment as sendCommentAPI } from '@/api/comment'
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
@@ -45,21 +45,25 @@ export default memo(function Reply(props) {
     //  value 回复的评论内容
     // commentId 回复的评论commentId
     async (commentType, resourceType, id, value, commentId) => {
-      const {
-        data: { comment: replyComment }
-      } = await sendCommentAPI(
-        commentType,
-        resourceType,
-        id,
-        value.trim(),
-        commentId
-      )
-      //将新回复的评论添加到回复的这个评论的回复列表中的第一个
-      comment.children.unshift(replyComment)
-      //查询渲染回复数据
-      setComment(comment)
-      //关闭回复框
-      setShowReplyComment(false)
+      try {
+        const {
+          data: { comment: replyComment }
+        } = await sendCommentAPI(
+          commentType,
+          resourceType,
+          id,
+          value.trim(),
+          commentId
+        )
+        //将新回复的评论添加到回复的这个评论的回复列表中的第一个
+        comment.children.unshift(replyComment)
+        //查询渲染回复数据
+        setComment(comment)
+        //关闭回复框
+        setShowReplyComment(false)
+      } catch (error) {
+        message.success('回复成功!')
+      }
     },
     []
   )

@@ -1,5 +1,12 @@
 @theme-color: #31c27c;
+.user-create-playlist {
+  cursor: pointer;
+  &:hover {
+    color: @theme-color;
+  }
+}
 .player-playlist-container {
+ 
   padding-top: 50px;
   height: 400px;
   overflow-y: scroll;
@@ -8,13 +15,13 @@
     height: 8px;
   }
   &::-webkit-scrollbar-thumb {
-    background-color: @theme-color;
+    background-color: #666;
   }
   &::-webkit-scrollbar-thumb {
-    background-color: @theme-color;
+    background-color: #666;
   }
   &::-webkit-scrollbar-thumb {
-    background-color: @theme-color;
+    background-color: #666;
     border-radius: 5px;
   }
   &::-webkit-scrollbar-track {
@@ -46,22 +53,24 @@
       display: inline-block;
     }
     .song-name {
-      position: relative;
       .name {
+        display: flex;
+        justify-content: center;
         cursor: pointer;
-        margin-top: 0;
         position: relative;
+        margin-top: 0;
         height: 30px;
         line-height: 30px;
+
         p {
           display: flex;
-          position: absolute;
-          left: 110px;
-          top: 0;
           opacity: 0;
+          position: absolute;
+          right: 0;
           transition: all 0.5s;
           span {
-            font-size: 20px;
+            font-size: 25px;
+            margin: 0 3px;
           }
         }
         &:hover {
@@ -78,6 +87,7 @@
       text-align: center;
       height: 30px;
       line-height: 30px;
+      font-size: 14px;
     }
   }
   .player-playlist-action {

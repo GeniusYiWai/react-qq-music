@@ -7,10 +7,13 @@ import Comment from 'components/Comment'
 import PublishComment from 'components/Comment/cpn/publishComment'
 import { getAlbumComment as getAlbumCommentAPI } from '@/api/comment'
 import LazyLoadImg from 'components/Common/lazyloadImg'
-import { getAlbumDeatil as getAlbumDeatilAPI } from '@/api/album'
+import {
+  getAlbumDeatil as getAlbumDeatilAPI,
+  getAlbumStatus as getAlbumStatusAPI
+} from '@/api/album'
 import Actions from 'components/Actions'
 import { ScrollTop } from '@/utils/tools'
-import { message } from 'antd'
+import { message,  } from 'antd'
 import InfiniteScroll from 'react-infinite-scroller'
 
 import Empty from 'components/Common/empty'
@@ -43,6 +46,7 @@ export default memo(function AlbumDetail() {
   //每页大小
   const [limit, setLimit] = useState(10)
   const [flag, setFlag] = useState(true)
+
   //是否还有更多数据
   const [hasMore, setHasMore] = useState(true)
   const [combineCondition, setCombineCondition] = useState({
@@ -50,6 +54,19 @@ export default memo(function AlbumDetail() {
     limit,
     offset
   })
+  //获取专辑是否收藏
+  const getAlbumStatus = async () => {
+    try {
+      const {
+        data: { isSub, code }
+      } = await getAlbumStatusAPI(id)
+      if (code === 200) {
+        setCollect(isSub)
+      }
+    } catch (error) {
+      message.error('获取专辑收藏状态失败!')
+    }
+  }
   //获取专辑详情
   const getAlbumDetail = async () => {
     try {
@@ -118,6 +135,8 @@ export default memo(function AlbumDetail() {
     getAlbumComment(combineCondition)
     //获取专辑下的热门评论
     getAlbumHotComment()
+    //获取专辑收藏状态
+    getAlbumStatus()
   }, [])
   //滚动到评论区域
   const ScrollToComment = useCallback(() => {
@@ -161,6 +180,7 @@ export default memo(function AlbumDetail() {
 
         <AlbumDetailCover song={albumSongs} />
       </div>
+    
       <Actions
         totalNum={totalNum}
         collect={collect}

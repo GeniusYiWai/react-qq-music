@@ -1,5 +1,5 @@
-import React, { memo, useState, useCallback } from 'react'
-import { Button } from 'antd'
+import React, { memo, useState, useCallback, useMemo } from 'react'
+import { Button, Modal } from 'antd'
 import {
   PlayCircleOutlined,
   HeartOutlined,
@@ -8,12 +8,19 @@ import {
   HeartFilled,
   CommentOutlined
 } from '@ant-design/icons'
+import { getItem } from '@/utils/storage'
 import { message } from 'antd'
 import { playPlaylist, playMusic, playRank } from '@/utils/player'
-import { collectPlaylist, collectAlbum, collectMv } from '@/api/collect'
-
+import {
+  collectPlaylist,
+  collectAlbum,
+  collectMv,
+  collectSongToPlaylist as collectSongToPlaylistAPI
+} from '@/api/collect'
+import { getCollectPlaylist as getUserCreatePlaylistAPI } from '@/api/profile'
 import './index.less'
 export default memo(function Actions(props) {
+  const uid = useMemo(() => getItem('uid'), [])
   const {
     totalNum, //评论总数 每个详情页面都用
     resourceType, //资源类型 根据资源类型来调用不用的收藏接口
@@ -24,11 +31,14 @@ export default memo(function Actions(props) {
     songDetail = {}, //歌曲详情 只有当页面是歌曲详情页面才会传过来 因为播放歌曲需要这个数据
     albumSongs = [], //专辑歌曲 只有当页面是专辑详情页面才会传过来 因为播放专辑下的所有歌曲这个数据
     playVideo, //播放mv 只有当页面是mv详情页面才会传过来 因为播放mv需要调用这个方法
-    ScrollToTop // 播放mv时滚到到顶部 只有当页面是mv详情页面才会传过来
+    ScrollToTop, // 播放mv时滚到到顶部 只有当页面是mv详情页面才会传过来,
+    playlistId
   } = props
+
   //收藏按钮禁用状态
   const [loading, setLoading] = useState(false)
   //播放
+
   const handlePlay = () => {
     //判断资源类型
     switch (resourceType) {
@@ -54,16 +64,75 @@ export default memo(function Actions(props) {
         break
     }
   }
+  //用户创建歌单
+  const [userCreatePlaylists, setUserCreatePlaylists] = useState([])
+  //获取用户创建歌单参数
+  const [createPlcombineCondition, setCreatePlCombineCondition] = useState({
+    //id
+    uid,
+    //偏移量
+    offset: 0,
+    //每页数据条数
+    limit: 15
+  })
+  //获取用户创建歌单
+  const getUserCreatePlaylist = async createPlcombineCondition => {
+    try {
+      const {
+        data: { playlist }
+      } = await getUserCreatePlaylistAPI({ ...createPlcombineCondition })
+      const newArr = []
+      //如果userId等于用户id 那就是用户创建的歌单
+      playlist.forEach(e => {
+        if (e.userId == uid) {
+          newArr.push(e)
+        }
+      })
+      setUserCreatePlaylists(newArr)
+    } catch (error) {
+      message.error('获取用户歌单失败!')
+    }
+  }
+  const collectSongToPlaylist = async playlist => {
+    console.log(playlist)
+    const op = !collect ? 'add' : 'del'
+    try {
+      const {
+        data: {
+          body: { code }
+        }
+      } = await collectSongToPlaylistAPI(playlist.id, id, op)
+      if (code === 200) {
+        message.success(!collect ? '添加成功' : '取消成功')
+        setIsModalVisible(false)
+      } else if (code === 502) {
+        message.warning('歌单内歌曲重复')
+      }
+    } catch (error) {
+      message.error('添加失败!')
+    }
+  }
+  const [isModalVisible, setIsModalVisible] = useState(false)
+
+  const showModal = () => {
+    setIsModalVisible(true)
+  }
+
+  const handleOk = () => {
+    setIsModalVisible(false)
+  }
+
+  const handleCancel = () => {
+    setIsModalVisible(false)
+  }
   //收藏当前页面的资源
-  const collectResource = useCallback(async () => {
-    //取反收藏按钮的状态
-    setCollect && setCollect(!collect)
+  const collectResource = async () => {
     switch (resourceType) {
       //收藏歌曲
       case 0:
-        message.error('暂无该接口')
+        setIsModalVisible(true)
+        getUserCreatePlaylist(createPlcombineCondition)
         break
-
       //收藏 统一需要id 和t
       //t为1收藏
       //t为2 取消收藏
@@ -72,8 +141,12 @@ export default memo(function Actions(props) {
         try {
           const type = !collect ? 1 : 2
           setLoading(true)
+          console.log(type)
           const { data } = await collectMv(type, id)
           setLoading(false)
+          //取反收藏按钮的状态
+          setCollect && setCollect(!collect)
+          message.success(data.message)
         } catch (error) {
           setLoading(false)
         }
@@ -85,6 +158,9 @@ export default memo(function Actions(props) {
           setLoading(true)
           const { data } = await collectPlaylist(type, id)
           setLoading(false)
+          //取反收藏按钮的状态
+          setCollect && setCollect(!collect)
+          message.success(data.message)
         } catch (error) {
           setLoading(false)
         }
@@ -96,6 +172,9 @@ export default memo(function Actions(props) {
           setLoading(true)
           const { data } = await collectAlbum(type, id)
           setLoading(false)
+          //取反收藏按钮的状态
+          setCollect && setCollect(!collect)
+          message.success(data.message)
         } catch (error) {
           setLoading(false)
         }
@@ -103,7 +182,7 @@ export default memo(function Actions(props) {
       default:
         break
     }
-  }, [resourceType])
+  }
   const setContenByType = useCallback(() => {
     switch (resourceType) {
       case 2:
@@ -125,33 +204,58 @@ export default memo(function Actions(props) {
   }, [resourceType])
   return (
     <div className='actions-container'>
+      <Modal
+        title='收藏到歌单'
+        visible={isModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        footer={[]}
+      >
+        {userCreatePlaylists.map(item => {
+          return (
+            <p
+              className='user-create-playlist'
+              onClick={() => {
+                collectSongToPlaylist(item)
+              }}
+            >
+              {item.name}
+            </p>
+          )
+        })}
+      </Modal>
       <Button icon={<PlayCircleOutlined />} onClick={() => handlePlay()}>
         {setContenByType()}
       </Button>
 
-      {collect ? (
-        <>
-          <Button
-            icon={<HeartFilled />}
-            className='collected'
-            onClick={() => collectResource()}
-            loading={loading}
-          >
-            <span>已收藏</span>
-          </Button>
-        </>
-      ) : (
-        <>
-          <Button
-            icon={<HeartOutlined />}
-            onClick={() => collectResource()}
-            loading={loading}
-            className='unselected'
-          >
-            收藏
-          </Button>
-        </>
+      {playlistId === uid ? null : (
+        <div>
+          {collect ? (
+            <>
+              <Button
+                icon={<HeartFilled />}
+                className='collected'
+                onClick={() => collectResource()}
+                loading={loading}
+              >
+                <span>已收藏</span>
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                icon={<HeartOutlined />}
+                onClick={() => collectResource()}
+                loading={loading}
+                className='unselected'
+              >
+                收藏
+              </Button>
+            </>
+          )}
+        </div>
       )}
+
       <Button icon={<CommentOutlined />} onClick={() => ScrollToComment()}>
         评论{totalNum}
       </Button>

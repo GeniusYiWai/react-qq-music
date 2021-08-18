@@ -11,7 +11,6 @@ import {
   getUserListenSongs as getUserListenSongsAPI
 } from '@/api/profile'
 import LazyLoadImg from 'components/Common/lazyloadImg'
-import { WeiboCircleOutlined } from '@ant-design/icons'
 import Empty from 'components/Common/empty'
 import PlaylistCover from 'components/Playlist/playlistCover'
 import ListenSongs from './cpn/listenSongsCover'

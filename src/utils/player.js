@@ -19,10 +19,12 @@ export const playMusic = (id, name, artists, duration) => {
       setItem('currentPlayMusicId', id)
       //从缓存中获取歌曲列表
       let playlist = getItem('playlist')
+      console.log(artists)
       const songInfo = {
         id,
         name,
         artists: handleSinger(artists),
+        singerId: artists[0].id,
         duration: formatMinuteSecond(duration)
       }
       //如果是第一次播放歌曲 初始化播放列表
@@ -57,14 +59,18 @@ export const playPlaylist = id => {
           //格式化播放列表
           const playlist = data.songs.reduce((init, val) => {
             let { id, name, ar: artists, dt: duration } = val
+            const singerId = artists[0].id
+
             artists = handleSinger(val.ar)
             duration = formatMinuteSecond(val.dt)
             init.push({
               id,
               name,
               artists,
+              singerId,
               duration
             })
+
             return init
           }, [])
           //将播放列表存入缓存
@@ -85,12 +91,15 @@ export const playRank = tracks => {
   //格式化播放列表
   const playlist = tracks.reduce((init, val) => {
     let { id, name, ar: artists, dt: duration } = val
+    const singerId = artists[0].id
+
     artists = handleSinger(val.ar)
     duration = formatMinuteSecond(val.dt)
     init.push({
       id,
       name,
       artists,
+      singerId,
       duration
     })
     return init
@@ -114,12 +123,14 @@ export const playAlbum = id => {
           //格式化播放列表
           const playlist = data.songs.reduce((init, val) => {
             let { id, name, ar: artists, dt: duration } = val
+            const singerId = artists[0].id
             artists = handleSinger(val.ar)
             duration = formatMinuteSecond(val.dt)
             init.push({
               id,
               name,
               artists,
+              singerId,
               duration
             })
             return init

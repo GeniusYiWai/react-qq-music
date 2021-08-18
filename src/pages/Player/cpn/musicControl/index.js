@@ -4,7 +4,9 @@ import {
   StepBackwardOutlined,
   StepForwardOutlined,
   PlayCircleOutlined,
-  PauseCircleOutlined
+  PauseCircleOutlined,
+  CommentOutlined,
+  VerticalAlignBottomOutlined
 } from '@ant-design/icons'
 import { setCurrentPlayMusic } from '../../store/actionCreators'
 import { useSelector, useDispatch } from 'react-redux'
@@ -17,7 +19,6 @@ import {
 } from '@/utils/tools'
 import { getItem, setItem } from '@/utils/storage'
 import { CheckCanPlay as CheckCanPlayAPI } from '@/api/player'
-
 import player from '@/assets/img/player.png'
 import './index.less'
 //0 -205px 列表循坏
@@ -90,6 +91,7 @@ export default memo(function Progress(props) {
 
   //处理点击播放暂停图标 调用父元素的更新播放状态方法 音乐同步播放暂停
   const changePlayStatus = status => {
+    if (disabled) return
     setIsPlaying(status)
     //调用父组件控制歌词组件是否滚动的方法
     changeLyricScroll()
@@ -143,7 +145,7 @@ export default memo(function Progress(props) {
         }, 200)()
       }
     } catch (error) {
-      message.warning('抱歉，这首歌曲暂时不能播放。')
+      message.error('抱歉，这首歌曲暂时不能播放。')
     }
   }
   //处理播放上一首或者下一首
@@ -229,7 +231,7 @@ export default memo(function Progress(props) {
     // audioRef.current.play()
   }, [currentPlayMusicId])
   const handleError = () => {
-    message.error('播放出错!')
+    message.error('抱歉，这首歌曲暂时不能播放。')
     setIsPlaying(false)
     //调用父组件控制歌词组件是否滚动的方法
     pauseLyricScroll()
@@ -243,9 +245,9 @@ export default memo(function Progress(props) {
         visible={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
-        cancelText={''}
+        okText={'确定'}
       >
-        <p>由于您的浏览器设置，音乐无法自动播放，请手动点击播放。</p>
+        <p>由于您的浏览器设置，音乐无法自动播放，请点击确定后开始播放音乐。</p>
       </Modal>
       <audio
         autoPlay
@@ -297,6 +299,18 @@ export default memo(function Progress(props) {
             }}
             onClick={() => changePlayMode()}
           ></div>
+        </Tooltip>
+        <Tooltip title={'查看评论'} color={'#31c27c'}>
+          <CommentOutlined
+            onClick={() =>
+              window.open(`/#/musichall/song/detail/${currentPlayMusicId}`)
+            }
+          />
+        </Tooltip>
+        <Tooltip title={'下载'} color={'#31c27c'}>
+          <VerticalAlignBottomOutlined
+            onClick={() => window.open(`${getPlaySong(currentPlayMusicId)}`)}
+          />
         </Tooltip>
       </div>
     </div>

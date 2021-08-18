@@ -16,7 +16,7 @@ export default memo(function LoginByPhone(props) {
       const { data } = await loginbByPhoneAPI(phoneNumber, password)
       if (data.code === 200) {
         //更新state中的用户登录状态 以及缓存中的用户登录状态 销毁弹出层
-        handleLoginSuccess(true)
+        handleLoginSuccess(data.cookie)
         setVisible(false)
       } else if (data.code === 502) {
         message.error(data.message)

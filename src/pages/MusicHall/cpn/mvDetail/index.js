@@ -18,7 +18,7 @@ import InfiniteScroll from 'react-infinite-scroller'
 import Actions from 'components/Actions'
 import Empty from 'components//Common/empty'
 import { ScrollTop } from '@/utils/tools'
-import { message } from 'antd'
+import { message, Alert } from 'antd'
 
 //资源类型 1代表mv
 const resourceType = 1
@@ -140,7 +140,7 @@ export default memo(function MvDetail() {
           return toTree(totalComments.concat(comments), 0)
         })
         //设置偏移量
-        setOffset(offset + limit+1)
+        setOffset(offset + limit + 1)
         //取反第一次加载页面
         setFlag(false)
       }
@@ -185,7 +185,10 @@ export default memo(function MvDetail() {
         <p>作者:{mvDetail.artists && handleSinger(mvDetail.artists)}</p>
         <p>发行时间:{mvDetail.publishTime}</p>
       </div>
-
+      <Alert
+        message='请注意,mv没有获取收藏状态的接口,所有mv默认都是未收藏,所以即使已经收藏也显示未收藏。'
+        type='warning'
+      />
       <Actions
         totalNum={totalNum}
         collect={collect}

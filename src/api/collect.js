@@ -21,3 +21,7 @@ export const collectAlbum = (t, id) => {
 export const collectMv = (t, id) => {
   return request.get(`/mv/sub?t=${t}&mvid=${id}&timestamp=${timestamp}`)
 }
+
+export const collectSongToPlaylist = (pid, tracks, op = 'add') => {
+  return request.get(`/playlist/tracks?op=${op}&pid=${pid}&tracks=${tracks}`)
+}

@@ -34,7 +34,7 @@ export default memo(function LoginByQRCode(props) {
         //清除定时器
         clearInterval(timer)
         //更新state中的用户登录状态 以及缓存中的用户登录状态 销毁弹出层
-        handleLoginSuccess(true)
+        handleLoginSuccess(data.cookie)
       }
     } catch (error) {
       message.error('获取二维码状态失败,请检查网络连接!')

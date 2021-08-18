@@ -1,5 +1,6 @@
 import request from '../utils/request'
-
+// 时间戳,防止缓存
+const timestamp = new Date().getTime()
 //获取所有歌单分类
 export const getAllPlaylistCate = () => {
   return request.get(`/playlist/catlist`)
@@ -18,4 +19,10 @@ export const getHighQualityByCate = (cate, limit, offset) => {
 //id 歌单id
 export const getPlaylistDeatil = id => {
   return request.get(`/playlist/detail?id=${id}`)
+}
+
+//获取歌单是否收藏
+//id 歌单id
+export const getPlaylistStatus = id => {
+  return request.get(`/playlist/detail/dynamic?id=${id}&timestamp=${timestamp}`)
 }
