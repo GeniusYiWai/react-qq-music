@@ -1,12 +1,13 @@
 import React, { memo, createElement, useState } from 'react'
 import { Comment } from 'antd'
-import { Avatar, Image, message } from 'antd'
+import { Avatar, message } from 'antd'
 import moment from 'moment'
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
 import { likeComment as likeCommentAPI } from '@/api/comment'
 import { LikeOutlined, LikeFilled } from '@ant-design/icons'
 import ReplyComment from './cpn/replyComment'
+//评论组件
 export default memo(function CommentList(props) {
   //props
   //id 父组件传递的当前评论的资源id
@@ -34,31 +35,7 @@ export default memo(function CommentList(props) {
       isLogin: state.user.isLogin
     }
   }, shallowEqual)
-  //actions渲染对评论进行的操作
-  //commentId 评论的id
-  //liked 是否点赞
-  //likedCount 点赞总数
-  //showReply 是否展示回复按钮
-  const actions = ({ commentId, liked, likedCount }, showReply = true) => {
-    return [
-      <span
-        onClick={() => {
-          handleLike(commentId)
-        }}
-      >
-        {/* 如果点赞了就显示点赞图标 */}
-        {createElement(liked ? LikeFilled : LikeOutlined)}
-        <span className='comment-action'>{likedCount}</span>
-      </span>,
-      <span
-        key='comment-basic-reply-to'
-        // 展示回复框
-        onClick={() => setShowReplyComment(!showReplyComment)}
-      >
-        {showReply ? '回复' : null}
-      </span>
-    ]
-  }
+
   //处理点赞和取消点赞评论
   const handleLike = commentId => {
     //先判断是否登录 如果没有登录 展示登录盒子
@@ -111,6 +88,31 @@ export default memo(function CommentList(props) {
   const goToUserDetail = id => {
     window.open(`/#/profile/user/${id}`)
   }
+  //actions渲染对评论进行的操作
+  //commentId 评论的id
+  //liked 是否点赞
+  //likedCount 点赞总数
+  //showReply 是否展示回复按钮
+  const actions = ({ commentId, liked, likedCount }, showReply = true) => {
+    return [
+      <span
+        onClick={() => {
+          handleLike(commentId)
+        }}
+      >
+        {/* 如果点赞了就显示点赞图标 */}
+        {createElement(liked ? LikeFilled : LikeOutlined)}
+        <span className='comment-action'>{likedCount}</span>
+      </span>,
+      <span
+        key='comment-basic-reply-to'
+        // 展示回复框
+        onClick={() => setShowReplyComment(!showReplyComment)}
+      >
+        {showReply ? '回复' : null}
+      </span>
+    ]
+  }
   return (
     <div className='comment-container w-1200'>
       <Comment
@@ -131,7 +133,6 @@ export default memo(function CommentList(props) {
             setShowReplyComment={setShowReplyComment}
             id={id}
             commentId={comment.commentId}
-            setComment={setComment}
             comment={comment}
             resourceType={resourceType}
           />

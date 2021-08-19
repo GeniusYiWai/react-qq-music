@@ -4,16 +4,18 @@ import PlayImg from 'components/Common/playImg'
 import { handleSinger } from '@/utils/tools'
 import { playAlbum } from '@/utils/player'
 import './index.less'
-//通用专辑封面
-//id album id
-// picUrl 图片地址
-// artists 专辑作者
-// name 专辑名称
+//新碟上架封面组件
 export default memo(function NewAlbumCover(props) {
   //props
+  //id album id
+  // picUrl 图片地址
+  // artists 专辑作者
+  // name 专辑名称
   const {
     album: { id, picUrl, artists, name }
   } = props
+  //functions
+
   //处理点击播放
   const handlePlay = () => {
     playAlbum(id)

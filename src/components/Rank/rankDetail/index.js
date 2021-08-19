@@ -5,12 +5,12 @@ import { playMusic } from '@/utils/player'
 import { handleSinger, formatMinuteSecond } from '@/utils/tools'
 import './index.less'
 //排行榜下的歌曲详情
-// name, 名称
-// id, id
-// al: { picUrl } 图片地址
-// ar, 作者
-// dt 时长
 export default memo(function RankDetail(props) {
+  // name, 名称
+  // id, id
+  // al: { picUrl } 图片地址
+  // ar, 作者
+  // dt 时长
   const {
     name,
     id,
@@ -18,16 +18,18 @@ export default memo(function RankDetail(props) {
     ar,
     dt
   } = props.item
+  //点击的歌曲的索引
   const { index } = props
-
+  //点击播放
   const handlePlay = () => {
     playMusic(id, name, ar, dt)
   }
-
-  const handleSingerClick = () => {
+  //查看歌手详情
+  const goToSingerDetail = () => {
     window.open(`/#/profile/singer/${ar[0].id}`)
   }
-  const handleNameClick = () => {
+  //查看歌曲详情
+  const goToSongDetail = () => {
     window.open(`/#/musichall/song/detail/${id}`)
   }
   return (
@@ -37,11 +39,11 @@ export default memo(function RankDetail(props) {
           <LazyLoadImg url={picUrl} width={60} height={60} />
           <PlayImg handleClick={() => handlePlay()}></PlayImg>
         </div>
-        <p onClick={() => handleNameClick()}>{name}</p>
+        <p onClick={() => goToSongDetail()}>{name}</p>
       </div>
 
       <div className='rank-detail-info'>
-        <span onClick={() => handleSingerClick()}>{handleSinger(ar)}</span>
+        <span onClick={() => goToSingerDetail()}>{handleSinger(ar)}</span>
         <i>{formatMinuteSecond(dt)}</i>
       </div>
     </div>

@@ -3,7 +3,6 @@ import {
   SHOW_LOGIN_BOX,
   SET_USER_INFO
 } from './constant'
-
 const initState = {
   //用户是否登录
   isLogin: false,

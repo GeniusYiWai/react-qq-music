@@ -1,16 +1,18 @@
 import React, { memo } from 'react'
 import LazyLoadImg from 'components/Common/lazyloadImg'
 import PlayImg from 'components/Common/playImg'
-
+import { message } from 'antd'
 import './indx.less'
 //通用dj 封面
-//picUrl 图片地址
-//name dj名称
-//desc dj描述
 export default memo(function DjCover(props) {
-  const { picUrl, name, desc, id } = props.dj
+  //props
+  //picUrl 图片地址
+  //name dj名称
+  //desc dj描述
+  const { picUrl, name, desc } = props.dj
+  //
   const handlePlay = () => {
-    console.log(id)
+    message.warning('没做')
   }
   return (
     <div className='dj-cover'>

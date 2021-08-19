@@ -1,7 +1,28 @@
 import React, { memo, useState } from 'react'
 import './index.less'
-
+//混合查询条件组件
 export default memo(function ConditionQuery(props) {
+  //props
+  // const Type = [ 分类条件数据
+  //   {
+  //     categoryName: '全部', //categoryName 条件名称
+  //     type: '-1'
+  //   },
+  //   {
+  //     categoryName: '男歌手',
+  //     type: '1'
+  //   },
+  //   {
+  //     categoryName: '女歌手',
+  //     type: '2'
+  //   },
+  //   {
+  //     categoryName: '乐队',
+  //     type: '3'
+  //   }
+  // ]
+  //condition 查询条件代表的参数
+  //switchCondition 切换查询条件
   const { condition, Category, categoryName, switchCondition } = props
   const [currentCondition, setCondition] = useState(Category[0][condition])
   return (

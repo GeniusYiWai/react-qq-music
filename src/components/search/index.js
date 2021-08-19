@@ -11,9 +11,13 @@ import { setItem, getItem, isExist } from '@/utils/storage'
 import { useHistory } from 'react-router-dom'
 import './index.less'
 const { Search } = Input
+//搜索组件
 export default memo(function SearchInput() {
+  //history
   const historyHook = useHistory()
+  //ref
   const searchBoxRef = useRef()
+  //state
   //用户输入的搜索关键字
   const [keyword, setKeyword] = useState()
   //热搜列表数据
@@ -57,25 +61,25 @@ export default memo(function SearchInput() {
       getSuggestion(value)
     }
   }
+  //获取搜索联想建议
   const getSearchSuggest = async value => {
     try {
       const {
-        data: { result }
+        data: { result, code }
       } = await getSearchSuggestAPI(value)
-      //赋值搜索联想数据
-      setSearchSuggestion(result)
-      //隐藏热门搜索
-      setShowHotKey(false)
-      //展示搜索联想
-      setShowSearchSuggestion(true)
+      if (code === 200) {
+        //赋值搜索联想数据
+        setSearchSuggestion(result)
+        //隐藏热门搜索
+        setShowHotKey(false)
+        //展示搜索联想
+        setShowSearchSuggestion(true)
+      }
     } catch (error) {
-      message.error('获取搜索联想建议失败,请检查网络连接!')
+      message.error('获取搜索联想建议失败!')
     }
   }
-  const getSuggestion = value => {
-    //调用获取搜索联想建议的接口
-    getSearchSuggest(value)
-  }
+
   //用户按下enter键 将关键字存入缓存 跳转到搜索页面
   const handlePress = e => {
     const {
@@ -91,10 +95,7 @@ export default memo(function SearchInput() {
       goToSearch(value)
     }
   }
-  const goToSearch = (value, t = 'songs') => {
-    //跳转到搜索页面
-    historyHook.push(`/musichall/search?k=${value}&t=${t}`)
-  }
+  //获取历史搜索
   const setHistorySearch = useCallback(value => {
     //从缓存中获取搜索历史
     const historySearch = getItem('historySearch') || []
@@ -115,15 +116,27 @@ export default memo(function SearchInput() {
       }
     }
   }, [])
+  //获取搜索联想建议
+  const getSuggestion = value => {
+    //调用获取搜索联想建议的接口
+    getSearchSuggest(value)
+  }
+  //获取热门搜索
   const getHotKeywords = async () => {
     try {
       const {
-        data: { data }
+        data: { data, code }
       } = await getHotKeywordsAPI()
-      setHotKeywords(data.slice(0, 5))
+      if (code === 200) {
+        setHotKeywords(data.slice(0, 5))
+      }
     } catch (error) {
-      message.error('获取热门搜索失败,请检查网络连接!')
+      message.error('获取热门搜索失败!')
     }
+  }
+  //跳转到搜索页面 携带点击的关键字 默认展示歌曲页面
+  const goToSearch = (value, t = 'songs') => {
+    historyHook.push(`/musichall/search?k=${value}&t=${t}`)
   }
   useEffect(() => {
     //获取热门搜索关键字

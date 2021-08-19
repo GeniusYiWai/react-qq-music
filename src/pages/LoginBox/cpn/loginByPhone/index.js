@@ -2,10 +2,14 @@ import React, { memo, useState } from 'react'
 import { Button, Form, Input, message } from 'antd'
 import { loginbByPhone as loginbByPhoneAPI } from '@/api/login'
 export default memo(function LoginByPhone(props) {
-  const [form] = Form.useForm()
+  //props
+  //setVisible 控制弹出层显示隐藏
+  //handleLoginSuccess 登录成功后调用该方法
   const { setVisible, handleLoginSuccess } = props
-  const [loading, setLoading] = useState(false)
   //获取表单引用
+  const [form] = Form.useForm()
+  //控制按钮禁用
+  const [loading, setLoading] = useState(false)
   //重置表单
   const onReset = () => {
     form.resetFields()

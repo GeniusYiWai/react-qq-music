@@ -7,12 +7,12 @@ import './index.less'
 const { TextArea } = Input
 //1代表发表评论 写死
 const commentType = 1
+//发表评论组件
 export default memo(function PublishComment(props) {
   //props
   const {
     totalNum, //总评论数
     id, //资源id
-    setTotalComments, //修改所有评论
     totalComments, //所有评论的数据
     setTotalNum, //修改总评论数
     resourceType //资源类型

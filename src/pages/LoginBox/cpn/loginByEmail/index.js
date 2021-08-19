@@ -2,10 +2,11 @@ import React, { memo, useState } from 'react'
 import { Button, Form, Input, message } from 'antd'
 import { loginByEmail as loginByEmailAPI } from '@/api/login'
 export default memo(function LoginByEmail(props) {
-  //获取表单引用
-  const [form] = Form.useForm()
+  //props
   //隐藏弹出层
   const { setVisible, handleLoginSuccess } = props
+  //获取表单引用
+  const [form] = Form.useForm()
   //点击登录后禁用按钮
   const [loading, setLoading] = useState(false)
   //重置表单
@@ -29,7 +30,7 @@ export default memo(function LoginByEmail(props) {
       setLoading(false)
     }
   }
-  //邮箱和密码校验通过触发该方法
+  //邮箱和密码校验通过触发该方法 进入登录流程
   const handleLogin = ({ email, password }) => {
     setLoading(true)
     loginByEmail(email, password)

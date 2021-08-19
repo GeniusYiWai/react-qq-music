@@ -8,8 +8,10 @@ import {
   getQRStatus as getQRStatusAPI
 } from '@/api/login'
 import './index.less'
+//定时器
+let timer
 export default memo(function LoginByQRCode(props) {
-  let timer
+  //props
   const { setVisible, handleLoginSuccess } = props
   //扫描登录授权中
   const [Authorizing, setAuthorizing] = useState(false)
@@ -23,13 +25,16 @@ export default memo(function LoginByQRCode(props) {
       const { data } = await getQRStatusAPI(key)
       //状态码800 说明二维码已经失效 隐藏之前的二维码图片 清除定时器
       if (data.code === 800) {
+        //二维码已经失效
         setQRValid(false)
         setAuthorizing(false)
         clearInterval(timer)
       } else if (data.code === 802) {
+        //授权中
         //展示授权中页面
         setAuthorizing(true)
       } else if (data.code === 803) {
+        //登录成功
         setVisible(false)
         //清除定时器
         clearInterval(timer)
@@ -37,6 +42,8 @@ export default memo(function LoginByQRCode(props) {
         handleLoginSuccess(data.cookie)
       }
     } catch (error) {
+      //清除定时器
+      clearInterval(timer)
       message.error('获取二维码状态失败,请检查网络连接!')
     }
   }

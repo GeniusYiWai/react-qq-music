@@ -20,13 +20,17 @@ import Pagination from 'components/Common/pagination'
 import './index.less'
 //处理性别
 const handleGender = gender => {
-  try {
-    return gender === 1 ? '男' : '女'
-  } catch (error) {
-    return '保密'
+  switch (gender) {
+    case 1:
+      return '男'
+    case 0:
+      return '女'
+    default:
+      return '保密'
   }
 }
 export default memo(function User() {
+  //路由参数
   const params = useParams()
   //获取用户id
   const { id } = params
@@ -46,7 +50,7 @@ export default memo(function User() {
   const [userCreatePlaylists, setUserCreatePlaylists] = useState([])
   //用户收藏歌单
   const [userCollectPlaylists, setUserCollectPlaylists] = useState([])
-  const [followsVisible, setFollowsVisible] = useState(false)
+
   //每页大小
   const [fansLimit, setFansLimit] = useState(10)
   const [fansOffset, setFansOffset] = useState(0)
@@ -62,16 +66,26 @@ export default memo(function User() {
     //每页数据条数
     limit: fansLimit
   })
+  //控制用户粉丝列表显示和隐藏
+  const [fansVisible, setFansVisible] = useState(false)
+  //控制用户关注列表显示和隐藏
+  const [followsVisible, setFollowsVisible] = useState(false)
+  const [disabled, setDisabled] = useState(false)
+  //fucntions
+  //展示用户关注列表
   const showFollows = () => {
     setFollowsVisible(true)
   }
+  //隐藏用户关注列表
   const onFollowsClose = () => {
     setFollowsVisible(false)
   }
-  const [fansVisible, setFansVisible] = useState(false)
+  //展示用户粉丝列表
+
   const showFans = () => {
     setFansVisible(true)
   }
+  //隐藏用户粉丝列表
   const onFansClose = () => {
     setFansVisible(false)
   }
@@ -86,6 +100,7 @@ export default memo(function User() {
       }
     } catch (error) {
       message.error('用户不存在!')
+      setDisabled(true)
     }
   }
   //获取用户动态
@@ -100,7 +115,7 @@ export default memo(function User() {
         throw new Error()
       }
     } catch (error) {
-      message.error('获取用户动态失败')
+      message.error('获取用户动态失败！')
     }
   }
   //获取用户关注 关注没有返回总数 只能判断返回值的length
@@ -238,7 +253,6 @@ export default memo(function User() {
   useEffect(() => {
     getUserFans(fansCombineCondition)
   }, [fansCombineCondition])
-
   return (
     <div className='user'>
       <div className='user-info-container'>
@@ -312,6 +326,7 @@ export default memo(function User() {
                 setCurrentPage={setCurrentCreatePlPage}
                 setData={setUserCreatePlaylists}
                 showSizeChanger={false}
+                disabled={disabled}
               />
             </div>
           </div>
@@ -335,6 +350,7 @@ export default memo(function User() {
                 setCurrentPage={setCurrentCollectPlPage}
                 setData={setUserCollectPlaylists}
                 showSizeChanger={false}
+                disabled={disabled}
               />
             </div>
           </div>
@@ -388,6 +404,7 @@ export default memo(function User() {
               setCurrentPage={setCurrentFansPage}
               setData={setUserFans}
               showSizeChanger={false}
+              disabled={disabled}
             />
           </div>
         </Drawer>

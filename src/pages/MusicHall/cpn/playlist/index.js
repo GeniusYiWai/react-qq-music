@@ -142,7 +142,9 @@ export default memo(function Playlist() {
         <div className='playlist-list'>
           {playlist.length === 0 ? <PlaylistSkeleton /> : null}
           {playlist.map((item, index) => {
-            return <PlaylistCover playlist={item} key={item.id} />
+            return (
+              <PlaylistCover playlist={item} key={Math.random() + item.id} />
+            )
           })}
           <Pagination
             setCombineCondition={setCombineCondition}

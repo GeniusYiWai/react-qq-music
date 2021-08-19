@@ -3,12 +3,13 @@ import LazyLoadImg from 'components/Common/lazyloadImg'
 import PlayImg from 'components/Common/playImg'
 import { playPlaylist } from '@/utils/player'
 import './index.less'
+//通用歌单封面
 
-//通用歌单封面’
-//coverImgUrl 图片地址
-//  name 歌单名称
-// playCount 歌单播放次数
 export default memo(function PlaylistCover(props) {
+  //props
+  //coverImgUrl 图片地址
+  //  name 歌单名称
+  // playCount 歌单播放次数
   const {
     playlist: { id, coverImgUrl, name, playCount }
   } = props

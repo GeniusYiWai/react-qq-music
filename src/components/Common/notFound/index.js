@@ -1,27 +1,30 @@
-import React, { memo, useEffect, useState, useCallback } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-
 import './index.less'
+//404页面组件
 export default memo(function NotFound() {
+  //state
+  //倒计时
   const [count, setCount] = useState(5)
+  //获取history
   const history = useHistory()
+  //开始倒计时
   useEffect(() => {
     let timer = setInterval(() => {
-      setCount(count => {
-        return count - 1
-      })
-      console.log(1111);
+      setCount(count - 1)
+      //倒计时结束 跳转到主页
       if (count === 0) {
-        history.push('/musichall')
+        history.push('/#/musichall')
       }
     }, 1000)
     return () => {
       clearInterval(timer)
     }
   }, [count])
-  const handleClick = useCallback(() => {
+  //点击跳转到主页
+  const handleClick = () => {
     history.push('/musichall')
-  }, [])
+  }
   return (
     <div className='notfound-container'>
       <h1>没有找到相关内容</h1>

@@ -9,7 +9,7 @@ export default memo(function SingerCover(props) {
     useLazy = true
   } = props
   //userType 为0是普通用户
-  //userType 为2是入驻歌手
+  //userType 为2是入驻歌手 为了区分关注歌手和关注用户 因为歌手也是用户
   const handleClick = () => {
     id
       ? window.open(`/#/profile/singer/${id}`)

@@ -4,13 +4,13 @@ import { handleSinger, formatMinuteSecond } from '@/utils/tools'
 import { playMusic } from '@/utils/player'
 import PlayImg from 'components/Common/playImg'
 import './index.less'
-
 //通用新歌封面
-//name 歌曲名称
-//artists 歌曲作者
-//duration 歌曲时长
-//id 歌曲id
+
 export default memo(function NewSongCover(props) {
+  //name 歌曲名称
+  //artists 歌曲作者
+  //duration 歌曲时长
+  //id 歌曲id
   const {
     song: {
       album: { picUrl },
@@ -20,13 +20,16 @@ export default memo(function NewSongCover(props) {
       id
     }
   } = props
+  //点击播放
   const handlePlay = () => {
     playMusic(id, name, artists, duration)
   }
-  const handleClick = () => {
+  //查看歌手详情
+  const goToSingerDetail = () => {
     window.open(`/#/profile/singer/${artists[0].id}`)
   }
-  const handleSongDetail = () => {
+  //查看歌曲详情
+  const goToSongDetail = () => {
     window.open(`/#/musichall/song/detail/${id}`)
   }
   return (
@@ -41,8 +44,8 @@ export default memo(function NewSongCover(props) {
       </div>
       <div className='song-info'>
         <div>
-          <p onClick={() => handleSongDetail()}>{name}</p>
-          <p onClick={() => handleClick()}>{handleSinger(artists)}</p>
+          <p onClick={() => goToSongDetail()}>{name}</p>
+          <p onClick={() => goToSingerDetail()}>{handleSinger(artists)}</p>
         </div>
         <div className='song-duration'>
           <p>{formatMinuteSecond(duration)}</p>

@@ -10,7 +10,6 @@ import Search from 'components/Search'
 import Logout from '../logout'
 import logo from '@/assets/img/logo.png'
 import { getLoginStatus as getLoginStatusAPI } from '@/api/login'
-import { message } from 'antd'
 import { setItem } from '@/utils/storage'
 import './index.less'
 //路由表
@@ -39,8 +38,9 @@ const routes = [
     link: true
   }
 ]
-//通用头部
+//通用头部组件
 export default memo(function Header() {
+  //redux
   const dispatch = useDispatch()
   //获取用户登录状态
   const { isLogin } = useSelector(state => {
@@ -62,14 +62,16 @@ export default memo(function Header() {
         //更改state中的用户信息
         dispatch(setUserDispatch(profile))
         setItem('uid', profile.userId)
-
       }
     } catch (error) {}
   }
+  //fnctions
   //登录成功 将登录态存入缓存 修改state中的用户登录状态
   const getUserInfo = () => {
     getLoginStatus()
   }
+  //effect 
+  // 每次刷新页面获取用户登录状态
   useEffect(() => {
     getUserInfo()
   }, [])

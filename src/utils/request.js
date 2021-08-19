@@ -59,18 +59,18 @@ request.interceptors.response.use(
           })
           break
         // 404请求不存在
-        case 404:
-          message.error({
-            content: '请求资源不存在!',
-            duration: 1
-          })
-          break
-        case 502:
-          message.error({
-            content: '服务器错误!',
-            duration: 1
-          })
-          break
+        // case 404:
+        //   message.error({
+        //     content: '请求资源不存在!',
+        //     duration: 1
+        //   })
+        //   break
+        // case 502:
+        //   message.error({
+        //     content: '服务器错误!',
+        //     duration: 1
+        //   })
+        //   break
         // 其他错误，直接抛出错误提示
         default:
         // message.error({

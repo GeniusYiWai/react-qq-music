@@ -1,4 +1,4 @@
-import React, { memo, useState, useCallback } from 'react'
+import React, { memo, useState } from 'react'
 import { Form, Input, message } from 'antd'
 import { sendComment as sendCommentAPI } from '@/api/comment'
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
@@ -7,6 +7,7 @@ import './index.less'
 const { TextArea } = Input
 //2代表回复评论 写死
 const commentType = 2
+//回复评论组件
 export default memo(function Reply(props) {
   //props
   const {
@@ -14,7 +15,6 @@ export default memo(function Reply(props) {
     id, //资源id
     commentId, //回复的评论的commentId
     comment, //当前回复的评论的数据
-    setComment, //父组件修改评论的数据的方法
     resourceType //资源类型
   } = props
   //state

@@ -19,6 +19,7 @@ import { getCollectPlaylist as getUserCreatePlaylistAPI } from '@/api/profile'
 import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import './index.less'
+//资源操作组件
 export default memo(function Actions(props) {
   //props
   const {

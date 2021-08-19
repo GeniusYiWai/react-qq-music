@@ -2,6 +2,10 @@ import React, { memo } from 'react'
 
 import './index.less'
 export default memo(function HotKeywordsList(props) {
+  // hotKeywords,热门搜索数据 
+  // hideAll,隐藏全部 
+  // setHistorySearch,存储历史搜索 
+  // goToSearch 跳转到搜索页面
   const { hotKeywords, hideAll, setHistorySearch, goToSearch } = props
   const handleClick = keyword => {
     //跳转到搜索页面

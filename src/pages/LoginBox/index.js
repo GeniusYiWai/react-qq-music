@@ -6,13 +6,12 @@ import LoginByQRCode from './cpn/loginByQrcode'
 import { useSelector, useDispatch } from 'react-redux'
 import { showLoginBoxDispatch, userLoginDispatch } from './store/actionCreators'
 import { setUserDispatch } from './store/actionCreators'
-import { getLoginStatus } from '@/api/login'
 import { setItem } from '@/utils/storage'
 import { message } from 'antd'
 import { getLoginStatus as getLoginStatusAPI } from '@/api/login'
-
 const { TabPane } = Tabs
 export default memo(function LoginBox() {
+  //redux
   const dispatch = useDispatch()
   //获取弹出层显示隐藏状态
   const { visible } = useSelector(state => {
@@ -20,6 +19,7 @@ export default memo(function LoginBox() {
       visible: state.user.showLoginBox
     }
   })
+  //fucntions
   //显示弹出层
   const showModal = () => {
     changeModal(true)
@@ -49,12 +49,11 @@ export default memo(function LoginBox() {
       }
     } catch (error) {}
   }
-  //登录成功 刷新页面
+  //登录成功 获取用户登录信息 将cookie存入到缓存中
   const handleLoginSuccess = cookie => {
     setItem('cookie', cookie)
     message.success('登录成功')
     getLoginStatus()
-    // window.location.reload()
   }
   return (
     <Modal

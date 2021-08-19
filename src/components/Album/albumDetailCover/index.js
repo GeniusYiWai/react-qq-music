@@ -3,6 +3,7 @@ import { handleSinger, formatMinuteSecond } from '@/utils/tools'
 import { PlayCircleOutlined } from '@ant-design/icons'
 import { playMusic } from '@/utils/player'
 import './index.less'
+//专辑详情组件
 export default memo(function AlbumDetailCover(props) {
   //props
   const { song } = props

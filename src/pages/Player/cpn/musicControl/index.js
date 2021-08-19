@@ -1,5 +1,5 @@
 import React, { memo, useState, useCallback, useRef, useEffect } from 'react'
-import { Slider, Tooltip, Modal, message } from 'antd'
+import { Slider, Tooltip, Modal, message, } from 'antd'
 import {
   StepBackwardOutlined,
   StepForwardOutlined,

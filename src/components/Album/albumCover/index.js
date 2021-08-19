@@ -1,6 +1,7 @@
 import React, { memo } from 'react'
 import { handleSinger, dateFormat } from '@/utils/tools'
 import './index.less'
+//专辑封面组件
 export default memo(function AlbumDetailCover(props) {
   //props
   const { album } = props
