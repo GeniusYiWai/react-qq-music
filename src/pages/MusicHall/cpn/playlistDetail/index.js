@@ -16,7 +16,6 @@ import { ScrollTop } from '@/utils/tools'
 import Empty from 'components//Common/empty'
 import { message } from 'antd'
 import InfiniteScroll from 'react-infinite-scroller'
-
 import './index.less'
 //资源类型 2代表歌单
 const resourceType = 2
@@ -26,6 +25,7 @@ export default memo(function PlaylistDetail() {
   const params = useParams()
   //获取当前的歌单id
   const { id } = params
+  //state
   //热门评论
   const [hotComments, setHotComments] = useState([])
   //全部评论
@@ -38,6 +38,22 @@ export default memo(function PlaylistDetail() {
   const [playlistSongs, setPlaylistSongs] = useState([])
   //歌单收藏状态
   const [collect, setCollect] = useState(false)
+  //偏移量 用于分页 计算方式  ( 页数 -1)*50, 其中 50 为 limit 的值 , 默认 为 0
+  const [offset, setOffset] = useState(0)
+  //是否正在加载新数据
+  const [loading, setLoading] = useState(false)
+  //判断是否是第一次加载页面
+  //每页大小
+  const [limit, setLimit] = useState(10)
+  const [flag, setFlag] = useState(true)
+  //是否还有更多数据
+  const [hasMore, setHasMore] = useState(true)
+  const [combineCondition, setCombineCondition] = useState({
+    id,
+    limit,
+    offset
+  })
+  //fucntions
   //获取歌单是否收藏
   const getPlaylistStatus = async () => {
     try {
@@ -55,35 +71,21 @@ export default memo(function PlaylistDetail() {
   const getPlaylistDetail = async () => {
     try {
       const {
-        data: { playlist }
+        data: { playlist, code }
       } = await getPlaylistDeatilAPI(id)
-
-      setPlaylistDetail(playlist)
-      setCollect(playlist.subscribed)
-      const trackIds = playlist.trackIds.map(item => item.id).join(',')
-      const {
-        data: { songs }
-      } = await getMusicById(trackIds)
-      setPlaylistSongs(songs)
+      if (code === 200) {
+        setPlaylistDetail(playlist)
+        const trackIds = playlist.trackIds.map(item => item.id).join(',')
+        const {
+          data: { songs }
+        } = await getMusicById(trackIds)
+        setPlaylistSongs(songs)
+      }
     } catch (error) {
       message.error('获取歌单详情失败!')
     }
   }
-  //偏移量 用于分页 计算方式  ( 页数 -1)*50, 其中 50 为 limit 的值 , 默认 为 0
-  const [offset, setOffset] = useState(0)
-  //是否正在加载新数据
-  const [loading, setLoading] = useState(false)
-  //判断是否是第一次加载页面
-  //每页大小
-  const [limit, setLimit] = useState(10)
-  const [flag, setFlag] = useState(true)
-  //是否还有更多数据
-  const [hasMore, setHasMore] = useState(true)
-  const [combineCondition, setCombineCondition] = useState({
-    id,
-    limit,
-    offset
-  })
+
   //获取歌单评论
   const getPlaylistComment = async combineCondition => {
     //上锁

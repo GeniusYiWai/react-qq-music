@@ -16,8 +16,10 @@ export default memo(
         playVideo()
       }
     }))
+    //获取视频ref
     const videoRef = useRef()
     const { videoUrl } = props
+    //播放视频
     const playVideo = useCallback(() => {
       videoRef.current.play()
     }, [])

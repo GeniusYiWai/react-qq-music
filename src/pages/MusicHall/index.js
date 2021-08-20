@@ -4,6 +4,7 @@ import { NavLink, useLocation } from 'react-router-dom'
 import { Skeleton } from 'antd'
 import './index.less'
 export default memo(function MusicHall(props) {
+  //判断当前是不是在搜索页面 如果是 隐藏首页二级菜单
   const location = useLocation()
   const path = location.pathname.split('/')
   const index = path.indexOf('search')

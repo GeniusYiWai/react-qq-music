@@ -7,6 +7,7 @@ import InfiniteScroll from 'react-infinite-scroller'
 import { Spin, message } from 'antd'
 import Empty from 'components/Common/empty'
 import { ScrollTop } from '@/utils/tools'
+
 import './index.less'
 //地区筛选条件
 const Area = [
@@ -79,6 +80,7 @@ const Order = [
 ]
 
 export default memo(function Singer() {
+  //state
   //mv列表
   const [mvList, setMvList] = useState([])
   //每页大小
@@ -91,6 +93,20 @@ export default memo(function Singer() {
   const [offset, setOffset] = useState(0)
   //判断是否是第一次加载页面
   const [flag, setFlag] = useState(true)
+  //mv查询条件
+  const [combineCondition, setCombineCondition] = useState({
+    //按热度查询
+    order: '',
+    //按地区查询
+    area: '',
+    //按类型查询
+    type: '',
+    //偏移量
+    offset,
+    //每页数据条数
+    limit
+  })
+  //functions
   //获取mv列表
   const getMv = async combineCondition => {
     //上锁
@@ -114,23 +130,10 @@ export default memo(function Singer() {
     } catch (error) {
       message.error('获取mv数据失败!')
       //如果请求出错 关锁
-      setLoading(true)
+      setLoading(false)
       setHasMore(false)
     }
   }
-  //混合查询条件 因为可以多个参数一起查询
-  const [combineCondition, setCombineCondition] = useState({
-    //按热度查询
-    order: '',
-    //按地区查询
-    area: '',
-    //按类型查询
-    type: '',
-    //偏移量
-    offset,
-    //每页数据条数
-    limit
-  })
   //切换查询条件会重新加载数据
   const switchCondition = useCallback((condition, value) => {
     //切换查询条件之前 先把之前的mv数据清空 防止切换之后的新数据和之前的数据合并
@@ -175,7 +178,7 @@ export default memo(function Singer() {
           switchCondition={switchCondition}
         />
       </div>
-      {loading ? <MVSkeleton limit={limit} /> : null}
+      {mvList.length === 0 ? <MVSkeleton limit={limit} /> : null}
       <InfiniteScroll
         initialLoad={false}
         pageStart={0}
@@ -183,6 +186,7 @@ export default memo(function Singer() {
         hasMore={!loading && hasMore}
         useWindow={true}
       >
+        
         <div className='mv-list-container w-1200'>
           {mvList.map(item => {
             return <MvCover mv={item} key={item.id} />

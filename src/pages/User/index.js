@@ -34,6 +34,7 @@ export default memo(function User() {
   const params = useParams()
   //获取用户id
   const { id } = params
+  //state
   //用户信息
   const [userInfo, setUserInfo] = useState({})
   //用户动态
@@ -50,7 +51,6 @@ export default memo(function User() {
   const [userCreatePlaylists, setUserCreatePlaylists] = useState([])
   //用户收藏歌单
   const [userCollectPlaylists, setUserCollectPlaylists] = useState([])
-
   //每页大小
   const [fansLimit, setFansLimit] = useState(10)
   const [fansOffset, setFansOffset] = useState(0)
@@ -71,6 +71,37 @@ export default memo(function User() {
   //控制用户关注列表显示和隐藏
   const [followsVisible, setFollowsVisible] = useState(false)
   const [disabled, setDisabled] = useState(false)
+
+  //用户创建歌单
+  const [createPlTotal, setCreatePlTotal] = useState(200)
+  //是否正在加载用户创建歌单
+  const [createPlLoading, setCreatePlLoading] = useState(true)
+  //获取用户创建歌单参数
+  const [createPlcombineCondition, setCreatePlCombineCondition] = useState({
+    //id
+    uid: id,
+    //偏移量
+    offset: 0,
+    //每页数据条数
+    limit: 15
+  })
+  //用户创建歌单页码
+  const [currentCreatePlPage, setCurrentCreatePlPage] = useState(1)
+  //用户收藏歌单
+  const [collectPlTotal, setCollectPlTotal] = useState(500)
+  //是否正在加载用户收藏歌单
+  const [collectPlLoading, setCollectPlLoading] = useState(true)
+  //获取用户收藏歌单参数
+  const [collectPlcombineCondition, setCollectPlCombineCondition] = useState({
+    //id
+    uid: id,
+    //偏移量
+    offset: 0,
+    //每页数据条数
+    limit: 100
+  })
+  //用户收藏歌单页码
+  const [currentCollectPlPage, setCurrentCollectPlPage] = useState(1)
   //fucntions
   //展示用户关注列表
   const showFollows = () => {
@@ -163,21 +194,6 @@ export default memo(function User() {
     }
   }
 
-  //用户创建歌单
-  const [createPlTotal, setCreatePlTotal] = useState(200)
-  //是否正在加载用户创建歌单
-  const [createPlLoading, setCreatePlLoading] = useState(true)
-  //获取用户创建歌单参数
-  const [createPlcombineCondition, setCreatePlCombineCondition] = useState({
-    //id
-    uid: id,
-    //偏移量
-    offset: 0,
-    //每页数据条数
-    limit: 15
-  })
-  //用户创建歌单页码
-  const [currentCreatePlPage, setCurrentCreatePlPage] = useState(1)
   //获取用户创建歌单
   const getUserCreatePlaylist = async createPlcombineCondition => {
     setCreatePlLoading(true)
@@ -199,21 +215,6 @@ export default memo(function User() {
     }
   }
 
-  //用户收藏歌单
-  const [collectPlTotal, setCollectPlTotal] = useState(500)
-  //是否正在加载用户收藏歌单
-  const [collectPlLoading, setCollectPlLoading] = useState(true)
-  //获取用户收藏歌单参数
-  const [collectPlcombineCondition, setCollectPlCombineCondition] = useState({
-    //id
-    uid: id,
-    //偏移量
-    offset: 0,
-    //每页数据条数
-    limit: 100
-  })
-  //用户收藏歌单页码
-  const [currentCollectPlPage, setCurrentCollectPlPage] = useState(1)
   //获取用户收藏歌单
   const getUserCollectPlaylist = async collectPlcombineCondition => {
     setCollectPlLoading(true)
@@ -234,22 +235,26 @@ export default memo(function User() {
       setCollectPlLoading(false)
     }
   }
-  useEffect(() => {
-    getUserInfo()
-    getUserEvent()
-    getUserFollows()
-    getUserListenSongs()
-  }, [id])
 
-  //监听 页码改变 一旦发生变化就重新加载歌单数据
+  useEffect(() => {
+    //获取用户信息
+    getUserInfo()
+    //获取用户动态
+    getUserEvent()
+    //获取用户关注
+    getUserFollows()
+    //获取用户粉丝
+    getUserListenSongs()
+  }, [])
+  //监听 用户创建歌单页码改变 一旦发生变化就重新加载歌单数据
   useEffect(() => {
     getUserCreatePlaylist(createPlcombineCondition)
   }, [createPlcombineCondition])
-  //监听 页码改变 一旦发生变化就重新加载歌单数据
+  //监听 用户收藏歌单页码改变 一旦发生变化就重新加载歌单数据
   useEffect(() => {
     getUserCollectPlaylist(collectPlcombineCondition)
   }, [collectPlcombineCondition])
-  //监听 页码改变 一旦发生变化就重新加载歌单数据
+  //监听 用户粉丝页码改变 一旦发生变化就重新加载歌单数据
   useEffect(() => {
     getUserFans(fansCombineCondition)
   }, [fansCombineCondition])

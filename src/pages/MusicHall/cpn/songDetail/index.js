@@ -23,6 +23,7 @@ export default memo(function SongDetail() {
   const params = useParams()
   //获取当前的歌曲id
   const { id } = params
+  //state
   //歌曲详情
   const [songDetail, setSongDetail] = useState({})
   //歌词
@@ -44,6 +45,7 @@ export default memo(function SongDetail() {
   const [flag, setFlag] = useState(true)
   //是否还有更多数据
   const [hasMore, setHasMore] = useState(true)
+  //歌曲查询条件
   const [combineCondition, setCombineCondition] = useState({
     id,
     limit,
@@ -74,7 +76,7 @@ export default memo(function SongDetail() {
       }
     } catch (error) {
       setTotalNum(0)
-      message.error('获取歌单评论失败!')
+      message.error('获取歌曲评论失败!')
     }
   }
   //获取歌曲下的热门评论
@@ -93,17 +95,24 @@ export default memo(function SongDetail() {
       }
     } catch (error) {
       setTotalNum(0)
-      message.error('获取歌单评论失败!')
+      message.error('获取歌曲评论失败!')
     }
   }
   //获取歌曲详情
   const getSongDeatil = async () => {
     try {
       const {
-        data: { songs }
+        data: { songs, code }
       } = await getSongDeatilAPI(id)
-      setSongDetail(songs[0])
-    } catch (error) {}
+      if (code === 200 && songs.length !== 0) {
+        setSongDetail(songs[0])
+      } else {
+        throw new Error()
+      }
+    } catch (error) {
+      setSongDetail({})
+      message.error('获取歌曲详情失败!')
+    }
   }
   //获取歌词
   const getLyric = async () => {
@@ -113,10 +122,12 @@ export default memo(function SongDetail() {
       } = await getLyricAPI(id)
       if (nolyric) {
         setLyric([{ txt: '纯音乐,敬请欣赏!' }])
-      } else {
+      } else if (lrc) {
         setLyric(new LyricParser(lrc.lyric))
       }
-    } catch (error) {}
+    } catch (error) {
+      message.error('获取歌词失败!')
+    }
   }
   //滚动到评论区域
   const ScrollToComment = () => {
@@ -153,10 +164,7 @@ export default memo(function SongDetail() {
             {songDetail.al && songDetail.al.name}
           </p>
         </div>
-        <Alert
-          message='请注意,歌曲没有获取收藏状态的接口,所有歌曲默认都是未收藏,所以即使已经收藏也显示未收藏。'
-          type='warning'
-        />
+
         <Actions
           totalNum={totalNum}
           collect={collect}

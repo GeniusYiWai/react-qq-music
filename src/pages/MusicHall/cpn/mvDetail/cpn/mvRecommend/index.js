@@ -2,7 +2,6 @@ import React, { memo } from 'react'
 import MvCover from 'components/Mv/mvCover'
 import './index.less'
 import MVSkeleton from 'components/Skeleton/mvSkeleton'
-
 export default memo(function MvRecommend(props) {
   const { simiMvs } = props
   return (

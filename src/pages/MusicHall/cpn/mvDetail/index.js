@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom'
 import MvPlayer from './cpn/mvPlayer'
 import MvRecommend from './cpn/mvRecommend'
 import { handleSinger } from '@/utils/tools'
-import './index.less'
 import { toTree } from '@/utils/tools'
 import Comment from 'components/Comment'
 import PublishComment from 'components/Comment/cpn/publishComment'
@@ -14,12 +13,11 @@ import {
   getSimiMv as getSimiMvAPI
 } from '@/api/mv'
 import InfiniteScroll from 'react-infinite-scroller'
-
 import Actions from 'components/Actions'
 import Empty from 'components//Common/empty'
 import { ScrollTop } from '@/utils/tools'
 import { message, Alert } from 'antd'
-
+import './index.less'
 //资源类型 1代表mv
 const resourceType = 1
 export default memo(function MvDetail() {
@@ -30,6 +28,7 @@ export default memo(function MvDetail() {
   const params = useParams()
   //从url中获取mvid
   const { id } = params
+  //state
   //热门评论
   const [hotComments, setHotComments] = useState([])
   //全部评论
@@ -44,6 +43,22 @@ export default memo(function MvDetail() {
   const [simiMvs, setSimiMvs] = useState([])
   //mv收藏状态
   const [collect, setCollect] = useState(false)
+  //偏移量 用于分页 计算方式  ( 页数 -1)*50, 其中 50 为 limit 的值 , 默认 为 0
+  const [offset, setOffset] = useState(0)
+  //是否正在加载新数据
+  const [loading, setLoading] = useState(false)
+  //判断是否是第一次加载页面
+  //每页大小
+  const [limit, setLimit] = useState(10)
+  const [flag, setFlag] = useState(true)
+  //是否还有更多数据
+  const [hasMore, setHasMore] = useState(true)
+  const [combineCondition, setCombineCondition] = useState({
+    id,
+    limit,
+    offset
+  })
+  //functions
   //获取mv详情
   const getMvDetail = async () => {
     try {
@@ -53,7 +68,7 @@ export default memo(function MvDetail() {
       if (code === 200) {
         setMvDetail(data)
       } else {
-        message.error('获取视频详情失败!')
+        message.error('获取mv详情失败!')
       }
     } catch (error) {
       message.error('获取mv详情失败!')
@@ -87,21 +102,7 @@ export default memo(function MvDetail() {
       message.error('获取推荐mv失败!')
     }
   }
-  //偏移量 用于分页 计算方式  ( 页数 -1)*50, 其中 50 为 limit 的值 , 默认 为 0
-  const [offset, setOffset] = useState(0)
-  //是否正在加载新数据
-  const [loading, setLoading] = useState(false)
-  //判断是否是第一次加载页面
-  //每页大小
-  const [limit, setLimit] = useState(10)
-  const [flag, setFlag] = useState(true)
-  //是否还有更多数据
-  const [hasMore, setHasMore] = useState(true)
-  const [combineCondition, setCombineCondition] = useState({
-    id,
-    limit,
-    offset
-  })
+
   //获取热门评论
   const getMvHotComment = async () => {
     try {
@@ -149,7 +150,6 @@ export default memo(function MvDetail() {
     }
   }
   //滚动到评论区域
-
   const ScrollToComment = useCallback(() => {
     ScrollTop(commentRef.current.offsetTop, 600)
   }, [])
@@ -186,7 +186,7 @@ export default memo(function MvDetail() {
         <p>发行时间:{mvDetail.publishTime}</p>
       </div>
       <Alert
-        message='请注意,mv没有获取收藏状态的接口,所有mv默认都是未收藏,所以即使已经收藏也显示未收藏。'
+        message='由于mv没有获取收藏状态的接口,所以所有mv默认都是未收藏'
         type='warning'
       />
       <Actions

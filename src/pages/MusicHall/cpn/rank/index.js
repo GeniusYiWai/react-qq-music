@@ -26,6 +26,7 @@ export default memo(function Rank() {
   const [rankList, setRankList] = useState([])
   //排行榜详情
   const [rankDetail, setRankDetail] = useState({})
+  //functions
   //获取排行榜列表
   const getAllRank = async () => {
     try {
@@ -66,7 +67,6 @@ export default memo(function Rank() {
     ScrollTop(0, 600)
     getAllRank()
   }, [])
-
   return (
     <div className='rank-container'>
       {rankList.length === 0 ? <RankSkeleton /> : null}

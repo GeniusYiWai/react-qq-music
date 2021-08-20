@@ -98,6 +98,13 @@ const Type = [
 ]
 const pageSize = 5
 export default memo(function Singer() {
+  //redux
+  //isLogin 用户登录状态
+  const { isLogin } = useSelector(state => {
+    return {
+      isLogin: state.user.isLogin
+    }
+  }, shallowEqual)
   const dispatch = useDispatch()
   //获取轮播图引用
   const carouselRef = useRef()
@@ -139,22 +146,21 @@ export default memo(function Singer() {
   })
   //用户收藏歌手
   const [collectSinger, setCollectSinger] = useState([])
+  //收藏的歌手数据
   const [newCollectSingerArray, setNewCollectSingerArray] = useState([])
-  //isLogin 用户登录状态
-  const { isLogin } = useSelector(state => {
-    return {
-      isLogin: state.user.isLogin
-    }
-  }, shallowEqual)
+
   //获取歌手
   const getSinger = async ({ area, initial, type, limit, offset }) => {
     try {
       const {
-        data: { artists, more }
+        data: { artists, more, code }
       } = await getSingerAPI(area, initial, type, limit, offset)
-      setSinger(artists)
-      setSingerHasMore(more)
+      if (code === 200) {
+        setSinger(artists)
+        setSingerHasMore(more)
+      }
     } catch (error) {
+      setSingerHasMore(false)
       message.error('获取热门歌手失败!')
     }
   }
@@ -164,20 +170,22 @@ export default memo(function Singer() {
       //上锁
       setLoading(true)
       const {
-        data: { artists, more }
+        data: { artists, more, code }
       } = await getHotSingerAPI(limit, offset)
-      setLoading(false)
-      setHasMore(more)
-      setHotSinger(hotSinger => {
-        return hotSinger.concat(artists)
-      })
-      //取反第一次加载页面
-      setFlag(false)
-      //设置偏移量
-      setOffset(offset + limit)
+      if (code === 200) {
+        setLoading(false)
+        setHasMore(more)
+        setHotSinger(hotSinger => {
+          return hotSinger.concat(artists)
+        })
+        //取反第一次加载页面
+        setFlag(false)
+        //设置偏移量
+        setOffset(offset + limit)
+      }
     } catch (error) {
       //如果请求出错 关锁
-      setLoading(true)
+      setLoading(false)
       setHasMore(false)
       message.error('获取推荐歌手失败!')
     }
@@ -186,17 +194,21 @@ export default memo(function Singer() {
   const getCollectSinger = async () => {
     try {
       const {
-        data: { data }
+        data: { data, code }
       } = await getCollectSingerAPI()
-      setCollectSinger(data)
-      spliceList(data)
+      if (code === 200) {
+        setCollectSinger(data)
+        spliceList(data)
+      }
     } catch (error) {
       message.error('获取关注歌手失败!')
     }
   }
   //切换查询条件 将新的查询条件与之前的进行对比 新的替代旧的
   const switchCondition = useCallback((condition, value) => {
+    //回到第一页
     setCurrentPage(1)
+    //清空旧数据
     setSinger([])
     setCombineCondition(combineCondition => ({
       ...combineCondition,
@@ -204,14 +216,7 @@ export default memo(function Singer() {
       offset: 0
     }))
   }, [])
-  //监听combineCondition的改变 一旦切换查询条件 就会重新触发加载数据
-  useEffect(() => {
-    //第一次加载 会先加载默认的全部数据
-    getSinger(combineCondition)
-  }, [combineCondition])
-  useEffect(() => {
-    getHotSinger({ ...hotSingerParams })
-  }, [hotSingerParams])
+
   //这个函数用来获取走马灯展示的数据
   //因为直接遍历关注歌手列表 走马灯一页只能显示一张图片
   //所以通过创建一个新数组 将原来的歌手列表按5个一组重新排序 这样一个走马灯页面就可以显示5张图片
@@ -223,16 +228,27 @@ export default memo(function Singer() {
     }
     setNewCollectSingerArray(arr)
   }
-  //这里监听用户登录状态的变更 如果用户登录了就重新发送请求 加载用户关注的歌手
+  //监听combineCondition的改变 一旦切换查询条件 就会重新触发加载数据
+  useEffect(() => {
+    //第一次加载 会先加载默认的全部数据
+    getSinger(combineCondition)
+  }, [combineCondition])
+
   useEffect(() => {
     ScrollTop(0, 600)
+    getHotSinger({ ...hotSingerParams })
+  }, [hotSingerParams])
+  //这里监听用户登录状态的变更 如果用户登录了就重新发送请求 加载用户关注的歌手
+  useEffect(() => {
     if (isLogin) {
       getCollectSinger()
     }
   }, [isLogin])
-  const handleClick = id => {
+  //查看歌手详情
+  const goToSingerDetail = id => {
     window.open(`/#/profile/singer/${id}`)
   }
+  //加载更多
   const loadMore = useCallback(() => {
     // 如果是第一次加载页面 不执行loadMore
     if (flag) return
@@ -262,7 +278,7 @@ export default memo(function Singer() {
                       return (
                         <div className='collect-singer-item' key={item.id}>
                           <img src={item.picUrl} alt='' />
-                          <p onClick={() => handleClick(item.id)}>
+                          <p onClick={() => goToSingerDetail(item.id)}>
                             {item.name}
                           </p>
                         </div>

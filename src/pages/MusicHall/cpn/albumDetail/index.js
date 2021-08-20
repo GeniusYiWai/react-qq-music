@@ -13,9 +13,8 @@ import {
 } from '@/api/album'
 import Actions from 'components/Actions'
 import { ScrollTop } from '@/utils/tools'
-import { message,  } from 'antd'
+import { message } from 'antd'
 import InfiniteScroll from 'react-infinite-scroller'
-
 import Empty from 'components/Common/empty'
 import './index.less'
 //资源类型 3代表专辑
@@ -25,6 +24,7 @@ export default memo(function AlbumDetail() {
   const commentRef = useRef()
   //从url中获取专辑id
   const params = useParams()
+  //state
   const { id } = params
   //热门评论
   const [hotComments, setHotComments] = useState([])
@@ -46,7 +46,6 @@ export default memo(function AlbumDetail() {
   //每页大小
   const [limit, setLimit] = useState(10)
   const [flag, setFlag] = useState(true)
-
   //是否还有更多数据
   const [hasMore, setHasMore] = useState(true)
   const [combineCondition, setCombineCondition] = useState({
@@ -71,10 +70,14 @@ export default memo(function AlbumDetail() {
   const getAlbumDetail = async () => {
     try {
       const {
-        data: { album, songs }
+        data: { album, songs, code }
       } = await getAlbumDeatilAPI(id)
-      setAlbumDetail(album)
-      setAlbumSongs(songs)
+      if (code === 200) {
+        setAlbumDetail(album)
+        setAlbumSongs(songs)
+      }else{
+        throw new Error()
+      }
     } catch (error) {
       message.error('获取专辑详情失败!')
     }
@@ -180,7 +183,7 @@ export default memo(function AlbumDetail() {
 
         <AlbumDetailCover song={albumSongs} />
       </div>
-    
+
       <Actions
         totalNum={totalNum}
         collect={collect}

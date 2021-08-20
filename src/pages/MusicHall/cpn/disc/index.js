@@ -20,35 +20,40 @@ export default memo(function NewAlbumRec() {
   const [pageSize, setPageSize] = useState(20)
   const [currentPage, setCurrentPage] = useState(1)
   const [total, setTotal] = useState(0)
-
+  const [disabled, setDisabled] = useState(false)
+  //自定义当前选项卡的索引
+  const [currentIndex, setCurrentIndex] = useState(0)
   //获取新碟数据
   const getRecAlbum = async area => {
     try {
       const {
-        data: { monthData }
+        data: { monthData, code }
       } = await getRecommendNewAlbum(area)
-      setNewAlbum(monthData)
-      setTotal(monthData.length)
+      if (code === 200) {
+        setNewAlbum(monthData)
+        setTotal(monthData.length)
+      }
+      setDisabled(false)
     } catch (error) {
+      setDisabled(true)
       message.error('获取新碟数据失败!')
     }
   }
-  //自定义当前选项卡的索引
-  const [currentIndex, setCurrentIndex] = useState(0)
   //切换当前选项卡的索引 一旦切换就会重新加载数据
   const switchTabs = useCallback(index => {
     setCurrentPage(1)
-
     setCurrentIndex(index)
   }, [])
+
+  //处理页码改变
+  const handlePageChange = current => {
+    setCurrentPage(current)
+  }
   useEffect(() => {
     setNewAlbum([])
     //调用dispatch 请求歌单数据 存入home state 第一次加载页面 手动加载第一个分类下的数据
     getRecAlbum(Tabs[currentIndex].area)
   }, [currentIndex])
-  const handlePageChange = current => {
-    setCurrentPage(current)
-  }
   return (
     <div className='newalbum-container'>
       <div className='w-1200'>
@@ -73,6 +78,7 @@ export default memo(function NewAlbumRec() {
           pageSize={pageSize}
           onChange={current => handlePageChange(current)}
           showSizeChanger={false}
+          disabled={disabled}
         />
       </div>
     </div>

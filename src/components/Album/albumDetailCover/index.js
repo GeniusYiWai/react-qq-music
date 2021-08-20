@@ -7,6 +7,7 @@ import './index.less'
 export default memo(function AlbumDetailCover(props) {
   //props
   const { song } = props
+  console.log(song)
   //fucntions
   //处理点击播放
   const handlePlay = index => {
@@ -15,10 +16,18 @@ export default memo(function AlbumDetailCover(props) {
   }
   //跳转到专辑详情
   const goToAlbumDetail = index => {
-    const {
-      al: { id: albumId }
-    } = song[index]
-    window.open(`/#/musichall/album/detail/${albumId}`)
+    const { al, album } = song[index]
+    window.open(`/#/musichall/album/detail/${al ? al.id : album.id}`)
+  }
+  //查看歌曲详情
+  const goToSongDetail = index => {
+    const { id } = song[index]
+    window.open(`/#/musichall/song/detail/${id}`)
+  }
+  //查看歌手详情
+  const goToSingerDetail = index => {
+    const { artists } = song[index]
+    window.open(`/#/profile/singer/${artists[0].id}`)
   }
   return (
     <div>
@@ -39,16 +48,21 @@ export default memo(function AlbumDetailCover(props) {
                 }}
                 key={index}
               >
+                <p className='text-nowrap'>
+                  <PlayCircleOutlined
+                    className='play-album-img'
+                    onClick={() => {
+                      handlePlay(index)
+                    }}
+                  />
+                  <span onClick={() => goToSongDetail(index)}>{name}</span>
+                </p>
                 <p
                   className='text-nowrap'
-                  onClick={() => {
-                    handlePlay(index)
-                  }}
+                  onClick={() => goToSingerDetail(index)}
                 >
-                  <PlayCircleOutlined className='play-album-img' />
-                  {name}
+                  {handleSinger(ar || artists)}
                 </p>
-                <p className='text-nowrap'>{handleSinger(ar || artists)}</p>
                 {al ? (
                   <p
                     className='text-nowrap'
@@ -59,7 +73,14 @@ export default memo(function AlbumDetailCover(props) {
                     {al && al.name}
                   </p>
                 ) : (
-                  <p className='text-nowrap'>{album && album.name}</p>
+                  <p
+                    className='text-nowrap'
+                    onClick={() => {
+                      goToAlbumDetail(index)
+                    }}
+                  >
+                    {album && album.name}
+                  </p>
                 )}
 
                 <p className='text-nowrap'>

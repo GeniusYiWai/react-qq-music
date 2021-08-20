@@ -1,0 +1,77 @@
+@theme-color: #31c27c;
+.carousel-container {
+  .playlist-content {
+    display: flex !important;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  .newsong-content {
+    margin-top: 10px;
+    display: flex !important;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+  .newalbum-content {
+    margin-top: 20px;
+    display: flex !important;
+    flex-wrap: wrap;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    position: relative;
+    & > div {
+      margin: 40px;
+    }
+  }
+  .mv-content {
+    display: flex !important;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin-top: 10px;
+    position: relative;
+    & > div {
+      margin: 40px;
+    }
+  }
+  .prev,
+  .next {
+    position: absolute;
+    top: 50%;
+    width: 50px;
+    height: 80px;
+    line-height: 80px;
+    text-align: center;
+    background-color: #e2e2e2;
+    opacity: 0.5;
+    cursor: pointer;
+    transform: translateY(-50%);
+    z-index: 99;
+    font-size: 30px;
+    color: #333;
+    position: absolute;
+    cursor: pointer;
+    &:hover {
+      opacity: 1;
+    }
+  }
+  .prev {
+    left: 0;
+  }
+  .next {
+    right: 0;
+  }
+  .ant-carousel .slick-dots {
+    bottom: -30px;
+    .slick-active {
+      background-color: @theme-color !important;
+    }
+    li {
+      background-color: #666;
+      width: 30px;
+      height: 3px;
+      button {
+        opacity: 0;
+      }
+    }
+  }
+}

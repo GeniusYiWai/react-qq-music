@@ -22,14 +22,15 @@ const Tabs = [
   }
 ]
 export default memo(function Singer() {
-  //当前分类索引
+  //歌手id 从路由中获取
+  const params = useParams()
+  const { id } = params
+  //state
+  //当前查看的歌手数据分类索引
   const [currentIndex, setCurrentIndex] = useState(0)
   //歌手信息
   const [singer, setsinger] = useState({})
-  //歌手id
-  const params = useParams()
-  const { id } = params
-  //切换当前分类
+  //切换当前查看的歌手数据分类
   const switchTabs = useCallback(index => {
     setCurrentIndex(index)
   }, [])
@@ -38,18 +39,21 @@ export default memo(function Singer() {
     try {
       const {
         data: {
+          code,
           data: { artist }
         }
       } = await getSingerInfoAPI(id)
-      setsinger(artist)
+      if (code === 200) {
+        setsinger(artist)
+      }
     } catch (error) {
-      message.error('获取歌手信息失败!')
+      message.error('歌手不存在!')
     }
   }
-  //获取歌手信息只执行一次
   useEffect(() => {
-    //第一次进入页面 将页面滚动到顶部
+    //进入页面 将页面滚动到顶部
     ScrollTop(0, 600)
+    //获取歌手信息
     getSingerInfo()
   }, [])
   return (

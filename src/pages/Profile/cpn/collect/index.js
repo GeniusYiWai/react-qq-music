@@ -12,7 +12,10 @@ import SongCover from 'components/Album/albumDetailCover'
 import MvCover from 'components/Mv/mvCover'
 import Category from 'components/Common/category'
 import Empty from 'components/Common/empty'
+import { message } from 'antd'
+
 import './index.less'
+//二级分类
 const Tabs = [
   {
     categoryName: '歌曲'
@@ -30,12 +33,10 @@ const Tabs = [
 export default memo(function Collect(props) {
   //获取当前登录用户的id
   const { userId } = props
+  //state
   //当前二级分类的索引
   const [currentIndex, setCurrentIndex] = useState(0)
-  //切换当前二级分类
-  const switchTabs = useCallback(index => {
-    setCurrentIndex(index)
-  }, [])
+
   //用户喜欢的歌曲
   const [likeSongs, setlikeSongs] = useState([])
   //用户喜欢的歌单
@@ -44,18 +45,7 @@ export default memo(function Collect(props) {
   const [likeAlbums, setlikeAlbums] = useState([])
   //用户喜欢的mv
   const [likeMvs, setlikeMvs] = useState([])
-  //获取用户收藏歌曲
-  const getCollectSongs = async () => {
-    try {
-      const {
-        data: { ids }
-      } = await getCollectSongsAPI(userId)
-      const {
-        data: { songs }
-      } = await getMusicById(ids)
-      setlikeSongs(songs)
-    } catch (error) {}
-  }
+  //用户收藏歌单查询条件
   const [collectPlcombineCondition, setCollectPlCombineCondition] = useState({
     //id
     uid: userId,
@@ -64,40 +54,74 @@ export default memo(function Collect(props) {
     //每页数据条数
     limit: 100
   })
+  //fucntions
+  //切换当前二级分类
+  const switchTabs = useCallback(index => {
+    setCurrentIndex(index)
+  }, [])
+  //获取用户收藏歌曲
+  const getCollectSongs = async () => {
+    try {
+      const {
+        data: { ids, code }
+      } = await getCollectSongsAPI(userId)
+      if (code === 200) {
+        const {
+          data: { songs, code }
+        } = await getMusicById(ids)
+        if (code === 200) {
+          setlikeSongs(songs)
+        }
+      }
+    } catch (error) {
+      message.error('获取用户收藏歌曲失败!')
+    }
+  }
+
   //获取用户收藏歌单
   const getCollectPlaylist = async collectPlcombineCondition => {
     try {
       const {
-        data: { playlist }
+        data: { playlist, code }
       } = await getCollectPlaylistAPI({ ...collectPlcombineCondition })
-      const newArr = []
-      playlist.forEach(e => {
-        if (e.userId != userId) {
-          newArr.push(e)
-        }
-      })
-      setlikePlaylists(newArr)
-    } catch (error) {}
+      if (code === 200) {
+        const newArr = playlist.filter(e => {
+          return e.userId !== userId
+        })
+        setlikePlaylists(newArr)
+      }
+    } catch (error) {
+      message.error('获取用户收藏歌单失败!')
+    }
   }
   //获取用户收藏专辑
   const getCollectAlbum = async () => {
     try {
       const {
-        data: { data }
+        data: { data, code }
       } = await getCollectAlbumAPI(userId)
-      setlikeAlbums(data)
-    } catch (error) {}
+      if (code === 200) {
+        setlikeAlbums(data)
+      }
+    } catch (error) {
+      message.error('获取用户收藏专辑失败!')
+    }
   }
   //获取用户收藏mv
   const getCollectMv = async () => {
     try {
       const {
-        data: { data }
+        data: { data, code }
       } = await getCollectMvAPI(userId)
-      setlikeMvs(data)
-    } catch (error) {}
+      if (code === 200) {
+        setlikeMvs(data)
+      }
+    } catch (error) {
+      message.error('获取用户收藏视频失败!')
+    }
   }
   useEffect(() => {
+    //根据索引 展示不同的内容
     switch (currentIndex) {
       case 0:
         getCollectSongs()

@@ -13,6 +13,12 @@
   display: flex;
   justify-content: space-between;
   padding: 20px;
+  & > p:first-child:hover {
+    color: #333;
+    span:hover {
+      color: @theme-color;
+    }
+  }
   p:hover {
     color: @theme-color;
   }

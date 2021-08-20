@@ -5,7 +5,9 @@ import InfiniteScroll from 'react-infinite-scroller'
 import { Spin, message } from 'antd'
 import MVSkeleton from 'components/Skeleton/mvSkeleton'
 export default memo(function SingerMv(props) {
+  //id 歌手id
   const { id } = props
+  //state
   //歌手mv
   const [singerMvs, setSingerMvs] = useState([])
   //mv limit
@@ -45,6 +47,8 @@ export default memo(function SingerMv(props) {
         setMvOffset(mvOffset + mvLimit)
       }
     } catch (error) {
+      setMvLoading(false)
+      setMvHasMore(false)
       message.error('获取歌手mv失败!')
     }
   }
@@ -53,9 +57,13 @@ export default memo(function SingerMv(props) {
     getSingerMvs({ ...mvCombineCondition, offset: mvOffset })
   }, [mvCombineCondition, mvOffset, mvHasMore])
   useEffect(() => {
+    //获取歌手
     getSingerMvs(mvCombineCondition)
     return () => {
+      //离开页面 清空mv数据
+
       setSingerMvs([])
+        //设置偏移量为0
       setMvOffset(0)
     }
   }, [])

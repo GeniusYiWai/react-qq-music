@@ -5,8 +5,9 @@ import unLoginBg from '@/assets/img/bg_profile_unlogin.jpg'
 import recLogin from '@/assets/img/rec_login.png'
 import './index.less'
 export default memo(function UnLogin() {
+  //redux
   const dispatch = useDispatch()
-  //展示登录弹出层
+  //点击登录 展示登录弹出层
   const handleLogin = useCallback(() => {
     dispatch(showLoginBoxDispatch(true))
   }, [])

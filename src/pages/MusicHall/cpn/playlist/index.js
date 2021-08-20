@@ -9,7 +9,7 @@ import PlaylistSkeleton from 'components/Skeleton/playlistSkeleton'
 import Pagination from 'components/Common/pagination'
 import { Menu, message } from 'antd'
 const { SubMenu } = Menu
-//歌单分类 写死
+//歌单分类
 const Category = [
   {
     categoryName: '语种',
@@ -32,8 +32,8 @@ const Category = [
     num: 4
   }
 ]
-
 export default memo(function Playlist() {
+  //state
   //鼠标悬浮显示分类详情
   const [openKeys, setOpenKeys] = useState([])
   //所有歌单分类
@@ -59,9 +59,11 @@ export default memo(function Playlist() {
   const getAllPlaylistCate = async () => {
     try {
       const {
-        data: { sub }
+        data: { sub, code }
       } = await getAllPlaylistCateAPI()
-      setPlaylistCate(sub)
+      if (code === 200) {
+        setPlaylistCate(sub)
+      }
     } catch (error) {
       message.error('获取歌单分类失败!')
     }
@@ -70,11 +72,13 @@ export default memo(function Playlist() {
   const getPlaylistByCate = async ({ cate, limit, offset }) => {
     try {
       const {
-        data: { playlists, total }
+        data: { playlists, total, code }
       } = await getHighQualityByCateAPI(cate, limit, offset)
-      //设置歌单总数
-      setTotal(total)
-      setPlaylist(playlists)
+      if (code === 200) {
+        //设置歌单总数
+        setTotal(total)
+        setPlaylist(playlists)
+      }
     } catch (error) {
       message.error('获取歌单详情失败!')
     }
@@ -114,7 +118,6 @@ export default memo(function Playlist() {
   useEffect(() => {
     getAllPlaylistCate()
   }, [])
-
   return (
     <div className='playlist-conatiner'>
       <div className='playlist-content w-1200'>

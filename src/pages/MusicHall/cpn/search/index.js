@@ -8,8 +8,12 @@ import AlbumCover from 'components/Album/albumCover'
 import SingerCover from 'components/Singer/singerCover'
 import PlaylistCover from 'components/Playlist/playlistCover'
 import MvCover from 'components/Mv/mvCover'
-import { message, Pagination } from 'antd'
+import { message, Pagination, Spin } from 'antd'
 import './index.less'
+//一级分类
+//value 显示的文字
+//type 查询条件
+//field 路由参数
 const Types = [
   {
     value: '单曲',
@@ -52,6 +56,9 @@ const Types = [
 export default memo(function Search() {
   const location = useLocation()
   const history = useHistory()
+  //解析url中的k和t
+  // k是搜索关键字
+  // t是查询的字段
   const params = location.search.split('?')[1].split('&')
   const { k: keyword, t: field } = useMemo(() => parseParam(params), [params])
   const { type, i } = useMemo(() => {
@@ -64,13 +71,30 @@ export default memo(function Search() {
     })
     return { type, i }
   }, [field])
+  //state
+  //分类索引
   const [index, setIndex] = useState(i)
+  //查询结果
   const [result, setResult] = useState([])
+  //页码
   const [page, setPage] = useState(1)
+  //总数
   const [total, setToal] = useState(50)
+  const [disabled, setDisabled] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [combineCondition, setCombineCondition] = useState({
+    limit: 10,
+    offset: 0,
+    type,
+    keyword
+  })
+  //functions
+  //切换查询类型
   const switchType = index => {
     setPage(1)
     setIndex(index)
+    setResult([])
+    //获取字段，名
     const { field } = Types[index]
     setCombineCondition(combineCondition => {
       return {
@@ -80,67 +104,66 @@ export default memo(function Search() {
         keyword
       }
     })
+    //修改url参数
     history.push(`/musichall/search?k=${keyword}&t=${field}`)
   }
-
+  //获取查询结果
   const getSearchResult = async combineCondition => {
+    setLoading(true)
     try {
       const {
-        data: { result }
+        data: { result, code }
       } = await getSearchResultAPI({ ...combineCondition })
-      switch (i) {
-        case 0:
-          setToal(result.songCount)
-          break
-        case 1:
-          setToal(result.albumCount)
-          break
+      if (code === 200) {
+        console.log(111111)
+        switch (i) {
+          case 0:
+            setToal(result.songCount)
+            break
+          case 1:
+            setToal(result.albumCount)
+            break
 
-        case 2:
-          setToal(result.artistCount)
-          break
+          case 2:
+            setToal(result.artistCount)
+            break
 
-        case 3:
-          setToal(result.playlistCount)
-          break
+          case 3:
+            setToal(result.playlistCount)
+            break
 
-        case 4:
-          setToal(result.userprofileCount)
-          break
+          case 4:
+            setToal(result.userprofileCount)
+            break
 
-        case 5:
-          setToal(result.mvCount)
-          break
+          case 5:
+            setToal(result.mvCount)
+            break
 
-        case 6:
-          setToal(result.videoCount)
-          break
+          case 6:
+            setToal(result.videoCount)
+            break
 
-        default:
-          break
+          default:
+            break
+        }
+        //根据当前展示的字段显示不同的查询结果
+        setResult(result[field])
+        //设置索引
+        setIndex(i)
+        setDisabled(false)
+        setLoading(false)
       }
-      setResult(result[field])
-      setIndex(i)
     } catch (error) {
       setIndex(i)
+      setResult([])
+      setDisabled(true)
+      setLoading(false)
+
       message.error('获取搜索结果失败,请检查网络连接!')
     }
   }
-
-  const [combineCondition, setCombineCondition] = useState({
-    limit: 10,
-    offset: 0,
-    type,
-    keyword
-  })
-
-  useEffect(() => {
-    getSearchResult(combineCondition)
-  }, [combineCondition])
-  //这里会执行2次同样的方法 目前想不出来解决方法
-  useEffect(() => {
-    switchType(0)
-  }, [keyword])
+  //监听页码改变
   const onChange = useCallback(page => {
     setPage(page)
     setCombineCondition(combineCondition => {
@@ -150,6 +173,14 @@ export default memo(function Search() {
       }
     })
   }, [])
+  useEffect(() => {
+    //获取查询结果
+    getSearchResult(combineCondition)
+  }, [combineCondition])
+  //这里用户按下enter键会跳转到搜索页面 会执行2次同样的方法 目前想不出来解决方法
+  useEffect(() => {
+    switchType(0)
+  }, [keyword])
 
   return (
     <div className='search-box'>
@@ -175,6 +206,9 @@ export default memo(function Search() {
           })}
         </div>
         <div className='search-result'>
+          <div className='loading'>
+            {loading ? <Spin size={'large'} /> : null}
+          </div>
           {index === 0 && result && <SongCover song={result} />}
           {index === 1 && result && <AlbumCover album={result} />}
           {index === 2 && result ? (
@@ -213,12 +247,14 @@ export default memo(function Search() {
             </div>
           ) : null}
         </div>
+
         <div className='pagination'>
           <Pagination
             total={total}
             showSizeChanger={false}
             onChange={page => onChange(page)}
             current={page}
+            disabled={disabled}
           />
         </div>
       </div>

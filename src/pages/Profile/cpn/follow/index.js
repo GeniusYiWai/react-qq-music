@@ -6,7 +6,11 @@ import {
 import SingerCover from 'components/Singer/singerCover'
 import Empty from 'components/Common/empty'
 import Category from 'components/Common/category'
+import { message } from 'antd'
+
 import './index.less'
+
+//二级菜单
 const Tabs = [
   {
     categoryName: '用户'
@@ -18,36 +22,47 @@ const Tabs = [
 export default memo(function Collect(props) {
   //获取当前登录用户的id
   const { userId } = props
+  //state
   //当前二级分类的索引
   const [currentIndex, setCurrentIndex] = useState(0)
-  //切换当前二级分类
-  const switchTabs = useCallback(index => {
-    setCurrentIndex(index)
-  }, [])
   //用户关注的用户
   const [userFollow, setUserFollow] = useState([])
   //用户关注的歌手
   const [singerFollow, setSingerFollow] = useState([])
-  //获取用户关注的用户
+  //fucntions
+  //切换当前二级分类
+  const switchTabs = useCallback(index => {
+    setCurrentIndex(index)
+  }, [])
+  //获取当前登录用户关注的用户
   const getUserFollow = async () => {
     try {
       const {
-        data: { follow }
+        data: { follow, code }
       } = await getUserFollowAPI(userId)
-      setUserFollow(follow)
-    } catch (error) {}
+      if (code === 200) {
+        setUserFollow(follow)
+      }
+    } catch (error) {
+      message.error('获取用户关注列表失败!')
+    }
   }
   //获取用户关注的歌手
   const getCollectSinger = async () => {
     try {
       const {
-        data: { data }
+        data: { data, code }
       } = await getCollectSingerAPI(userId)
-      setSingerFollow(data)
-    } catch (error) {}
+      if (code === 200) {
+        setSingerFollow(data)
+      }
+    } catch (error) {
+      message.error('获取用户粉丝列表失败!')
+    }
   }
 
   useEffect(() => {
+    //根据索引 展示不同的菜单
     switch (currentIndex) {
       case 0:
         getUserFollow()

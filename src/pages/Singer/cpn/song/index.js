@@ -3,8 +3,13 @@ import { getSingerSongs as getSingerSongsAPI } from '@/api/singer'
 import SongCover from 'components/Album/albumDetailCover'
 import InfiniteScroll from 'react-infinite-scroller'
 import { Spin, message } from 'antd'
+import Empty from 'components/Common/empty'
+
 export default memo(function SingerSong(props) {
+  //props
+  //id 歌手id
   const { id } = props
+  //state
   //歌手歌曲
   const [singerSongs, setSingerSongs] = useState([])
   //歌曲 limit
@@ -46,6 +51,7 @@ export default memo(function SingerSong(props) {
         throw new Error()
       }
     } catch (error) {
+      setSongLoading(false)
       message.error('获取歌手单曲失败!')
     }
   }
@@ -56,7 +62,9 @@ export default memo(function SingerSong(props) {
   useEffect(() => {
     getSingerSongs(songCombineCondition)
     return () => {
+      //离开页面 清空歌曲数据
       setSingerSongs([])
+      //设置偏移量为0
       setSongOffset(0)
     }
   }, [])
@@ -70,6 +78,7 @@ export default memo(function SingerSong(props) {
         useWindow={true}
       >
         <SongCover song={singerSongs} />
+        {singerSongs.length === 0 ? <Empty /> : null}
         <div className='loading'>
           {songLoading ? <Spin size='large' /> : null}
         </div>

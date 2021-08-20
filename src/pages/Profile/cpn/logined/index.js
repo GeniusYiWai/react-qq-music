@@ -11,7 +11,9 @@ import Collect from '../collect'
 import Follow from '../follow'
 import Empty from 'components/Common/empty'
 import ListenSongs from '@/pages/User/cpn/listenSongsCover'
+import { message } from 'antd'
 import './index.less'
+//一级菜单
 const Tabs = [
   {
     categoryName: '我喜欢'
@@ -30,6 +32,8 @@ const Tabs = [
   }
 ]
 export default memo(function CollectList(props) {
+  //props
+
   //userid 用户id
   //backgroundUrl 背景图
   //avatarUrl 头像
@@ -37,8 +41,8 @@ export default memo(function CollectList(props) {
   //signature 个性签名
   const { userId, backgroundUrl, avatarUrl, nickname, signature } =
     props.userInfo
-
-  //当前展示的一级索引
+  //state
+  //当前展示的一级菜单的索引
   const [currentIndex, setCurrentIndex] = useState(0)
   //用户创建的歌单
   const [userCreatePlaylist, setUserCreatePlaylist] = useState([])
@@ -46,11 +50,7 @@ export default memo(function CollectList(props) {
   const [userFan, setUserFan] = useState([])
   //用户最近常听
   const [userListenSongs, setUserListenSongs] = useState([])
-  //切换当前一级分类
-  const switchTabs = useCallback(index => {
-    setCurrentIndex(index)
-  }, [])
-  //获取用户收藏歌单参数
+  //获取用户收藏歌单查询条件
   const [collectPlcombineCondition, setCollectPlCombineCondition] = useState({
     //id
     uid: userId,
@@ -59,23 +59,7 @@ export default memo(function CollectList(props) {
     //每页数据条数
     limit: 100
   })
-  //获取用户创建歌单
-  const getUserCreatePlaylist = async collectPlcombineCondition => {
-    try {
-      const {
-        data: { playlist }
-      } = await getCollectPlaylistAPI({ ...collectPlcombineCondition })
-      const newArr = []
-      //如果userId不等于用户id 那就是用户收藏的歌单
-      playlist.forEach(e => {
-        if (e.userId == userId) {
-          newArr.push(e)
-        }
-      })
-      setUserCreatePlaylist(newArr)
-    } catch (error) {}
-  }
-  //混合查询条件 因为可以多个参数一起查询
+  //获取用户粉丝查询条件
   const [fansCombineCondition, setFansCombineCondition] = useState({
     uid: userId,
     //偏移量
@@ -83,25 +67,56 @@ export default memo(function CollectList(props) {
     //每页数据条数
     limit: 100
   })
+  //fucntions
+  //切换当前一级分类
+  const switchTabs = useCallback(index => {
+    setCurrentIndex(index)
+  }, [])
+  //获取用户创建歌单
+  const getUserCreatePlaylist = async collectPlcombineCondition => {
+    try {
+      const {
+        data: { playlist, code }
+      } = await getCollectPlaylistAPI({ ...collectPlcombineCondition })
+      if (code === 200) {
+        //如果userId不等于用户id 那就是用户收藏的歌单
+        const newArr = playlist.filter(e => {
+          return e.userId === userId
+        })
+        setUserCreatePlaylist(newArr)
+      }
+    } catch (error) {
+      message.error('获取用户创建歌单失败!')
+    }
+  }
   //获取用户粉丝列表
   const getUserFan = async fansCombineCondition => {
     try {
       const {
-        data: { followeds }
+        data: { followeds, code }
       } = await getUserFanAPI({ ...fansCombineCondition })
-      setUserFan(followeds)
-    } catch (error) {}
+      if (code === 200) {
+        setUserFan(followeds)
+      }
+    } catch (error) {
+      message.error('获取用户粉丝列表失败!')
+    }
   }
   //获取用户最近常听
   const getUserListenSongs = async () => {
     try {
       const {
-        data: { weekData }
+        data: { weekData, code }
       } = await getUserListenSongsAPI(userId)
-      setUserListenSongs(weekData)
-    } catch (error) {}
+      if (code === 200) {
+        setUserListenSongs(weekData)
+      }
+    } catch (error) {
+      message.error('获取用户听歌排行失败!')
+    }
   }
   useEffect(() => {
+    //根据索引 展示不同的菜单
     switch (currentIndex) {
       //1 用户创建的歌单
       case 1:
@@ -119,6 +134,7 @@ export default memo(function CollectList(props) {
         break
     }
   }, [currentIndex])
+  //查看用户详情
   const goToUserDetail = () => {
     window.open(`/#/profile/user/${userId}`)
   }
@@ -131,7 +147,9 @@ export default memo(function CollectList(props) {
         <img src={avatarUrl} alt='' />
         <p>{nickname}</p>
         <span>{signature}</span>
-        <button onClick={() => goToUserDetail()} className='showDetail'>查看用户详情</button>
+        <button onClick={() => goToUserDetail()} className='showDetail'>
+          前往用户主页
+        </button>
       </div>
       <Category
         Tabs={Tabs}

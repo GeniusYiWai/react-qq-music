@@ -18,10 +18,10 @@ import Empty from 'components//Common/empty'
 import { ScrollTop } from '@/utils/tools'
 import { message } from 'antd'
 import InfiniteScroll from 'react-infinite-scroller'
-
 //资源类型 1代表Video
 const resourceType = 1
 export default memo(function VideoDetail() {
+  //ref
   //获取评论区域的ref引用
   const commentRef = useRef()
   //获取Video播放器的ref引用
@@ -29,6 +29,7 @@ export default memo(function VideoDetail() {
   const params = useParams()
   //从url中获取Videoid
   const { id } = params
+  //state
   //热门评论
   const [hotComments, setHotComments] = useState([])
   //全部评论
@@ -58,6 +59,7 @@ export default memo(function VideoDetail() {
     limit,
     offset
   })
+  //functions
   //获取Video详情
   const getVideoDetail = async () => {
     try {
@@ -78,11 +80,14 @@ export default memo(function VideoDetail() {
     try {
       const {
         data: {
+          code,
           urls: [url]
         }
       } = await getVideoUrlAPI(id)
-      if (url) {
-        setVideoUrl(url.url)
+      if (code === 200) {
+        if (url) {
+          setVideoUrl(url.url)
+        }
       }
     } catch (error) {
       message.error('获取视频播放地址失败!')
@@ -164,9 +169,13 @@ export default memo(function VideoDetail() {
   useEffect(() => {
     //第一次进入页面 将页面滚动到顶部
     ScrollTop(0, 300)
+    //获取视频详情
     getVideoDetail()
+    //获取相似视频
     getSimiVideo()
+    //获取视频播放地址
     getVideoUrl()
+    //获取视频评论
     getVideoComment(combineCondition)
     getVideoHotComment()
   }, [])

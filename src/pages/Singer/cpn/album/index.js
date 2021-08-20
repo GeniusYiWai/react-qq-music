@@ -47,6 +47,8 @@ export default memo(function SingerAlbum(props) {
         throw new Error()
       }
     } catch (error) {
+      setAlbumHasMore(false)
+      setAlbumLoading(false)
       message.error('获取歌手专辑失败!')
     }
   }
@@ -57,7 +59,9 @@ export default memo(function SingerAlbum(props) {
   useEffect(() => {
     getSingerAlbums(albumCombineCondition)
     return () => {
+      //离开页面 清空专辑数据
       setSingerAlbums([])
+      //设置偏移量为0
       setAlbumOffset(0)
     }
   }, [])

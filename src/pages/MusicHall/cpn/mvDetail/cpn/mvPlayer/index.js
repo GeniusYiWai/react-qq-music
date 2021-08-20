@@ -5,7 +5,6 @@ import React, {
   forwardRef,
   useImperativeHandle
 } from 'react'
-
 import './index.less'
 export default memo(
   forwardRef(function MvPlayer(props, ref) {
