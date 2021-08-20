@@ -1,5 +1,5 @@
 import React, { memo, useState, useCallback, useRef, useEffect } from 'react'
-import { Slider, Tooltip, Modal, message, } from 'antd'
+import { Slider, Tooltip, Modal, message } from 'antd'
 import {
   StepBackwardOutlined,
   StepForwardOutlined,
@@ -41,10 +41,10 @@ export default memo(function Progress(props) {
   const showModal = () => {
     setIsModalVisible(true)
   }
-
   const handleOk = () => {
     setIsModalVisible(false)
     audioRef.current.play()
+    playLyricScroll()
   }
 
   const handleCancel = () => {
@@ -65,7 +65,8 @@ export default memo(function Progress(props) {
     setCurrentPlayMusicId,
     changeLyricScroll,
     pauseLyricScroll,
-    changeLyricProgress
+    changeLyricProgress,
+    playLyricScroll
   } = props
   const dispatch = useDispatch()
   //从store中获取当前正在播放的音乐信息
@@ -238,6 +239,11 @@ export default memo(function Progress(props) {
     audioRef.current.pause()
     setDisabled(true)
   }
+  useEffect(() => {
+    if (isPlaying) {
+      playLyricScroll()
+    }
+  }, [isPlaying])
   return (
     <div className='progress-container'>
       <Modal
@@ -256,8 +262,13 @@ export default memo(function Progress(props) {
         onTimeUpdate={() => onMusicPlay()}
         onEnded={() => onMusicEnded()}
         //监听音乐是否在播放 如果是 就修改播放图标的状态
-        onPlay={() => setIsPlaying(true)}
-        onCanPlay={() => setDisabled(false)}
+        onPlay={() => {
+          setIsPlaying(true)
+          setIsModalVisible(false)
+        }}
+        onCanPlay={() => {
+          setDisabled(false)
+        }}
         onError={() => {
           handleError()
         }}

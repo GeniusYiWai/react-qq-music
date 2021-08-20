@@ -25,20 +25,38 @@ th,
 ins {
   padding: 0;
   margin: 0;
-  box-sizing: border-box;
 }
 
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
 ul,
 ol,
 li {
   list-style: none;
 }
-
 a {
   text-decoration: none;
   color: #666;
 }
-
 input,
 textarea,
 button,
@@ -51,7 +69,6 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
-
 img {
   border: none;
   vertical-align: middle;
@@ -61,7 +78,6 @@ body {
   font-size: 14px;
   color: #333;
   font-family: Arial, Helvetica, sans-serif;
-  box-sizing: border-box;
 }
 //文字溢出显示省略号
 .text-nowrap {
@@ -73,11 +89,10 @@ body {
   width: 1200px;
   margin: 0 auto;
 }
-
 html,
 body {
-  min-width: 1200px;
   height: 100%;
+  box-sizing: border-box;
 }
 @media only screen and (min-width: 1200px) {
   html,

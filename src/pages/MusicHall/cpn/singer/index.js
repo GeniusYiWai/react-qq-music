@@ -10,8 +10,6 @@ import {
 } from '@/api/singer'
 import { getCollectSinger as getCollectSingerAPI } from '@/api/profile'
 import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
-import { Carousel } from 'antd'
-import { LeftOutlined, RightOutlined } from '@ant-design/icons'
 import { Spin } from 'antd'
 import SingerSkeleton from 'components/Skeleton/singerSkeleton'
 import Pagination from 'components/Common/pagination'
@@ -19,6 +17,8 @@ import { ScrollTop } from '@/utils/tools'
 import { message } from 'antd'
 import InfiniteScroll from 'react-infinite-scroller'
 import Empty from 'components/Common/empty'
+import Carousel from 'components/Common/carousel'
+
 import './index.less'
 //首字母查询
 const Initials = [
@@ -96,7 +96,6 @@ const Type = [
     type: '3'
   }
 ]
-const pageSize = 5
 export default memo(function Singer() {
   //redux
   //isLogin 用户登录状态
@@ -106,8 +105,6 @@ export default memo(function Singer() {
     }
   }, shallowEqual)
   const dispatch = useDispatch()
-  //获取轮播图引用
-  const carouselRef = useRef()
   //下方热门歌手
   const [hotSinger, setHotSinger] = useState([])
   //下方热门歌手limit
@@ -146,8 +143,6 @@ export default memo(function Singer() {
   })
   //用户收藏歌手
   const [collectSinger, setCollectSinger] = useState([])
-  //收藏的歌手数据
-  const [newCollectSingerArray, setNewCollectSingerArray] = useState([])
 
   //获取歌手
   const getSinger = async ({ area, initial, type, limit, offset }) => {
@@ -198,7 +193,6 @@ export default memo(function Singer() {
       } = await getCollectSingerAPI()
       if (code === 200) {
         setCollectSinger(data)
-        spliceList(data)
       }
     } catch (error) {
       message.error('获取关注歌手失败!')
@@ -217,17 +211,6 @@ export default memo(function Singer() {
     }))
   }, [])
 
-  //这个函数用来获取走马灯展示的数据
-  //因为直接遍历关注歌手列表 走马灯一页只能显示一张图片
-  //所以通过创建一个新数组 将原来的歌手列表按5个一组重新排序 这样一个走马灯页面就可以显示5张图片
-  const spliceList = data => {
-    const arr = []
-    const totalPage = Math.ceil(data.length / pageSize)
-    for (let i = 0; i < totalPage; i++) {
-      arr[i] = data.slice(i * pageSize, i * pageSize + pageSize)
-    }
-    setNewCollectSingerArray(arr)
-  }
   //监听combineCondition的改变 一旦切换查询条件 就会重新触发加载数据
   useEffect(() => {
     //第一次加载 会先加载默认的全部数据
@@ -244,10 +227,7 @@ export default memo(function Singer() {
       getCollectSinger()
     }
   }, [isLogin])
-  //查看歌手详情
-  const goToSingerDetail = id => {
-    window.open(`/#/profile/singer/${id}`)
-  }
+
   //加载更多
   const loadMore = useCallback(() => {
     // 如果是第一次加载页面 不执行loadMore
@@ -259,41 +239,11 @@ export default memo(function Singer() {
       <div className='singer-bg' style={{ backgroundImage: `url(${BgImage})` }}>
         {isLogin ? (
           <>
-            <LeftOutlined
-              className='prev'
-              onClick={() => {
-                carouselRef.current.prev()
-              }}
-            />
             <Carousel
-              effect='fade'
-              autoplay
-              className='collect-singer-container'
-              ref={carouselRef}
-            >
-              {newCollectSingerArray.map((singer, index) => {
-                return (
-                  <div className='collect-singer-wrapper' key={index}>
-                    {singer.map(item => {
-                      return (
-                        <div className='collect-singer-item' key={item.id}>
-                          <img src={item.picUrl} alt='' />
-                          <p onClick={() => goToSingerDetail(item.id)}>
-                            {item.name}
-                          </p>
-                        </div>
-                      )
-                    })}
-                  </div>
-                )
-              })}
-            </Carousel>
-            <RightOutlined
-              className='next'
-              onClick={() => {
-                carouselRef.current.next()
-              }}
-            />
+              data={collectSinger}
+              pagesize={5}
+              type={'singer'}
+            ></Carousel>
           </>
         ) : (
           <>
@@ -310,6 +260,7 @@ export default memo(function Singer() {
             />
           </>
         )}
+      
       </div>
       <ConditionQuery
         condition='initial'

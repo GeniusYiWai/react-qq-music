@@ -7,6 +7,7 @@ import { ScrollTop } from '@/utils/tools'
 import { message } from 'antd'
 import SingerMv from './cpn/mv'
 import SingerAlbum from './cpn/album'
+
 import SingerSong from './cpn/song'
 import './index.less'
 //一级分类

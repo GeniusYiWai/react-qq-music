@@ -6,8 +6,7 @@ import { Modal, Tooltip } from 'antd'
 import {
   DeleteOutlined,
   PlusOutlined,
-  PlayCircleOutlined,
- 
+  PlayCircleOutlined
 } from '@ant-design/icons'
 import { getCollectPlaylist as getUserCreatePlaylistAPI } from '@/api/profile'
 import { CheckCanPlay as CheckCanPlayAPI } from '@/api/player'
@@ -23,7 +22,8 @@ export default memo(function Playlist(props) {
     setCurrentPlayMusicId,
     isPlaying,
     playlist,
-    setPlaylist
+    setPlaylist,
+    playLyricScroll
   } = props
   const dispatch = useDispatch()
   const uid = useMemo(() => getItem('uid'), [])
@@ -63,6 +63,7 @@ export default memo(function Playlist(props) {
   const handleOk = () => {
     clearPlaylist()
     setIsModalVisible(false)
+    playLyricScroll()
   }
   const handleCancel = () => {
     setIsModalVisible(false)

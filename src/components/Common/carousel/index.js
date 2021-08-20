@@ -5,6 +5,7 @@ import PlaylistCover from 'components/Playlist/playlistCover'
 import NewSongCover from 'components/Song/songCover'
 import NewAlbumCover from 'components/Album/newAlbumCover'
 import MVCover from 'components/Mv/mvCover'
+import CollectSinger from 'components/Singer/collectSinger'
 import './index.less'
 export default memo(function MyCarousel(props) {
   //获取轮播图引用
@@ -13,8 +14,6 @@ export default memo(function MyCarousel(props) {
   const { data, pagesize, type } = props
   //state
   const [newArr, setNewArr] = useState([])
-  const [className, setClassName] = useState('')
-
   const spliceData = data => {
     const arr = []
     const totalPage = Math.ceil(data.length / pagesize)
@@ -24,24 +23,6 @@ export default memo(function MyCarousel(props) {
     return arr
   }
   useEffect(() => {
-    switch (type) {
-      case 'playlist':
-        setClassName('playlist-content')
-        break
-      case 'song':
-        setClassName('newsong-content')
-        break
-      case 'album':
-        setClassName('newalbum-content')
-        break
-      case 'mv':
-        setClassName('mv-content')
-        break
-
-      default:
-        break
-    }
-    console.log(spliceData(data))
     setNewArr(spliceData(data))
   }, [data])
   return (
@@ -70,7 +51,7 @@ export default memo(function MyCarousel(props) {
           >
             {newArr.map((arr, index) => {
               return (
-                <div className={className} key={index}>
+                <div className='carousel-wrapper' key={index}>
                   {arr.map(item => {
                     switch (type) {
                       case 'playlist':
@@ -97,6 +78,13 @@ export default memo(function MyCarousel(props) {
                       case 'mv':
                         return (
                           <MVCover mv={item} key={Math.random() + item.id} />
+                        )
+                      case 'singer':
+                        return (
+                          <CollectSinger
+                            singer={item}
+                            key={Math.random() + item.id}
+                          />
                         )
 
                       default:

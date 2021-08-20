@@ -21,6 +21,9 @@ export default memo(
       changeLyricScroll: () => {
         Lyric && Lyric.togglePlay()
       },
+      playLyricScroll: () => {
+        Lyric && Lyric.play()
+      },
       pauseLyricScroll: () => {
         Lyric && Lyric.stop()
       },
@@ -38,17 +41,15 @@ export default memo(
     //获取歌词容器ref引用
     const lyricRef = useRef()
     //歌词滚动后自动触发该函数
-    const handleLyric = useCallback(
-      ({ lineNum }) => {
-        if (lineNum > 2) {
-          lyricRef.current.scrollTo(0, lineNum * 30 - 30)
-        }
-        //根据行数滚动歌词容器
-        //设置歌词当前滚动到的行数
-        setLineNum(lineNum)
-      },
-      [setLineNum]
-    )
+    const handleLyric = ({ lineNum }) => {
+      if (lineNum > 2) {
+        lyricRef.current.scrollTo(0, lineNum * 30 - 30)
+      }
+      //根据行数滚动歌词容器
+      //设置歌词当前滚动到的行数
+      setLineNum(lineNum)
+    }
+
     // const handleLyricScroll = useCallback(() => {
     //   let scrollTimer
     //   clearTimeout(scrollTimer)
@@ -61,7 +62,6 @@ export default memo(
       getLyric(currentPlayMusicId).then(({ data }) => {
         if (data.nolyric) {
           setLyric([{ txt: '纯音乐,敬请欣赏!' }])
-          setLineNum(0)
         } else if (data.lrc) {
           //生成Lyric实例
           Lyric = new LyricParser(data.lrc.lyric, handleLyric)
@@ -71,8 +71,8 @@ export default memo(
           setLyric(Lyric.lines)
         } else {
           setLyric([{ txt: '暂无歌词!' }])
-          setLineNum(0)
         }
+        setLineNum(0)
       })
       //这里一定要返回一个清除歌词滚动的方法 不然会生成多个Lyric同时调用
       return () => {
@@ -80,7 +80,7 @@ export default memo(
         LyricRef.current && LyricRef.current.scrollTo(0, 0)
         Lyric && Lyric.stop()
       }
-    }, [currentPlayMusicId, handleLyric])
+    }, [currentPlayMusicId])
 
     return (
       <div className='music-lyric-container'>

@@ -19,6 +19,9 @@ export default memo(function Player() {
   const childRef = useRef()
   // changeLyricScroll就是子组件暴露给父组件的方法
   //这个方法用来手动控制歌词的滚动状态
+  const playLyricScroll = () => {
+    childRef.current.playLyricScroll()
+  }
   const changeLyricScroll = () => {
     childRef.current.changeLyricScroll()
   }
@@ -71,10 +74,11 @@ export default memo(function Player() {
     document.addEventListener('visibilitychange', function () {
       var isHidden = document.hidden
       if (!isHidden) {
-        setPlaylist(getItem('playlist')||[])
-        setCurrentPlayMusicId(getItem('currentPlayMusicId')||null)
+        setPlaylist(getItem('playlist') || [])
+        setCurrentPlayMusicId(getItem('currentPlayMusicId') || null)
       }
     })
+    pauseLyricScroll()
   }, [])
 
   return (
@@ -114,6 +118,7 @@ export default memo(function Player() {
               changeLyricScroll={changeLyricScroll}
               pauseLyricScroll={pauseLyricScroll}
               changeLyricProgress={changeLyricProgress}
+              playLyricScroll={playLyricScroll}
             />
             <MusicLyric
               ref={childRef}

@@ -35,7 +35,6 @@ export default memo(function PlaylistRec() {
   }
   //切换当前歌单分类的索引
   const switchTabs = useCallback(index => {
-    console.log(11111);
     setPlaylists([])
     setCurrentIndex(index)
   }, [])
