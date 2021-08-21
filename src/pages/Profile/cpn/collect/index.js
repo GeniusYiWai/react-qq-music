@@ -13,7 +13,7 @@ import MvCover from 'components/Mv/mvCover'
 import Category from 'components/Common/category'
 import Empty from 'components/Common/empty'
 import { message } from 'antd'
-import { getUserPlaylist } from '@/utils/actions'
+import { getUserPlaylist } from '@/actions/user'
 
 import './index.less'
 //二级分类

@@ -142,9 +142,10 @@ export default memo(function SearchInput() {
     //获取热门搜索关键字
     getHotKeywords()
     //点击window 隐藏全部
-    window.addEventListener('click', () => {
-      hideAll()
-    })
+    window.addEventListener('click', hideAll)
+    return () => {
+      window.removeEventListener('click', hideAll)
+    }
   }, [])
   return (
     <div className='search-container' ref={searchBoxRef}>

@@ -19,7 +19,6 @@ export const playMusic = (id, name, artists, duration) => {
       setItem('currentPlayMusicId', id)
       //从缓存中获取歌曲列表
       let playlist = getItem('playlist')
-      console.log(artists)
       const songInfo = {
         id,
         name,

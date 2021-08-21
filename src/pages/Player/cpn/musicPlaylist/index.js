@@ -1,22 +1,27 @@
-import React, { memo, useCallback, useState, useMemo } from 'react'
+import React, { memo, useCallback, useState } from 'react'
 import { setItem, clearItem, getItem } from '@/utils/storage'
-import './index.less'
 import { debounce } from '@/utils/tools'
-import { Modal, Tooltip } from 'antd'
+import { Modal, Tooltip, message } from 'antd'
 import {
   DeleteOutlined,
   PlusOutlined,
   PlayCircleOutlined
 } from '@ant-design/icons'
-import { getCollectPlaylist as getUserCreatePlaylistAPI } from '@/api/profile'
 import { CheckCanPlay as CheckCanPlayAPI } from '@/api/player'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
-import { message } from 'antd'
-import { collectSongToPlaylist as collectSongToPlaylistAPI } from '@/api/collect'
+import { collectSongToPlaylist, getUserPlaylist } from '@/actions/user'
 import Wave from '@/assets/img/wave.gif'
+import './index.less'
+
 export default memo(function Playlist(props) {
-  //从父元素中获取当前音乐是否正在播放和播放的音乐id  用于展示样式
+  //props
+  // currentPlayMusicId, 当前播放的音乐id
+  // setCurrentPlayMusicId, 修改当前播放音乐的id
+  // isPlaying, 全局音乐播放状态
+  // playlist, 播放列表
+  // setPlaylist, 修改播放列表
+  // playLyricScroll 滚动歌词
   const {
     currentPlayMusicId,
     setCurrentPlayMusicId,
@@ -25,63 +30,58 @@ export default memo(function Playlist(props) {
     setPlaylist,
     playLyricScroll
   } = props
+  ///redux
   const dispatch = useDispatch()
-  const uid = useMemo(() => getItem('uid'), [])
-  //获取用户登录状态
   const { isLogin } = useSelector(state => {
     return {
       isLogin: state.user.isLogin
     }
   }, shallowEqual)
+  //从缓存中取当前登录用户的id
+  const uid = getItem('uid')
+  //state
+  //控制清空播放列表弹出层显示隐藏
+  const [isModalVisible, setIsModalVisible] = useState(false)
+  //控制删除歌曲到歌单弹出层显示隐藏
+  const [isCollectModalVisible, setIsCollectModalVisible] = useState(false)
+  //用户创建歌单查询条件
+  const [createPlcombineCondition] = useState({
+    //id
+    uid,
+    //偏移量
+    offset: 0,
+    //每页数据条数
+    limit: 100
+  })
+  //用户创建歌单
+  const [userCreatePlaylists, setUserCreatePlaylists] = useState([])
+  //用户当前选中的要收藏的歌曲的id
+  const [currentSelectMusicId, setCurrentSelectMusicId] = useState(null)
+
+  //检查歌曲是否可以播放
   const CheckCanPlay = async id => {
     try {
       const {
         data: { success }
       } = await CheckCanPlayAPI(id)
       if (success) {
+        //可以播放 修改当前播放的音乐id
         debounce(() => {
           setCurrentPlayMusicId(id)
           setItem('currentPlayMusicId', id)
-        }, 200)()
+          playLyricScroll()
+        }, 500)()
       }
     } catch (error) {
       message.error('抱歉，这首歌曲暂时不能播放。')
     }
   }
-  //点击播放列表中的歌曲 修改当前播放的音乐id 存入store中
+  //点击播放列表中的歌曲 修改当前播放的音乐id
   const changePlayMusicID = id => {
+    if (id === currentPlayMusicId) return
     CheckCanPlay(id)
-    //这里对切换上一首或者下一首进行了防抖处理 防止用户快速切换歌曲 导致歌词组件无法及时清除上一个已经进行的歌词滚动 因为歌词滚动需要时间初始化 如果快速切换会导致清除函数无法及时生效 使得多个歌词滚动同时进行 歌词会来回跳跃
   }
-  const [isModalVisible, setIsModalVisible] = useState(false)
-  const showModal = () => {
-    if (playlist.length === 0) {
-      return
-    }
-    setIsModalVisible(true)
-  }
-  const handleOk = () => {
-    clearPlaylist()
-    setIsModalVisible(false)
-    playLyricScroll()
-  }
-  const handleCancel = () => {
-    setIsModalVisible(false)
-  }
-  const goToSingerDetail = (e, item) => {
-    e.stopPropagation()
-    window.open(`/#/profile/singer/${item.singerId}`)
-  }
-  const goToSongDetail = (e, item) => {
-    e.stopPropagation()
-    window.open(`/#/musichall/song/detail/${item.id}`)
-  }
-  //清空播放列表
-  const clearPlaylist = useCallback(() => {
-    clearItem('playlist')
-    clearItem('currentPlayMusicId')
-    setPlaylist([])
-  }, [])
+
   //移除单首歌曲
   const handleDetele = useCallback(
     (e, id) => {
@@ -99,8 +99,6 @@ export default memo(function Playlist(props) {
     [playlist, currentPlayMusicId, setPlaylist]
   )
 
-  const [isCollectModalVisible, setIsCollectModalVisible] = useState(false)
-
   const showCollectModal = () => {
     setIsCollectModalVisible(true)
   }
@@ -112,64 +110,65 @@ export default memo(function Playlist(props) {
   const handleCollectCancel = () => {
     setIsCollectModalVisible(false)
   }
-  //用户创建歌单
-  const [userCreatePlaylists, setUserCreatePlaylists] = useState([])
-  //获取用户创建歌单参数
-  const [createPlcombineCondition, setCreatePlCombineCondition] = useState({
-    //id
-    uid,
-    //偏移量
-    offset: 0,
-    //每页数据条数
-    limit: 15
-  })
+
   //获取用户创建歌单
-  const getUserCreatePlaylist = async createPlcombineCondition => {
-    try {
-      const {
-        data: { playlist }
-      } = await getUserCreatePlaylistAPI({ ...createPlcombineCondition })
-      const newArr = []
-      //如果userId等于用户id 那就是用户创建的歌单
-      playlist.forEach(e => {
-        if (e.userId == uid) {
-          newArr.push(e)
-        }
-      })
-      setUserCreatePlaylists(newArr)
-    } catch (error) {
-      message.error('获取用户歌单失败!')
-    }
+  const getUserCreatePlaylist = () => {
+    getUserPlaylist(
+      createPlcombineCondition,
+      uid,
+      null,
+      setUserCreatePlaylists,
+      'create'
+    )
   }
-  const [currentSelectMusicId, setCurrentSelectMusicId] = useState(null)
+  //收藏歌曲
   const collectSong = (e, id) => {
     e.stopPropagation()
+    //判断是否登录
     if (!isLogin) {
       dispatch(showLoginBoxDispatch(true))
       return
     }
+    //展示弹出层
     setIsCollectModalVisible(true)
+    //修改当前选中的要收藏音乐id
     setCurrentSelectMusicId(id)
+    //获取用户创建歌单
     getUserCreatePlaylist(createPlcombineCondition)
   }
-
-  const collectSongToPlaylist = async playlist => {
-    try {
-      const {
-        data: {
-          body: { code }
-        }
-      } = await collectSongToPlaylistAPI(playlist.id, currentSelectMusicId)
-      if (code === 200) {
-        message.success('添加成功')
-        setIsCollectModalVisible(false)
-      } else if (code === 502) {
-        message.warning('歌单内歌曲重复')
-      }
-    } catch (error) {
-      message.error('添加失败!')
+  //展示清空播放列表对话框
+  const showModal = () => {
+    if (playlist.length === 0) {
+      return
     }
+    setIsModalVisible(true)
   }
+  //清空播放列表
+  const clearPlaylist = () => {
+    clearItem('playlist')
+    clearItem('currentPlayMusicId')
+    setPlaylist([])
+  }
+  //用户点击确定 清空播放列表
+  const handleOk = () => {
+    clearPlaylist()
+    setIsModalVisible(false)
+  }
+  //点击取消 隐藏对话框
+  const handleCancel = () => {
+    setIsModalVisible(false)
+  }
+  //查看歌手详情
+  const goToSingerDetail = (e, item) => {
+    e.stopPropagation()
+    window.open(`/#/profile/singer/${item.singerId}`)
+  }
+  //查看歌曲详情
+  const goToSongDetail = (e, item) => {
+    e.stopPropagation()
+    window.open(`/#/musichall/song/detail/${item.id}`)
+  }
+
   return (
     <div className='player-playlist-container'>
       <Modal
@@ -184,8 +183,13 @@ export default memo(function Playlist(props) {
             <p
               className='user-create-playlist'
               onClick={() => {
-                collectSongToPlaylist(item)
+                collectSongToPlaylist(
+                  item,
+                  currentSelectMusicId,
+                  setIsCollectModalVisible
+                )
               }}
+              key={item.id}
             >
               {item.name}
             </p>

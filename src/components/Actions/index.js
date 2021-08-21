@@ -9,15 +9,10 @@ import {
 import { getItem } from '@/utils/storage'
 import { message } from 'antd'
 import { playPlaylist, playMusic, playRank } from '@/utils/player'
-import {
-  collectPlaylist,
-  collectAlbum,
-  collectMv,
-  collectSongToPlaylist as collectSongToPlaylistAPI
-} from '@/api/collect'
+import { collectPlaylist, collectAlbum, collectMv } from '@/api/collect'
 import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
-import { getUserPlaylist } from '@/utils/actions'
+import { getUserPlaylist, collectSongToPlaylist } from '@/actions/user'
 import './index.less'
 //资源操作组件
 export default memo(function Actions(props) {
@@ -63,24 +58,7 @@ export default memo(function Actions(props) {
     }
   }, shallowEqual)
   //functions
-  //添加歌曲到歌单
-  const collectSongToPlaylist = async playlist => {
-    try {
-      const {
-        data: {
-          body: { code }
-        }
-      } = await collectSongToPlaylistAPI(playlist.id, id, 'add')
-      if (code === 200) {
-        message.success('添加成功')
-        setIsModalVisible(false)
-      } else if (code === 502) {
-        message.warning('歌单内歌曲重复')
-      }
-    } catch (error) {
-      message.error('添加失败!')
-    }
-  }
+
   //点击播放按钮触发事件
   const handlePlay = () => {
     //判断资源类型
@@ -110,8 +88,8 @@ export default memo(function Actions(props) {
     message.success(type === 1 ? '收藏成功' : '取消收藏成功')
   }
   //获取用户创建歌单
-  const handleCollectSongToPlaylist =  () => {
-     getUserPlaylist(
+  const handleCollectSongToPlaylist = () => {
+    getUserPlaylist(
       createPlcombineCondition,
       uid,
       setCollectLoading,
@@ -222,7 +200,7 @@ export default memo(function Actions(props) {
               className='user-create-playlist'
               key={item.id}
               onClick={() => {
-                collectSongToPlaylist(item)
+                collectSongToPlaylist(item,id,setIsModalVisible)
               }}
             >
               {item.name}

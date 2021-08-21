@@ -42,12 +42,16 @@ export default memo(function Logout() {
     e.stopPropagation()
     setShow(true)
   }
+  const hideInfo = () => {
+    setShow(false)
+  }
   //effect
   useEffect(() => {
     //点击window 隐藏个人信息
-    window.addEventListener('click', () => {
-      setShow(false)
-    })
+    window.addEventListener('click', hideInfo)
+    return () => {
+      window.removeEventListener('click', hideInfo)
+    }
   }, [])
   return (
     <div className='logout-container'>

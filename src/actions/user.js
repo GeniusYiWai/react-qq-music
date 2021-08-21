@@ -4,6 +4,7 @@ import {
   getUserFollow as getUserFollowsAPI,
   getUserListenSongs as getUserListenSongsAPI
 } from '@/api/profile'
+import { collectSongToPlaylist as collectSongToPlaylistAPI } from '@/api/collect'
 //获取用户创建或者收藏的歌单
 export const getUserPlaylist = async (
   createPlcombineCondition,
@@ -65,5 +66,27 @@ export const getUserListenSongs = async (id, setData) => {
     }
   } catch (error) {
     message.error('无权限访问用户听歌排行!')
+  }
+}
+//添加歌曲到歌单
+export const collectSongToPlaylist = async (
+  playlist,
+  id,
+  setIsModalVisible
+) => {
+  try {
+    const {
+      data: {
+        body: { code }
+      }
+    } = await collectSongToPlaylistAPI(playlist.id, id)
+    if (code === 200) {
+      message.success('添加成功')
+      setIsModalVisible(false)
+    } else if (code === 502) {
+      message.warning('歌单内歌曲重复')
+    }
+  } catch (error) {
+    message.error('添加失败!')
   }
 }

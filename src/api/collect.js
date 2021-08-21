@@ -44,5 +44,7 @@ export const collectMv = (t, id) => {
  * @returns
  */
 export const collectSongToPlaylist = (pid, tracks, op = 'add') => {
-  return request.get(`/playlist/tracks?op=${op}&pid=${pid}&tracks=${tracks}`)
+  return request.get(
+    `/playlist/tracks?op=${op}&pid=${pid}&tracks=${tracks}&timestamp=${timestamp}`
+  )
 }

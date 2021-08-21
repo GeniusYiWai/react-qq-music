@@ -4,7 +4,7 @@ import SingerCover from 'components/Singer/singerCover'
 import Empty from 'components/Common/empty'
 import Category from 'components/Common/category'
 import { message } from 'antd'
-import { getUserFollows } from '@/utils/actions'
+import { getUserFollows } from '@/actions/user'
 import './index.less'
 //二级菜单
 const Tabs = [

@@ -4,33 +4,38 @@ import MusicPlaylist from './cpn/musicPlaylist'
 import MusicControl from './cpn/musicControl'
 import MusicLyric from './cpn/musicLyric'
 import { getItem } from '@/utils/storage'
-import {
-  userLoginDispatch,
-  setUserDispatch
-} from '@/pages/LoginBox/store/actionCreators'
 import { useDispatch, useSelector } from 'react-redux'
-import { getLoginStatus as getLoginStatusAPI } from '@/api/login'
-import { setItem } from '@/utils/storage'
-
+import { getLoginStatus } from '@/actions/login'
 export default memo(function Player() {
+  //redux
+  //获取store中的当前播放音乐信息 用于展示背景图
+  const { currentPlayMusic } = useSelector(state => {
+    return {
+      currentPlayMusic: state.player.currentPlayMusic
+    }
+  })
   const dispatch = useDispatch()
-
   //获取歌词组件的引用
   const childRef = useRef()
   // changeLyricScroll就是子组件暴露给父组件的方法
-  //这个方法用来手动控制歌词的滚动状态
+  //调用歌词组件的手动播放歌词的方法
   const playLyricScroll = () => {
-    childRef.current.playLyricScroll()
+    childRef.current && childRef.current.playLyricScroll()
   }
+  //调用歌词组件的手动改变歌词播放状态的方法
   const changeLyricScroll = () => {
-    childRef.current.changeLyricScroll()
+    childRef.current && childRef.current.changeLyricScroll()
   }
+  //调用歌词组件的手动暂停歌词滚动的方法
   const pauseLyricScroll = () => {
-    childRef.current.pauseLyricScroll()
+    childRef.current && childRef.current.pauseLyricScroll()
   }
-  //这个方法用来手动控制歌词的滚动进度
+  //调用歌词组件的控制歌词的滚动进度的方法
   const changeLyricProgress = time => {
-    childRef.current.changeLyricProgress(time)
+    childRef.current && childRef.current.changeLyricProgress(time)
+  }
+  const scrollToTop = () => {
+    childRef.current && childRef.current.scrollToTop()
   }
   //从缓存中取出当前播放的音乐id
   const [currentPlayMusicId, setCurrentPlayMusicId] = useState(
@@ -38,51 +43,20 @@ export default memo(function Player() {
   )
   //从缓存中获取播放列表
   const [playlist, setPlaylist] = useState(getItem('playlist') || [])
-  //切换音乐播放状态
+  //全局音乐播放状态
   const [isPlaying, setIsPlaying] = useState(false)
-   //切换音乐播放状态
-   const [isEnded, setIsEnded] = useState(false)
-  //获取store中的当前播放音乐信息 用于展示背景图
-  const { currentPlayMusic } = useSelector(state => {
-    return {
-      currentPlayMusic: state.player.currentPlayMusic
-    }
-  })
-
-  //获取登录信息
-  const getLoginStatus = async () => {
-    try {
-      const {
-        data: {
-          data: { profile }
-        }
-      } = await getLoginStatusAPI()
-      if (profile) {
-        //更改state中的用户登录状态
-        dispatch(userLoginDispatch(true))
-        //更改state中的用户信息
-        dispatch(setUserDispatch(profile))
-        setItem('uid', profile.userId)
-      }
-    } catch (error) {}
-  }
-  //登录成功 将登录态存入缓存 修改state中的用户登录状态
-  const getUserInfo = () => {
-    getLoginStatus()
-  }
   useEffect(() => {
-    getUserInfo()
+    //获取登录状态 如果登录成功  修改store中的用户登录状态
+    getLoginStatus(dispatch)
     //监听页面进入 重新从缓存中取当前的播放列表和播放音乐的id
     document.addEventListener('visibilitychange', function () {
-      var isHidden = document.hidden
+      const isHidden = document.hidden
       if (!isHidden) {
         setPlaylist(getItem('playlist') || [])
         setCurrentPlayMusicId(getItem('currentPlayMusicId') || null)
       }
     })
-    pauseLyricScroll()
   }, [])
-
   return (
     <div
       className='player-container'
@@ -108,6 +82,8 @@ export default memo(function Player() {
             isPlaying={isPlaying}
             playlist={playlist}
             setPlaylist={setPlaylist}
+            pauseLyricScroll={pauseLyricScroll}
+            playLyricScroll={playLyricScroll}
           />
         </div>
         {playlist.length > 0 ? (
@@ -121,14 +97,13 @@ export default memo(function Player() {
               pauseLyricScroll={pauseLyricScroll}
               changeLyricProgress={changeLyricProgress}
               playLyricScroll={playLyricScroll}
-              setIsEnded={setIsEnded}
+              scrollToTop={scrollToTop}
             />
             <MusicLyric
               ref={childRef}
               currentPlayMusic={currentPlayMusic}
               currentPlayMusicId={currentPlayMusicId}
               isPlaying={isPlaying}
-              isEnded={isEnded}
             />
           </>
         ) : null}

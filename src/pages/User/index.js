@@ -6,7 +6,6 @@ import {
   getUserInfo as getUserInfoAPI,
   getUserEvent as getUserEventAPI,
   getUserFan as getUserFansAPI,
-  getUserListenSongs as getUserListenSongsAPI
 } from '@/api/profile'
 import LazyLoadImg from 'components/Common/lazyloadImg'
 import Empty from 'components/Common/empty'
@@ -19,7 +18,7 @@ import {
   getUserPlaylist,
   getUserFollows,
   getUserListenSongs
-} from '@/utils/actions'
+} from '@/actions/user'
 import './index.less'
 //处理性别
 const handleGender = gender => {

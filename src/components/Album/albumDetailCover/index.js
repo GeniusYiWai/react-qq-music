@@ -7,7 +7,6 @@ import './index.less'
 export default memo(function AlbumDetailCover(props) {
   //props
   const { song } = props
-  console.log(song)
   //fucntions
   //处理点击播放
   const handlePlay = index => {

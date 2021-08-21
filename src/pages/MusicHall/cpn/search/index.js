@@ -115,7 +115,6 @@ export default memo(function Search() {
         data: { result, code }
       } = await getSearchResultAPI({ ...combineCondition })
       if (code === 200) {
-        console.log(111111)
         switch (i) {
           case 0:
             setToal(result.songCount)

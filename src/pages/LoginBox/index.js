@@ -4,11 +4,10 @@ import LoginByPhone from './cpn/loginByPhone'
 import LoginByEmail from './cpn/loginByEmail'
 import LoginByQRCode from './cpn/loginByQrcode'
 import { useSelector, useDispatch } from 'react-redux'
-import { showLoginBoxDispatch, userLoginDispatch } from './store/actionCreators'
-import { setUserDispatch } from './store/actionCreators'
+import { showLoginBoxDispatch } from './store/actionCreators'
 import { setItem } from '@/utils/storage'
 import { message } from 'antd'
-import { getLoginStatus as getLoginStatusAPI } from '@/api/login'
+import { getLoginStatus } from '@/actions/login'
 const { TabPane } = Tabs
 export default memo(function LoginBox() {
   //redux
@@ -32,28 +31,11 @@ export default memo(function LoginBox() {
   const changeModal = flag => {
     dispatch(showLoginBoxDispatch(flag))
   }
-  //获取登录信息
-  const getLoginStatus = async () => {
-    try {
-      const {
-        data: {
-          data: { profile }
-        }
-      } = await getLoginStatusAPI()
-      if (profile) {
-        //更改state中的用户登录状态
-        dispatch(userLoginDispatch(true))
-        //更改state中的用户信息
-        dispatch(setUserDispatch(profile))
-        setItem('uid', profile.userId)
-      }
-    } catch (error) {}
-  }
   //登录成功 获取用户登录信息 将cookie存入到缓存中
   const handleLoginSuccess = cookie => {
     setItem('cookie', cookie)
     message.success('登录成功')
-    getLoginStatus()
+    getLoginStatus(dispatch)
   }
   return (
     <Modal

@@ -1,16 +1,11 @@
 import React, { memo, useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
-import {
-  showLoginBoxDispatch,
-  userLoginDispatch,
-  setUserDispatch
-} from '@/pages/LoginBox/store/actionCreators'
+import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import Search from 'components/Search'
 import Logout from '../logout'
 import logo from '@/assets/img/logo.png'
-import { getLoginStatus as getLoginStatusAPI } from '@/api/login'
-import { setItem } from '@/utils/storage'
+import { getLoginStatus } from '@/actions/login'
 import './index.less'
 //路由表
 const routes = [
@@ -48,32 +43,11 @@ export default memo(function Header() {
       isLogin: state.user.isLogin
     }
   }, shallowEqual)
-  //获取登录信息
-  const getLoginStatus = async () => {
-    try {
-      const {
-        data: {
-          data: { profile }
-        }
-      } = await getLoginStatusAPI()
-      if (profile) {
-        //更改state中的用户登录状态
-        dispatch(userLoginDispatch(true))
-        //更改state中的用户信息
-        dispatch(setUserDispatch(profile))
-        setItem('uid', profile.userId)
-      }
-    } catch (error) {}
-  }
-  //fnctions
-  //登录成功 将登录态存入缓存 修改state中的用户登录状态
-  const getUserInfo = () => {
-    getLoginStatus()
-  }
-  //effect 
+  //effect
   // 每次刷新页面获取用户登录状态
   useEffect(() => {
-    getUserInfo()
+    //获取登录状态 如果登录成功  修改store中的用户登录状态
+    getLoginStatus(dispatch)
   }, [])
 
   return (

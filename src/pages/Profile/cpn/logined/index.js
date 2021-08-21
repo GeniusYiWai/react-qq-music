@@ -1,9 +1,5 @@
 import React, { memo, useEffect, useState, useCallback } from 'react'
-import {
-  getCollectPlaylist as getCollectPlaylistAPI,
-  getUserFan as getUserFanAPI,
-  getUserListenSongs as getUserListenSongsAPI
-} from '@/api/profile'
+import { getUserFan as getUserFanAPI } from '@/api/profile'
 import PlaylistCover from 'components/Playlist/playlistCover'
 import SingerCover from 'components/Singer/singerCover'
 import Category from 'components/Common/category'
@@ -12,7 +8,7 @@ import Follow from '../follow'
 import Empty from 'components/Common/empty'
 import ListenSongs from '@/pages/User/cpn/listenSongsCover'
 import { message } from 'antd'
-import { getUserPlaylist, getUserListenSongs } from '@/utils/actions'
+import { getUserPlaylist, getUserListenSongs } from '@/actions/user'
 
 import './index.less'
 //一级菜单
