@@ -40,6 +40,8 @@ export default memo(function Player() {
   const [playlist, setPlaylist] = useState(getItem('playlist') || [])
   //切换音乐播放状态
   const [isPlaying, setIsPlaying] = useState(false)
+   //切换音乐播放状态
+   const [isEnded, setIsEnded] = useState(false)
   //获取store中的当前播放音乐信息 用于展示背景图
   const { currentPlayMusic } = useSelector(state => {
     return {
@@ -119,12 +121,14 @@ export default memo(function Player() {
               pauseLyricScroll={pauseLyricScroll}
               changeLyricProgress={changeLyricProgress}
               playLyricScroll={playLyricScroll}
+              setIsEnded={setIsEnded}
             />
             <MusicLyric
               ref={childRef}
               currentPlayMusic={currentPlayMusic}
               currentPlayMusicId={currentPlayMusicId}
               isPlaying={isPlaying}
+              isEnded={isEnded}
             />
           </>
         ) : null}

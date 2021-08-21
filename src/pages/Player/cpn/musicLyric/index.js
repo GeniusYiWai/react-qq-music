@@ -20,7 +20,7 @@ export default memo(
       changeLyricScroll: () => {
         Lyric && Lyric.togglePlay()
       },
-      //手动滚动歌词
+      //手动播放歌词
       playLyricScroll: () => {
         Lyric && Lyric.play()
       },
@@ -34,12 +34,14 @@ export default memo(
         Lyric && Lyric.togglePlay()
       }
     }))
+    //props
+    const { currentPlayMusic, currentPlayMusicId, isPlaying, isEnded } = props
+
     //获取当前播放的歌词在第几行
     const [lineNum, setLineNum] = useState(0)
     //获取歌词
     const [lyric, setLyric] = useState([])
     //获取当前播放音乐id 和信息
-    const { currentPlayMusic, currentPlayMusicId, isPlaying } = props
     //获取歌词容器ref引用
     const lyricRef = useRef()
     //歌词滚动后自动触发该函数
@@ -81,7 +83,7 @@ export default memo(
         LyricRef.current && LyricRef.current.scrollTo(0, 0)
         Lyric && Lyric.stop()
       }
-    }, [currentPlayMusicId])
+    }, [currentPlayMusicId, isEnded])
 
     return (
       <div className='music-lyric-container'>

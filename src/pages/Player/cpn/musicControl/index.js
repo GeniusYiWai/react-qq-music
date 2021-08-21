@@ -66,7 +66,8 @@ export default memo(function Progress(props) {
     changeLyricScroll,
     pauseLyricScroll,
     changeLyricProgress,
-    playLyricScroll
+    playLyricScroll,
+    setIsEnded
   } = props
   const dispatch = useDispatch()
   //从store中获取当前正在播放的音乐信息
@@ -143,6 +144,7 @@ export default memo(function Progress(props) {
           setIsPlaying(true)
           setCurrentPlayMusicId(id)
           setItem('currentPlayMusicId', id)
+          setIsEnded(false)
         }, 200)()
       }
     } catch (error) {
@@ -178,6 +180,7 @@ export default memo(function Progress(props) {
           newIndex = index
           //这里必须手动修改音乐播放地址 因为currentPlayMusicId没有发生改变 不会触发useEffect重新加载数据
           audioRef.current.src = getPlaySong(currentPlayMusicId)
+          setIsEnded(true)
           break
         //随机播放
         case 'random':
@@ -216,13 +219,13 @@ export default memo(function Progress(props) {
   }, [switchSong, playModeNum])
 
   //切换播放模式
-  const changePlayMode = useCallback(() => {
+  const changePlayMode = () => {
     // 1是默认 2是单曲循环 3是随机播放
     //因为索引从0开始 所以需要加1
     playModeNum + 1 === mode.length
       ? setPlayModeNum(0)
       : setPlayModeNum(playModeNum + 1)
-  }, [playModeNum])
+  }
 
   useEffect(() => {
     //currentPlayMusicId发生变化就重新加载当前播放的音乐信息
