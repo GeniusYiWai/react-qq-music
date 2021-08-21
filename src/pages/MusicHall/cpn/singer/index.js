@@ -237,15 +237,17 @@ export default memo(function Singer() {
   return (
     <div className='singer-container'>
       <div className='singer-bg' style={{ backgroundImage: `url(${BgImage})` }}>
-        {isLogin ? (
-          <>
-            <Carousel
-              data={collectSinger}
-              pagesize={5}
-              type={'singer'}
-            ></Carousel>
-          </>
-        ) : (
+        {isLogin && collectSinger.length !== 0 ? (
+          <Carousel
+            data={collectSinger}
+            pagesize={5}
+            type={'singer'}
+          ></Carousel>
+        ) : null}
+        {isLogin && collectSinger.length === 0 ? (
+          <Empty text='您还谁都没有关注' />
+        ) : null}
+        {!isLogin ? (
           <>
             <h1>万千歌手 尽在眼前</h1>
             <h3>登录查看你的关注歌手</h3>
@@ -259,8 +261,7 @@ export default memo(function Singer() {
               }}
             />
           </>
-        )}
-      
+        ) : null}
       </div>
       <ConditionQuery
         condition='initial'

@@ -5,9 +5,7 @@ import SingerCover from 'components/Singer/singerCover'
 import {
   getUserInfo as getUserInfoAPI,
   getUserEvent as getUserEventAPI,
-  getUserFollow as getUserFollowsAPI,
   getUserFan as getUserFansAPI,
-  getCollectPlaylist as getUserCreatePlaylistAPI,
   getUserListenSongs as getUserListenSongsAPI
 } from '@/api/profile'
 import LazyLoadImg from 'components/Common/lazyloadImg'
@@ -17,6 +15,11 @@ import ListenSongs from './cpn/listenSongsCover'
 import PlaylistSkeleton from 'components/Skeleton/playlistSkeleton'
 import SingerSkeleton from 'components/Skeleton/singerSkeleton'
 import Pagination from 'components/Common/pagination'
+import {
+  getUserPlaylist,
+  getUserFollows,
+  getUserListenSongs
+} from '@/utils/actions'
 import './index.less'
 //处理性别
 const handleGender = gender => {
@@ -149,17 +152,7 @@ export default memo(function User() {
       message.error('获取用户动态失败！')
     }
   }
-  //获取用户关注 关注没有返回总数 只能判断返回值的length
-  const getUserFollows = async () => {
-    try {
-      const {
-        data: { follow }
-      } = await getUserFollowsAPI(id)
-      setUserFollows(follow)
-    } catch (error) {
-      message.error('获取用户关注列表失败')
-    }
-  }
+
   //获取用户粉丝总数
   const getUserFans = async fansCombineCondition => {
     setFansLoading(true)
@@ -182,58 +175,25 @@ export default memo(function User() {
       setFansLoading(false)
     }
   }
-  //获取用户最近常听
-  const getUserListenSongs = async () => {
-    try {
-      const {
-        data: { weekData }
-      } = await getUserListenSongsAPI(id)
-      setUserListenSongs(weekData)
-    } catch (error) {
-      message.error('无权限访问用户听歌排行!')
-    }
-  }
-
   //获取用户创建歌单
-  const getUserCreatePlaylist = async createPlcombineCondition => {
-    setCreatePlLoading(true)
-    try {
-      const {
-        data: { playlist }
-      } = await getUserCreatePlaylistAPI({ ...createPlcombineCondition })
-      const newArr = []
-      //如果userId等于用户id 那就是用户创建的歌单
-      playlist.forEach(e => {
-        if (e.userId == id) {
-          newArr.push(e)
-        }
-      })
-      setUserCreatePlaylists(newArr)
-      setCreatePlLoading(false)
-    } catch (error) {
-      setCreatePlLoading(false)
-    }
+  const getUserCreatePlaylist = () => {
+    getUserPlaylist(
+      createPlcombineCondition,
+      id,
+      setCreatePlLoading,
+      setUserCreatePlaylists,
+      'create'
+    )
   }
-
   //获取用户收藏歌单
-  const getUserCollectPlaylist = async collectPlcombineCondition => {
-    setCollectPlLoading(true)
-    try {
-      const {
-        data: { playlist }
-      } = await getUserCreatePlaylistAPI({ ...collectPlcombineCondition })
-      const newArr = []
-      //如果userId不等于用户id 那就是用户收藏的歌单
-      playlist.forEach(e => {
-        if (e.userId != id) {
-          newArr.push(e)
-        }
-      })
-      setCollectPlLoading(false)
-      setUserCollectPlaylists(newArr)
-    } catch (error) {
-      setCollectPlLoading(false)
-    }
+  const getUserCollectPlaylist = () => {
+    getUserPlaylist(
+      collectPlcombineCondition,
+      id,
+      setCollectPlLoading,
+      setUserCollectPlaylists,
+      'collect'
+    )
   }
 
   useEffect(() => {
@@ -242,9 +202,9 @@ export default memo(function User() {
     //获取用户动态
     getUserEvent()
     //获取用户关注
-    getUserFollows()
+    getUserFollows(id, setUserFollows)
     //获取用户粉丝
-    getUserListenSongs()
+    getUserListenSongs(id, setUserListenSongs)
   }, [])
   //监听 用户创建歌单页码改变 一旦发生变化就重新加载歌单数据
   useEffect(() => {
@@ -281,7 +241,7 @@ export default memo(function User() {
               <div>
                 <span
                   onClick={() => {
-                    message.error('没做')
+                    message.warning('没做')
                   }}
                 >
                   {userEvents.length}

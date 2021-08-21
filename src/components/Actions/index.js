@@ -15,9 +15,9 @@ import {
   collectMv,
   collectSongToPlaylist as collectSongToPlaylistAPI
 } from '@/api/collect'
-import { getCollectPlaylist as getUserCreatePlaylistAPI } from '@/api/profile'
 import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
+import { getUserPlaylist } from '@/utils/actions'
 import './index.less'
 //资源操作组件
 export default memo(function Actions(props) {
@@ -40,6 +40,7 @@ export default memo(function Actions(props) {
   const uid = getItem('uid')
   //收藏按钮禁用状态
   const [loading, setLoading] = useState(false)
+  const [collectLoading, setCollectLoading] = useState(false)
   //modal显示隐藏
   const [isModalVisible, setIsModalVisible] = useState(false)
   //用户创建歌单
@@ -62,26 +63,6 @@ export default memo(function Actions(props) {
     }
   }, shallowEqual)
   //functions
-  //获取用户创建的歌单
-  const getUserCreatePlaylist = async createPlcombineCondition => {
-    try {
-      const {
-        data: { playlist, code }
-      } = await getUserCreatePlaylistAPI({ ...createPlcombineCondition })
-      if (code === 200) {
-        const newArr = []
-        //如果userId等于用户id 那就是用户创建的歌单
-        playlist.forEach(e => {
-          if (e.userId === uid) {
-            newArr.push(e)
-          }
-        })
-        setUserCreatePlaylists(newArr)
-      }
-    } catch (error) {
-      message.error('获取用户歌单失败!')
-    }
-  }
   //添加歌曲到歌单
   const collectSongToPlaylist = async playlist => {
     try {
@@ -128,6 +109,17 @@ export default memo(function Actions(props) {
   const getText = type => {
     message.success(type === 1 ? '收藏成功' : '取消收藏成功')
   }
+  //获取用户创建歌单
+  const handleCollectSongToPlaylist =  () => {
+     getUserPlaylist(
+      createPlcombineCondition,
+      uid,
+      setCollectLoading,
+      setUserCreatePlaylists,
+      'create'
+    )
+  }
+
   //点击收藏按钮触发事件
   const collectResource = async () => {
     //先判断用户有没有登录
@@ -228,6 +220,7 @@ export default memo(function Actions(props) {
           return (
             <p
               className='user-create-playlist'
+              key={item.id}
               onClick={() => {
                 collectSongToPlaylist(item)
               }}
@@ -248,7 +241,7 @@ export default memo(function Actions(props) {
             className='collected'
             onClick={() => {
               setIsModalVisible(true)
-              getUserCreatePlaylist(createPlcombineCondition)
+              handleCollectSongToPlaylist()
             }}
             loading={loading}
           >

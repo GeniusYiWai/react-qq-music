@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useState } from 'react'
 import RankType from 'components/Rank/rankType'
-import { Button } from 'antd'
+import { Button, message } from 'antd'
 import {
   PlayCircleOutlined,
   FolderAddOutlined,
@@ -17,9 +17,20 @@ import { handleDate } from '@/utils/tools'
 import RankDetail from 'components/Rank/rankDetail'
 import RankSkeleton from 'components/Skeleton/rankSkeleton'
 import { ScrollTop } from '@/utils/tools'
-import { message } from 'antd'
+import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
+import { useDispatch, useSelector, shallowEqual } from 'react-redux'
+import { collectPlaylist } from '@/api/collect'
 import './index.less'
 export default memo(function Rank() {
+  //redux
+  const dispatch = useDispatch()
+  //获取用户登录状态
+  const { isLogin } = useSelector(state => {
+    return {
+      isLogin: state.user.isLogin
+    }
+  }, shallowEqual)
+  //state
   //切换排行榜
   const [currentIndex, setcurrentIndex] = useState(0)
   //排行榜列表
@@ -61,6 +72,16 @@ export default memo(function Rank() {
     setcurrentIndex(index)
     //手动调用获取排行榜详情的dispatch
     getRankById(rankList[index].id)
+  }
+  const collectRank = async () => {
+    try {
+      const { data } = await collectPlaylist(1, rankList[currentIndex].id)
+      if (data.code === 200) {
+        message.success('收藏成功')
+      }
+    } catch (error) {
+      message.error('收藏失败!')
+    }
   }
   //第一次加载页面 手动加载第一个排行榜分类下的数据
   useEffect(() => {
@@ -106,14 +127,36 @@ export default memo(function Rank() {
                   >
                     播放
                   </Button>
-                  <Button icon={<FolderAddOutlined />}>
+                  <Button
+                    icon={<FolderAddOutlined />}
+                    onClick={() => {
+                      collectRank()
+                    }}
+                  >
                     {rankDetail.subscribedCount}
                   </Button>
-                  <Button icon={<ShareAltOutlined />}>
+                  <Button
+                    icon={<ShareAltOutlined />}
+                    onClick={() => {
+                      message.warning('没做')
+                    }}
+                  >
                     {rankDetail.shareCount}
                   </Button>
-                  <Button icon={<DownloadOutlined />}></Button>
-                  <Button icon={<CommentOutlined />}>
+                  <Button
+                    icon={<DownloadOutlined />}
+                    onClick={() => {
+                      message.warning('没做')
+                    }}
+                  >
+                    下载
+                  </Button>
+                  <Button
+                    icon={<CommentOutlined />}
+                    onClick={() => {
+                      message.warning('没做')
+                    }}
+                  >
                     {rankDetail.commentCount}
                   </Button>
                 </div>

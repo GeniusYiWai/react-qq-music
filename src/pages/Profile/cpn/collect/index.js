@@ -13,6 +13,7 @@ import MvCover from 'components/Mv/mvCover'
 import Category from 'components/Common/category'
 import Empty from 'components/Common/empty'
 import { message } from 'antd'
+import { getUserPlaylist } from '@/utils/actions'
 
 import './index.less'
 //二级分类
@@ -36,7 +37,6 @@ export default memo(function Collect(props) {
   //state
   //当前二级分类的索引
   const [currentIndex, setCurrentIndex] = useState(0)
-
   //用户喜欢的歌曲
   const [likeSongs, setlikeSongs] = useState([])
   //用户喜欢的歌单
@@ -79,20 +79,14 @@ export default memo(function Collect(props) {
   }
 
   //获取用户收藏歌单
-  const getCollectPlaylist = async collectPlcombineCondition => {
-    try {
-      const {
-        data: { playlist, code }
-      } = await getCollectPlaylistAPI({ ...collectPlcombineCondition })
-      if (code === 200) {
-        const newArr = playlist.filter(e => {
-          return e.userId !== userId
-        })
-        setlikePlaylists(newArr)
-      }
-    } catch (error) {
-      message.error('获取用户收藏歌单失败!')
-    }
+  const getCollectPlaylist = () => {
+    getUserPlaylist(
+      collectPlcombineCondition,
+      userId,
+      null,
+      setlikePlaylists,
+      'collect'
+    )
   }
   //获取用户收藏专辑
   const getCollectAlbum = async () => {

@@ -12,6 +12,8 @@ import Follow from '../follow'
 import Empty from 'components/Common/empty'
 import ListenSongs from '@/pages/User/cpn/listenSongsCover'
 import { message } from 'antd'
+import { getUserPlaylist, getUserListenSongs } from '@/utils/actions'
+
 import './index.less'
 //一级菜单
 const Tabs = [
@@ -73,21 +75,14 @@ export default memo(function CollectList(props) {
     setCurrentIndex(index)
   }, [])
   //获取用户创建歌单
-  const getUserCreatePlaylist = async collectPlcombineCondition => {
-    try {
-      const {
-        data: { playlist, code }
-      } = await getCollectPlaylistAPI({ ...collectPlcombineCondition })
-      if (code === 200) {
-        //如果userId不等于用户id 那就是用户收藏的歌单
-        const newArr = playlist.filter(e => {
-          return e.userId === userId
-        })
-        setUserCreatePlaylist(newArr)
-      }
-    } catch (error) {
-      message.error('获取用户创建歌单失败!')
-    }
+  const getUserCreatePlaylist = () => {
+    getUserPlaylist(
+      collectPlcombineCondition,
+      userId,
+      null,
+      setUserCreatePlaylist,
+      'create'
+    )
   }
   //获取用户粉丝列表
   const getUserFan = async fansCombineCondition => {
@@ -102,19 +97,7 @@ export default memo(function CollectList(props) {
       message.error('获取用户粉丝列表失败!')
     }
   }
-  //获取用户最近常听
-  const getUserListenSongs = async () => {
-    try {
-      const {
-        data: { weekData, code }
-      } = await getUserListenSongsAPI(userId)
-      if (code === 200) {
-        setUserListenSongs(weekData)
-      }
-    } catch (error) {
-      message.error('获取用户听歌排行失败!')
-    }
-  }
+
   useEffect(() => {
     //根据索引 展示不同的菜单
     switch (currentIndex) {
@@ -128,7 +111,7 @@ export default memo(function CollectList(props) {
         break
       //用户最近常听
       case 4:
-        getUserListenSongs()
+        getUserListenSongs(userId, setUserListenSongs)
         break
       default:
         break

@@ -3,13 +3,12 @@ import React, {
   useRef,
   useEffect,
   useState,
-  useCallback,
   useImperativeHandle,
   forwardRef
 } from 'react'
 import './index.less'
 import { handleSinger } from '@/utils/tools'
-import LyricParser from 'lyric-parser'
+import LyricParser from '@/utils/lyric'
 import { getLyric } from '@/api/player'
 //这里必须把歌词类放到最外面 否则每次重新渲染都会丢失
 let Lyric
@@ -21,12 +20,15 @@ export default memo(
       changeLyricScroll: () => {
         Lyric && Lyric.togglePlay()
       },
+      //手动滚动歌词
       playLyricScroll: () => {
         Lyric && Lyric.play()
       },
+      //手动暂停歌词
       pauseLyricScroll: () => {
         Lyric && Lyric.stop()
       },
+      //手动跳转歌词
       changeLyricProgress: time => {
         Lyric && Lyric.seek(time)
         Lyric && Lyric.togglePlay()
@@ -49,7 +51,6 @@ export default memo(
       //设置歌词当前滚动到的行数
       setLineNum(lineNum)
     }
-
     // const handleLyricScroll = useCallback(() => {
     //   let scrollTimer
     //   clearTimeout(scrollTimer)

@@ -1,15 +1,11 @@
 import React, { memo, useEffect, useState, useCallback } from 'react'
-import {
-  getCollectSinger as getCollectSingerAPI,
-  getUserFollow as getUserFollowAPI
-} from '@/api/profile'
+import { getCollectSinger as getCollectSingerAPI } from '@/api/profile'
 import SingerCover from 'components/Singer/singerCover'
 import Empty from 'components/Common/empty'
 import Category from 'components/Common/category'
 import { message } from 'antd'
-
+import { getUserFollows } from '@/utils/actions'
 import './index.less'
-
 //二级菜单
 const Tabs = [
   {
@@ -34,19 +30,7 @@ export default memo(function Collect(props) {
   const switchTabs = useCallback(index => {
     setCurrentIndex(index)
   }, [])
-  //获取当前登录用户关注的用户
-  const getUserFollow = async () => {
-    try {
-      const {
-        data: { follow, code }
-      } = await getUserFollowAPI(userId)
-      if (code === 200) {
-        setUserFollow(follow)
-      }
-    } catch (error) {
-      message.error('获取用户关注列表失败!')
-    }
-  }
+
   //获取用户关注的歌手
   const getCollectSinger = async () => {
     try {
@@ -65,7 +49,7 @@ export default memo(function Collect(props) {
     //根据索引 展示不同的菜单
     switch (currentIndex) {
       case 0:
-        getUserFollow()
+        getUserFollows(userId, setUserFollow)
         break
       case 1:
         getCollectSinger()

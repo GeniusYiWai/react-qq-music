@@ -9,9 +9,9 @@ export default memo(function CollectSinger(props) {
     window.open(`/#/profile/singer/${id}`)
   }
   return (
-    <div className='collect-singer-item'>
+    <div className='collect-singer-item' onClick={() => goToSingerDetail(id)}>
       <img src={picUrl} alt='' />
-      <p onClick={() => goToSingerDetail(id)}>{name}</p>
+      <p>{name}</p>
     </div>
   )
 })
