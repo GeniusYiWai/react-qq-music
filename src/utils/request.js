@@ -4,7 +4,7 @@ import { getItem } from '@/utils/storage'
 //区分开发环境
 const baseURL =
   process.env.NODE_ENV === 'development'
-    ? 'http://localhost:3200/'
+    ? 'http://localhost:3000/'
     : 'https://autumnfish.cn/'
 const request = axios.create({
   //请求根地址

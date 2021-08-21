@@ -49,7 +49,7 @@ export default memo(function CollectList(props) {
   //用户最近常听
   const [userListenSongs, setUserListenSongs] = useState([])
   //获取用户收藏歌单查询条件
-  const [collectPlcombineCondition, setCollectPlCombineCondition] = useState({
+  const [collectPlcombineCondition] = useState({
     //id
     uid: userId,
     //偏移量
@@ -58,7 +58,7 @@ export default memo(function CollectList(props) {
     limit: 100
   })
   //获取用户粉丝查询条件
-  const [fansCombineCondition, setFansCombineCondition] = useState({
+  const [fansCombineCondition] = useState({
     uid: userId,
     //偏移量
     offset: 0,

@@ -11,7 +11,7 @@ export default memo(function SingerMv(props) {
   //歌手mv
   const [singerMvs, setSingerMvs] = useState([])
   //mv limit
-  const [mvLimit, setMvLimit] = useState(20)
+  const [mvLimit] = useState(20)
   //mv是否正在加载新数据
   const [mvLoading, setMvLoading] = useState(false)
   //mv是否还有更多数据
@@ -19,7 +19,7 @@ export default memo(function SingerMv(props) {
   //mv offset
   const [mvOffset, setMvOffset] = useState(0)
   //mv混合查询条件
-  const [mvCombineCondition, setMvCombineCondition] = useState({
+  const [mvCombineCondition] = useState({
     id: id,
     //偏移量
     offset: mvOffset,
@@ -61,7 +61,6 @@ export default memo(function SingerMv(props) {
     getSingerMvs(mvCombineCondition)
     return () => {
       //离开页面 清空mv数据
-
       setSingerMvs([])
         //设置偏移量为0
       setMvOffset(0)

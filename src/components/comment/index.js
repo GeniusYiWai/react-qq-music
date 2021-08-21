@@ -26,7 +26,7 @@ export default memo(function CommentList(props) {
   //控制回复框的展示和隐藏
   const [showReplyComment, setShowReplyComment] = useState(false)
   //获取父组件传递过来的评论的数据
-  const [comment, setComment] = useState(props.comment)
+  const [comment] = useState(props.comment)
   //redux
   const dispatch = useDispatch()
   //获取用户登录状态

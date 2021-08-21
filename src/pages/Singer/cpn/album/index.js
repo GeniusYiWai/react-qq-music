@@ -9,7 +9,7 @@ export default memo(function SingerAlbum(props) {
   //歌手专辑
   const [singerAlbums, setSingerAlbums] = useState([])
   //专辑 limit
-  const [albumLimit, setAlbumLimit] = useState(20)
+  const [albumLimit] = useState(20)
   //专辑是否正在加载新数据
   const [albumLoading, setAlbumLoading] = useState(false)
   //专辑是否还有更多数据
@@ -17,7 +17,7 @@ export default memo(function SingerAlbum(props) {
   //专辑 offset
   const [albumOffset, setAlbumOffset] = useState(0)
   //专辑混合查询条件
-  const [albumCombineCondition, setAlbumCombineCondition] = useState({
+  const [albumCombineCondition] = useState({
     id: id,
     //偏移量
     offset: albumOffset,

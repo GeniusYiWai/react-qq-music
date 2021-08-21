@@ -129,7 +129,7 @@ export default memo(function Progress(props) {
     setProgress((currentTime / duration) * 100)
   }, [currentTime, duration])
   //检测音乐是否可以播放
-  const CheckCanPlay = async id => {
+  const CheckCanPlay = useCallback(async id => {
     try {
       const {
         data: { success }
@@ -145,11 +145,8 @@ export default memo(function Progress(props) {
         }, 500)()
       }
     } catch (error) {
-      // setCurrentPlayMusicId(id)
-      // setItem('currentPlayMusicId', id)
-      // pauseLyricScroll()
     }
-  }
+  },[])
 
   //处理播放上一首或者下一首
   const switchSong = useCallback(
@@ -193,7 +190,7 @@ export default memo(function Progress(props) {
       //这里对切换上一首或者下一首进行了防抖处理 防止用户快速切换歌曲 导致歌词组件无法及时清除上一个已经进行的歌词滚动 因为歌词滚动需要时间初始化 如果快速切换会导致清除函数无法及时生效 使得多个歌词滚动同时进行 歌词会来回跳跃
       CheckCanPlay(playlist[newIndex].id)
     },
-    [CheckCanPlay, currentPlayMusicId, playlist]
+    [CheckCanPlay, currentPlayMusicId, playlist,scrollToTop]
   )
 
   //当音乐播放完成后触发该函数 自动播放下一首
@@ -263,9 +260,8 @@ export default memo(function Progress(props) {
   useEffect(() => {
     if (isPlaying) {
       audioRef.current.play()
-      setIsModalVisible(false)
     }
-  })
+  }, [currentPlayMusicId,isPlaying])
   return (
     <div className='progress-container'>
       <Modal
@@ -278,6 +274,7 @@ export default memo(function Progress(props) {
         <p>由于您的浏览器设置，音乐无法自动播放，请点击确定后开始播放音乐。</p>
       </Modal>
       <audio
+      
         controls
         ref={audioRef}
         onTimeUpdate={() => onMusicPlay()}

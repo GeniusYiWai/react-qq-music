@@ -35,19 +35,18 @@ export default memo(function Actions(props) {
   const uid = getItem('uid')
   //收藏按钮禁用状态
   const [loading, setLoading] = useState(false)
-  const [collectLoading, setCollectLoading] = useState(false)
   //modal显示隐藏
   const [isModalVisible, setIsModalVisible] = useState(false)
   //用户创建歌单
   const [userCreatePlaylists, setUserCreatePlaylists] = useState([])
   //获取用户创建歌单参数
-  const [createPlcombineCondition, setCreatePlCombineCondition] = useState({
+  const [createPlcombineCondition] = useState({
     //id
     uid,
     //偏移量
     offset: 0,
     //每页数据条数
-    limit: 15
+    limit: 100
   })
   //redux
   const dispatch = useDispatch()
@@ -92,7 +91,7 @@ export default memo(function Actions(props) {
     getUserPlaylist(
       createPlcombineCondition,
       uid,
-      setCollectLoading,
+      null,
       setUserCreatePlaylists,
       'create'
     )

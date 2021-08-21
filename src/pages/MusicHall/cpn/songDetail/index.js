@@ -12,7 +12,7 @@ import { ScrollTop } from '@/utils/tools'
 import { getLyric as getLyricAPI } from '@/api/player'
 import { getSongComment as getSongCommentAPI } from '@/api/comment'
 import InfiniteScroll from 'react-infinite-scroller'
-import { message, Alert } from 'antd'
+import { message } from 'antd'
 import Empty from 'components//Common/empty'
 import './index.less'
 //资源类型 0代表歌曲
@@ -41,12 +41,12 @@ export default memo(function SongDetail() {
   const [loading, setLoading] = useState(false)
   //判断是否是第一次加载页面
   //每页大小
-  const [limit, setLimit] = useState(10)
+  const [limit] = useState(10)
   const [flag, setFlag] = useState(true)
   //是否还有更多数据
   const [hasMore, setHasMore] = useState(true)
-  //歌曲查询条件
-  const [combineCondition, setCombineCondition] = useState({
+  //歌曲评论查询条件
+  const [combineCondition] = useState({
     id,
     limit,
     offset

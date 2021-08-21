@@ -54,7 +54,7 @@ export default memo(function User() {
   //用户收藏歌单
   const [userCollectPlaylists, setUserCollectPlaylists] = useState([])
   //每页大小
-  const [fansLimit, setFansLimit] = useState(10)
+  const [fansLimit] = useState(10)
   const [fansOffset, setFansOffset] = useState(0)
   //是否正在加载新数据
   const [fansLoading, setFansLoading] = useState(true)
@@ -75,7 +75,7 @@ export default memo(function User() {
   const [disabled, setDisabled] = useState(false)
 
   //用户创建歌单
-  const [createPlTotal, setCreatePlTotal] = useState(200)
+  const [createPlTotal] = useState(200)
   //是否正在加载用户创建歌单
   const [createPlLoading, setCreatePlLoading] = useState(true)
   //获取用户创建歌单参数
@@ -90,7 +90,7 @@ export default memo(function User() {
   //用户创建歌单页码
   const [currentCreatePlPage, setCurrentCreatePlPage] = useState(1)
   //用户收藏歌单
-  const [collectPlTotal, setCollectPlTotal] = useState(500)
+  const [collectPlTotal] = useState(500)
   //是否正在加载用户收藏歌单
   const [collectPlLoading, setCollectPlLoading] = useState(true)
   //获取用户收藏歌单参数

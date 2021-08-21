@@ -4,7 +4,6 @@ import SongCover from 'components/Album/albumDetailCover'
 import InfiniteScroll from 'react-infinite-scroller'
 import { Spin, message } from 'antd'
 import Empty from 'components/Common/empty'
-
 export default memo(function SingerSong(props) {
   //props
   //id 歌手id
@@ -13,7 +12,7 @@ export default memo(function SingerSong(props) {
   //歌手歌曲
   const [singerSongs, setSingerSongs] = useState([])
   //歌曲 limit
-  const [songLimit, setSongLimit] = useState(50)
+  const [songLimit] = useState(50)
   //歌曲是否正在加载新数据
   const [songLoading, setSongLoading] = useState(false)
   //歌曲是否还有更多数据
@@ -21,7 +20,7 @@ export default memo(function SingerSong(props) {
   //歌曲 offset
   const [songOffset, setSongOffset] = useState(0)
   //歌曲混合查询条件
-  const [songCombineCondition, setSongCombineCondition] = useState({
+  const [songCombineCondition] = useState({
     id: id,
     //偏移量
     offset: songOffset,

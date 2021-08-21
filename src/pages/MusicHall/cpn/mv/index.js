@@ -84,7 +84,7 @@ export default memo(function Singer() {
   //mv列表
   const [mvList, setMvList] = useState([])
   //每页大小
-  const [limit, setLimit] = useState(20)
+  const [limit] = useState(20)
   //是否正在加载新数据
   const [loading, setLoading] = useState(false)
   //是否还有更多数据

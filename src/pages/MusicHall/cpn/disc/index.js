@@ -17,7 +17,7 @@ const Tabs = [
 export default memo(function NewAlbumRec() {
   //新碟数据
   const [newAlbum, setNewAlbum] = useState([])
-  const [pageSize, setPageSize] = useState(20)
+  const [pageSize] = useState(20)
   const [currentPage, setCurrentPage] = useState(1)
   const [total, setTotal] = useState(0)
   const [disabled, setDisabled] = useState(false)

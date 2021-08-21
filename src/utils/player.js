@@ -5,7 +5,6 @@ import { CheckCanPlay } from '@/api/player'
 import { getPlaylistDeatil } from '@/api/playlist'
 import { getMusicById as getMusicByIdApi } from '@/api/player'
 import { getAlbumDeatil } from '@/api/album'
-
 //通用新歌封面
 //name 歌曲名称
 //artists 歌曲作者

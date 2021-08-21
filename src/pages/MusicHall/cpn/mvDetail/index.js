@@ -49,11 +49,12 @@ export default memo(function MvDetail() {
   const [loading, setLoading] = useState(false)
   //判断是否是第一次加载页面
   //每页大小
-  const [limit, setLimit] = useState(10)
+  const [limit] = useState(10)
   const [flag, setFlag] = useState(true)
   //是否还有更多数据
   const [hasMore, setHasMore] = useState(true)
-  const [combineCondition, setCombineCondition] = useState({
+  //评论查询条件
+  const [combineCondition] = useState({
     id,
     limit,
     offset
@@ -169,7 +170,7 @@ export default memo(function MvDetail() {
     getMvUrl()
     getMvHotComment()
     getMvComment(combineCondition)
-  }, [id])
+  }, [])
   const loadMore = useCallback(() => {
     //如果是第一次加载页面 不执行loadMore
     if (flag) return

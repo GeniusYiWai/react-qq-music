@@ -74,6 +74,10 @@ export default memo(function Rank() {
     getRankById(rankList[index].id)
   }
   const collectRank = async () => {
+    if(!isLogin){
+      dispatch(showLoginBoxDispatch(true))
+      return
+    }
     try {
       const { data } = await collectPlaylist(1, rankList[currentIndex].id)
       if (data.code === 200) {

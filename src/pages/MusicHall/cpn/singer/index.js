@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useCallback, useState, useRef } from 'react'
+import React, { memo, useEffect, useCallback, useState } from 'react'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import BgImage from '@/assets/img/bg_singer.jpg'
 import ConditionQuery from 'components/Common/conditionQuery'
@@ -108,7 +108,7 @@ export default memo(function Singer() {
   //下方热门歌手
   const [hotSinger, setHotSinger] = useState([])
   //下方热门歌手limit
-  const [limit, setLimit] = useState(50)
+  const [limit] = useState(50)
   //下方热门歌手offset
   const [offset, setOffset] = useState(0)
   //下方热门歌手是否正在加载新数据
@@ -118,7 +118,7 @@ export default memo(function Singer() {
   //判断是否是第一次加载页面
   const [flag, setFlag] = useState(true)
   //热门歌手加载数据需要的参数
-  const [hotSingerParams, setHotSingerParams] = useState({
+  const [hotSingerParams] = useState({
     //
     limit,
     //

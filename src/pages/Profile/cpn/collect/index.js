@@ -1,7 +1,6 @@
 import React, { memo, useEffect, useState, useCallback } from 'react'
 import {
   getCollectSongs as getCollectSongsAPI,
-  getCollectPlaylist as getCollectPlaylistAPI,
   getCollectMv as getCollectMvAPI,
   getCollectAlbum as getCollectAlbumAPI
 } from '@/api/profile'
@@ -46,7 +45,7 @@ export default memo(function Collect(props) {
   //用户喜欢的mv
   const [likeMvs, setlikeMvs] = useState([])
   //用户收藏歌单查询条件
-  const [collectPlcombineCondition, setCollectPlCombineCondition] = useState({
+  const [collectPlcombineCondition] = useState({
     //id
     uid: userId,
     //偏移量

@@ -41,7 +41,7 @@ export default memo(function Playlist() {
   //歌单详情
   const [playlist, setPlaylist] = useState([])
   //切换歌单分类
-  const [key, setKey] = useState('全部')
+  const [key] = useState('全部')
   //歌单总数
   const [total, setTotal] = useState(0)
   //页码

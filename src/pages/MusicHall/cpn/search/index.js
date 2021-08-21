@@ -180,7 +180,6 @@ export default memo(function Search() {
   useEffect(() => {
     switchType(0)
   }, [keyword])
-
   return (
     <div className='search-box'>
       <div
