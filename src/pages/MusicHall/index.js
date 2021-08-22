@@ -62,13 +62,13 @@ export default memo(function MusicHall(props) {
       <Suspense
         fallback={
           <>
-            <Skeleton />
-            <Skeleton />
-            <Skeleton />
-            <Skeleton />
-            <Skeleton />
-            <Skeleton />
-            <Skeleton />
+            <Skeleton active/>
+            <Skeleton active/>
+            <Skeleton active/>
+            <Skeleton active/>
+            <Skeleton active/>
+            <Skeleton active/>
+            <Skeleton active/>
           </>
         }
       >

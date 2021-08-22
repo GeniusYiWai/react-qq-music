@@ -95,7 +95,7 @@ export default memo(function LoginByPhone(props) {
         <Input.Password />
       </Form.Item>
       <Form.Item wrapperCol={{ offset: 4, span: 20 }}>
-        <Button type='primary' htmlType='submit' loading={loading}>
+        <Button type='primary' htmlType='submit' loading={loading} style={{marginRight:10}}>
           确认登录
         </Button>
         <Button htmlType='button' onClick={onReset} loading={loading}>

@@ -25,8 +25,8 @@ export default memo(function AlbumDetailCover(props) {
   }
   //查看歌手详情
   const goToSingerDetail = index => {
-    const { artists } = song[index]
-    window.open(`/#/profile/singer/${artists[0].id}`)
+    const { artists, ar } = song[index]
+    window.open(`/#/profile/singer/${artists ? artists[0].id : ar[0].id}`)
   }
   return (
     <div>

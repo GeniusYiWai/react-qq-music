@@ -18,7 +18,7 @@ export const getCollectSongs = uid => {
  */
 export const getCollectPlaylist = ({ uid, limit, offset }) => {
   return request.get(
-    `/user/playlist?uid=${uid}&limit=${limit}&offset=${offset}&timestamp=${timestamp}`
+    `/user/playlist?uid=${uid}&limit=${limit}&offset=${offset}&timestamp=${timestamp}&random=${Math.random()}`
   )
 }
 //获取用户收藏的专辑

@@ -15,13 +15,13 @@ export default memo(function App() {
         <Suspense
           fallback={
             <>
-              <Skeleton />
-              <Skeleton />
-              <Skeleton />
-              <Skeleton />
-              <Skeleton />
-              <Skeleton />
-              <Skeleton />
+              <Skeleton active/>
+              <Skeleton active/>
+              <Skeleton active/>
+              <Skeleton active/>
+              <Skeleton active/>
+              <Skeleton active/>
+              <Skeleton active/>
             </>
           }
         >

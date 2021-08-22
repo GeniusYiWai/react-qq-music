@@ -51,7 +51,7 @@ export const getUserFollows = async (id, setData) => {
       setData(follow)
     }
   } catch (error) {
-    message.error('获取用户关注列表失败')
+    message.error('获取用户关注列表失败!')
   }
 }
 
@@ -65,7 +65,7 @@ export const getUserListenSongs = async (id, setData) => {
       setData(weekData)
     }
   } catch (error) {
-    message.error('无权限访问用户听歌排行!')
+    message.warning('无权限访问用户听歌排行!')
   }
 }
 //添加歌曲到歌单
@@ -74,6 +74,7 @@ export const collectSongToPlaylist = async (
   id,
   setIsModalVisible
 ) => {
+  setIsModalVisible(false)
   try {
     const {
       data: {
@@ -81,10 +82,9 @@ export const collectSongToPlaylist = async (
       }
     } = await collectSongToPlaylistAPI(playlist.id, id)
     if (code === 200) {
-      message.success('添加成功')
-      setIsModalVisible(false)
+      message.success('添加成功。')
     } else if (code === 502) {
-      message.warning('歌单内歌曲重复')
+      message.warning('歌单内歌曲重复!')
     }
   } catch (error) {
     message.error('添加失败!')

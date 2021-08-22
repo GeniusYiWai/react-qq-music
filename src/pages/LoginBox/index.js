@@ -34,7 +34,7 @@ export default memo(function LoginBox() {
   //登录成功 获取用户登录信息 将cookie存入到缓存中
   const handleLoginSuccess = cookie => {
     setItem('cookie', cookie)
-    message.success('登录成功')
+    message.success('登录成功。')
     getLoginStatus(dispatch)
   }
   return (

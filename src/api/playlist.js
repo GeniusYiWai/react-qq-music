@@ -42,3 +42,11 @@ export const getPlaylistDeatil = id => {
 export const getPlaylistStatus = id => {
   return request.get(`/playlist/detail/dynamic?id=${id}&timestamp=${timestamp}`)
 }
+/**
+ *
+ * @param {*} name 歌单名称
+ * @returns
+ */
+export const createPlaylist = name => {
+  return request.get(`/playlist/create?name=${name}&timestamp=${timestamp}`)
+}

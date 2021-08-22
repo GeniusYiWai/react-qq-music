@@ -21,10 +21,10 @@ export default memo(function CommentList(props) {
   // 6: 动态
   const { resourceType, id } = props
   //state
-  //控制组件重新渲染
-  const [flag, setFlag] = useState(false)
   //控制回复框的展示和隐藏
   const [showReplyComment, setShowReplyComment] = useState(false)
+  //点赞按钮禁用状态
+  const [loading, setLoading] = useState(false)
   //获取父组件传递过来的评论的数据
   const [comment] = useState(props.comment)
   //redux
@@ -43,10 +43,9 @@ export default memo(function CommentList(props) {
       dispatch(showLoginBoxDispatch(true))
       return
     }
+    if (loading) return
     //通过当前点赞的评论的id找到他的父id
     getCommentById(comment, commentId)
-    //用于点赞后重新渲染组件
-    setFlag(!flag)
   }
   //获取当前点赞的评论 发送点赞请求
   const getCommentById = (comment, commentId) => {
@@ -65,12 +64,10 @@ export default memo(function CommentList(props) {
 
   //发送点赞评论请求
   const likeComment = async (e, id, commentId, resourceType) => {
+    setLoading(true)
     try {
-      e.liked = !e.liked
       //获取操作类型 1是点赞 0是取消点赞
-      let type = e.liked ? 1 : 0
-      //重新计算点赞次数
-      e.liked ? e.likedCount++ : e.likedCount--
+      let type = !e.liked ? 1 : 0
       //发送点赞请求
       //id 资源id
       //commentId 点赞的评论的commentId
@@ -78,9 +75,14 @@ export default memo(function CommentList(props) {
       //resourceType 资源类型
       const { data } = await likeCommentAPI(id, commentId, type, resourceType)
       if (data.code === 200) {
-        message.success('操作成功')
+        e.liked = !e.liked
+        //重新计算点赞次数
+        e.liked ? e.likedCount++ : e.likedCount--
+        message.success('操作成功。')
+        setLoading(false)
       }
     } catch (error) {
+      setLoading(false)
       message.error('操作失败!')
     }
   }

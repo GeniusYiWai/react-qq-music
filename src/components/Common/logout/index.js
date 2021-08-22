@@ -29,12 +29,12 @@ export default memo(function Logout() {
       if (data.code === 200) {
         //清除cookie
         clearItem('cookie')
-        message.success('退出成功')
+        message.success('退出成功。')
         //设置redux中登录状态为false
         dispatch(userLoginDispatch(false))
       }
     } catch (error) {
-      message.error('退出失败')
+      message.error('退出失败!')
     }
   }
   //展示用户详细信息

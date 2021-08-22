@@ -5,7 +5,7 @@ import SingerCover from 'components/Singer/singerCover'
 import {
   getUserInfo as getUserInfoAPI,
   getUserEvent as getUserEventAPI,
-  getUserFan as getUserFansAPI,
+  getUserFan as getUserFansAPI
 } from '@/api/profile'
 import LazyLoadImg from 'components/Common/lazyloadImg'
 import Empty from 'components/Common/empty'
@@ -57,7 +57,7 @@ export default memo(function User() {
   const [fansLimit] = useState(10)
   const [fansOffset, setFansOffset] = useState(0)
   //是否正在加载新数据
-  const [fansLoading, setFansLoading] = useState(true)
+  const [fansLoading, setFansLoading] = useState(false)
   //用户创建歌单页码
   const [currentFansPage, setCurrentFansPage] = useState(1)
   //混合查询条件 因为可以多个参数一起查询
@@ -100,7 +100,7 @@ export default memo(function User() {
     //偏移量
     offset: 0,
     //每页数据条数
-    limit: 100
+    limit: 200
   })
   //用户收藏歌单页码
   const [currentCollectPlPage, setCurrentCollectPlPage] = useState(1)
@@ -169,7 +169,7 @@ export default memo(function User() {
       //设置偏移量
       setFansOffset(fansOffset + fansLimit)
     } catch (error) {
-      message.error('获取用户粉丝列表失败')
+      message.error('获取用户粉丝列表失败!')
       //如果请求出错 关锁
       setFansLoading(false)
     }
@@ -240,7 +240,7 @@ export default memo(function User() {
               <div>
                 <span
                   onClick={() => {
-                    message.warning('没做')
+                    message.warning('没做。')
                   }}
                 >
                   {userEvents.length}
@@ -309,7 +309,7 @@ export default memo(function User() {
               <Pagination
                 setCombineCondition={setCollectPlCombineCondition}
                 total={collectPlTotal}
-                limit={100}
+                limit={200}
                 currentPage={currentCollectPlPage}
                 setCurrentPage={setCurrentCollectPlPage}
                 setData={setUserCollectPlaylists}
@@ -353,13 +353,16 @@ export default memo(function User() {
         >
           <div className='fan-list'>
             {fansLoading ? <SingerSkeleton /> : null}
-            {userFans.length !== 0 ? (
-              userFans.map((item, index) => {
-                return <SingerCover singer={item} key={index} useLazy={false} />
-              })
-            ) : (
+            {userFans.length !== 0
+              ? userFans.map((item, index) => {
+                  return (
+                    <SingerCover singer={item} key={index} useLazy={false} />
+                  )
+                })
+              : null}
+            {!fansLoading && userFans.length === 0 ? (
               <Empty text='这里空空如也' showBtn={false} />
-            )}
+            ) : null}
             <Pagination
               setCombineCondition={setFansCombineCondition}
               total={userFansSize}

@@ -20,6 +20,9 @@ import { ScrollTop } from '@/utils/tools'
 import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import { collectPlaylist } from '@/api/collect'
+import { Spin } from 'antd'
+import { Skeleton } from 'antd'
+
 import './index.less'
 export default memo(function Rank() {
   //redux
@@ -37,6 +40,9 @@ export default memo(function Rank() {
   const [rankList, setRankList] = useState([])
   //排行榜详情
   const [rankDetail, setRankDetail] = useState({})
+  const [loading, setLoading] = useState(false)
+  //收藏按钮loading状态
+  const [collectLoading, setCollectLoading] = useState(false)
   //functions
   //获取排行榜列表
   const getAllRank = async () => {
@@ -53,12 +59,17 @@ export default memo(function Rank() {
   }
   //获取排行榜详情
   const getRankById = async id => {
+    setLoading(true)
     try {
       const {
-        data: { playlist }
+        data: { playlist, code }
       } = await getRankByIdAPI(id)
-      setRankDetail(playlist)
+      if (code === 200) {
+        setRankDetail(playlist)
+        setLoading(false)
+      }
     } catch (error) {
+      setLoading(false)
       message.error('获取排行榜详情失败!')
     }
   }
@@ -74,16 +85,23 @@ export default memo(function Rank() {
     getRankById(rankList[index].id)
   }
   const collectRank = async () => {
-    if(!isLogin){
+    if (!isLogin) {
       dispatch(showLoginBoxDispatch(true))
       return
     }
+    setCollectLoading(true)
     try {
       const { data } = await collectPlaylist(1, rankList[currentIndex].id)
       if (data.code === 200) {
-        message.success('收藏成功')
+        setRankDetail(detail => {
+          return { ...detail, subscribedCount: detail.subscribedCount + 1 }
+        })
+        message.success('收藏成功。')
+        setCollectLoading(false)
       }
     } catch (error) {
+      setCollectLoading(false)
+
       message.error('收藏失败!')
     }
   }
@@ -111,7 +129,7 @@ export default memo(function Rank() {
             )
           })}
         </div>
-        {rankList.length !== 0 ? (
+        {rankList.length !== 0 && !loading ? (
           <div className='rank-right'>
             <div className='rank-right-info'>
               <div className='rank-right-left'>
@@ -136,13 +154,14 @@ export default memo(function Rank() {
                     onClick={() => {
                       collectRank()
                     }}
+                    loading={collectLoading}
                   >
                     {rankDetail.subscribedCount}
                   </Button>
                   <Button
                     icon={<ShareAltOutlined />}
                     onClick={() => {
-                      message.warning('没做')
+                      message.warning('没做。')
                     }}
                   >
                     {rankDetail.shareCount}
@@ -150,7 +169,7 @@ export default memo(function Rank() {
                   <Button
                     icon={<DownloadOutlined />}
                     onClick={() => {
-                      message.warning('没做')
+                      message.warning('没做。')
                     }}
                   >
                     下载
@@ -158,7 +177,7 @@ export default memo(function Rank() {
                   <Button
                     icon={<CommentOutlined />}
                     onClick={() => {
-                      message.warning('没做')
+                      message.warning('没做。')
                     }}
                   >
                     {rankDetail.commentCount}
@@ -166,6 +185,7 @@ export default memo(function Rank() {
                 </div>
               </div>
             </div>
+
             <div className='rank-list-container'>
               <div className='rank-list-title'>
                 <p className='trackCount'>
@@ -184,7 +204,17 @@ export default memo(function Rank() {
               </div>
             </div>
           </div>
-        ) : null}
+        ) : (
+          <div className='loading'>
+            <Skeleton active />
+            <Skeleton active />
+            <Skeleton active />
+            <Skeleton active />
+            <Skeleton active />
+            <Skeleton active />
+            <Skeleton active />
+          </div>
+        )}
       </div>
     </div>
   )

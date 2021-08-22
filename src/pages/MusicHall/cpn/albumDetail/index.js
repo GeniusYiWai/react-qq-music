@@ -76,7 +76,7 @@ export default memo(function AlbumDetail() {
       if (code === 200) {
         setAlbumDetail(album)
         setAlbumSongs(songs)
-      }else{
+      } else {
         throw new Error()
       }
     } catch (error) {
@@ -175,15 +175,6 @@ export default memo(function AlbumDetail() {
           <p>{albumDetail && albumDetail.description}</p>
         </div>
       </div>
-      <div className='album-songs-container'>
-        <div className='pl-cover'>
-          <p className='text-nowrap'>歌曲</p>
-          <p className='text-nowrap'>歌手</p>
-          <p className='text-nowrap'>时长</p>
-        </div>
-
-        <AlbumDetailCover song={albumSongs} />
-      </div>
 
       <Actions
         totalNum={totalNum}
@@ -194,6 +185,10 @@ export default memo(function AlbumDetail() {
         ScrollToComment={ScrollToComment}
         albumSongs={albumSongs}
       />
+      <div className='album-songs-container'>
+        <AlbumDetailCover song={albumSongs} />
+      </div>
+
       <div className='song-comment-container w-1200' ref={commentRef}>
         <PublishComment
           totalNum={totalNum}

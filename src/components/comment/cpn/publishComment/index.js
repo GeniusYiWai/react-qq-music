@@ -1,6 +1,6 @@
 import React, { memo, useState } from 'react'
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
-import { Input, message } from 'antd'
+import { Input, message, Button } from 'antd'
 import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
 import { sendComment } from '@/api/comment'
 import './index.less'
@@ -13,13 +13,15 @@ export default memo(function PublishComment(props) {
   const {
     totalNum, //总评论数
     id, //资源id
-    totalComments, //所有评论的数据
     setTotalNum, //修改总评论数
-    resourceType //资源类型
+    resourceType, //资源类型
+    setTotalComments
   } = props
   //state
   //用户输入的评论
   const [value, setValue] = useState('')
+  //发布评论按钮loading状态
+  const [loading, setLaoding] = useState(false)
   //redux
   const dispatch = useDispatch()
   const { isLogin } = useSelector(state => {
@@ -30,11 +32,9 @@ export default memo(function PublishComment(props) {
   //functions
   //用户输入的评论赋值给value
   const handleChange = e => {
-    if (e.target.value.trim() !== '') {
-      setValue(e.target.value.trim())
-    } else if (e.target.value === '') {
-      setValue('')
-    }
+    // if (e.target.value.trim() !== '') {
+    setValue(e.target.value)
+    // }
   }
   //发送评论
   const handlePublish = () => {
@@ -43,7 +43,10 @@ export default memo(function PublishComment(props) {
       dispatch(showLoginBoxDispatch(true))
       return
     }
-    if (value === '') return
+    if (value.trim() === '') {
+      message.warning('请输入有效内容。')
+      return
+    }
     publishComments(commentType, resourceType, id, value)
   }
   //发表评论
@@ -52,6 +55,7 @@ export default memo(function PublishComment(props) {
     //resourceType 资源类型
     //id 资源id
     ///value 评论内容
+    setLaoding(true)
     try {
       const {
         data: { comment, code }
@@ -59,14 +63,24 @@ export default memo(function PublishComment(props) {
       if (code === 200) {
         //找了半天才发现为什么发表的评论不能添加到评论列表中 原来是因为这里返回的结果里没有parentCommentId 需要自己带上
         //将新评论添加到所有评论的最顶部
-        totalComments.unshift({ ...comment, parentCommentId: 0 })
+        setTotalComments(totalComments => {
+          totalComments.unshift({
+            ...comment,
+            parentCommentId: 0,
+            //手动增添二级评论数组
+            children: []
+          })
+          return totalComments
+        })
         //清空输入框
         setValue('')
         //修改评论总数
         setTotalNum(totalNum + 1)
-        message.success('发表成功')
+        message.success('发表成功。')
+        setLaoding(false)
       }
     } catch (error) {
+      setLaoding(false)
       message.error('发表失败!')
     }
   }
@@ -84,9 +98,13 @@ export default memo(function PublishComment(props) {
         onChange={e => handleChange(e)}
       />
       <div className='reply-btn-container'>
-        <button className='reply-btn' onClick={() => handlePublish()}>
+        <Button
+          className='reply-btn'
+          onClick={() => handlePublish()}
+          loading={loading}
+        >
           发表评论
-        </button>
+        </Button>
       </div>
     </div>
   )

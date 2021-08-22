@@ -4,7 +4,8 @@ import {
   PlayCircleOutlined,
   HeartOutlined,
   HeartFilled,
-  CommentOutlined
+  CommentOutlined,
+  FormOutlined
 } from '@ant-design/icons'
 import { getItem } from '@/utils/storage'
 import { message } from 'antd'
@@ -13,6 +14,8 @@ import { collectPlaylist, collectAlbum, collectMv } from '@/api/collect'
 import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import { getUserPlaylist, collectSongToPlaylist } from '@/actions/user'
+import CreatePlaylist from 'components/Playlist/createPlaylist'
+import PlaylistImg from '@/assets/img/playlist.jpg'
 import './index.less'
 //资源操作组件
 export default memo(function Actions(props) {
@@ -37,6 +40,8 @@ export default memo(function Actions(props) {
   const [loading, setLoading] = useState(false)
   //modal显示隐藏
   const [isModalVisible, setIsModalVisible] = useState(false)
+  //创建歌单弹出层显示隐藏
+  const [isCreateModalVisible, setIsCreateModalVisible] = useState(false)
   //用户创建歌单
   const [userCreatePlaylists, setUserCreatePlaylists] = useState([])
   //获取用户创建歌单参数
@@ -84,10 +89,15 @@ export default memo(function Actions(props) {
     }
   }
   const getText = type => {
-    message.success(type === 1 ? '收藏成功' : '取消收藏成功')
+    message.success(type === 1 ? '收藏成功。' : '取消收藏成功。')
   }
   //获取用户创建歌单
   const handleCollectSongToPlaylist = () => {
+    if (!isLogin) {
+      dispatch(showLoginBoxDispatch(true))
+      return
+    }
+    setIsModalVisible(true)
     getUserPlaylist(
       createPlcombineCondition,
       uid,
@@ -184,8 +194,28 @@ export default memo(function Actions(props) {
   const handleCancel = () => {
     setIsModalVisible(false)
   }
+  const handleCreateOk = () => {
+    setIsCreateModalVisible(false)
+  }
+  const handleCreateCancel = () => {
+    setIsCreateModalVisible(false)
+  }
   return (
     <div className='actions-container'>
+      <Modal
+        title='创建歌单'
+        visible={isCreateModalVisible}
+        onOk={handleCreateOk}
+        onCancel={handleCreateCancel}
+        footer={[]}
+      >
+        <CreatePlaylist
+          handleCreateOk={handleCreateOk}
+          handleCreateCancel={handleCreateCancel}
+          getUserCreatePlaylist={handleCollectSongToPlaylist}
+        />
+      </Modal>
+
       <Modal
         title='收藏到歌单'
         visible={isModalVisible}
@@ -193,15 +223,26 @@ export default memo(function Actions(props) {
         onCancel={handleCancel}
         footer={[]}
       >
+        <div
+          className='create-new'
+          onClick={() => {
+            setIsCreateModalVisible(true)
+          }}
+        >
+          <FormOutlined />
+          创建新歌单
+        </div>
+
         {userCreatePlaylists.map(item => {
           return (
             <p
               className='user-create-playlist'
               key={item.id}
               onClick={() => {
-                collectSongToPlaylist(item,id,setIsModalVisible)
+                collectSongToPlaylist(item, id, setIsModalVisible)
               }}
             >
+              <img src={PlaylistImg} alt="" />
               {item.name}
             </p>
           )
@@ -210,14 +251,12 @@ export default memo(function Actions(props) {
       <Button icon={<PlayCircleOutlined />} onClick={() => handlePlay()}>
         {setContenByType()}
       </Button>
-
       {resourceType === 0 ? (
         <>
           <Button
             icon={<HeartOutlined />}
             className='collected'
             onClick={() => {
-              setIsModalVisible(true)
               handleCollectSongToPlaylist()
             }}
             loading={loading}
@@ -256,7 +295,6 @@ export default memo(function Actions(props) {
           )}
         </div>
       )}
-
       <Button icon={<CommentOutlined />} onClick={() => ScrollToComment()}>
         评论{totalNum}
       </Button>

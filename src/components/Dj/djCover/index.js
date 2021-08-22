@@ -12,7 +12,7 @@ export default memo(function DjCover(props) {
   const { picUrl, name, desc } = props.dj
   //
   const handlePlay = () => {
-    message.warning('没做')
+    message.warning('没做。')
   }
   return (
     <div className='dj-cover'>
