@@ -6,6 +6,7 @@ import Search from 'components/Search'
 import Logout from '../logout'
 import logo from '@/assets/img/logo.png'
 import { getLoginStatus } from '@/actions/login'
+import {message} from 'antd'
 import './index.less'
 //路由表
 const routes = [
@@ -97,11 +98,17 @@ export default memo(function Header() {
             />
           )}
 
-          <div className='select-container'>
+          <div
+            className='select-container'
+            onClick={() => message.warning('请选择正规平台,谨防人财两空。（￣ω￣）')}
+          >
             <input type='button' value='开通VIP' className='vip' />
             <span className='icon white'></span>
           </div>
-          <div className='select-container'>
+          <div
+            className='select-container'
+            onClick={() => message.warning('请选择正规平台,谨防人财两空。（￣ω￣）')}
+          >
             <input type='button' value='充值' className='recharge' />
             <span className='icon black'></span>
           </div>

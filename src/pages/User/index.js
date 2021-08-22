@@ -240,7 +240,7 @@ export default memo(function User() {
               <div>
                 <span
                   onClick={() => {
-                    message.warning('没做。')
+                    message.warning('没做╮（￣▽￣）╭')
                   }}
                 >
                   {userEvents.length}

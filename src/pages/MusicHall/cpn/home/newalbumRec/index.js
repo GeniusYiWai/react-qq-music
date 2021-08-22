@@ -48,8 +48,11 @@ export default memo(function NewAlbumRec() {
           switchTabs={switchTabs}
           currentIndex={currentIndex}
         />
-        {newAlbums.length === 0 ? <AlbumRecSkeleton limit={10} /> : null}
-        <Carousel data={newAlbums} pagesize={10} type={'album'}></Carousel>
+        {newAlbums.length === 0 ? (
+          <AlbumRecSkeleton limit={10} />
+        ) : (
+          <Carousel data={newAlbums} pagesize={10} type={'album'}></Carousel>
+        )}
       </div>
     </div>
   )

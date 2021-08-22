@@ -6,6 +6,7 @@ import MusicLyric from './cpn/musicLyric'
 import { getItem } from '@/utils/storage'
 import { useDispatch, useSelector } from 'react-redux'
 import { getLoginStatus } from '@/actions/login'
+import Empty from 'components/Common/empty'
 export default memo(function Player() {
   //redux
   //获取store中的当前播放音乐信息 用于展示背景图
@@ -107,7 +108,7 @@ export default memo(function Player() {
               isPlaying={isPlaying}
             />
           </>
-        ) : null}
+        ) : <Empty/>}
       </div>
     </div>
   )

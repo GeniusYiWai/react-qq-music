@@ -49,10 +49,13 @@ export default memo(function NewSongRec() {
           switchTabs={switchTabs}
           currentIndex={currentIndex}
         />
-        {newSongs.length === 0 ? <SongRecSkeleton /> : null}
-        <Carousel data={newSongs} pagesize={9} type={'song'}>
-          <div className='newsong-content'></div>
-        </Carousel>
+        {newSongs.length === 0 ? (
+          <SongRecSkeleton />
+        ) : (
+          <Carousel data={newSongs} pagesize={9} type={'song'}>
+            <div className='newsong-content'></div>
+          </Carousel>
+        )}
       </div>
     </div>
   )

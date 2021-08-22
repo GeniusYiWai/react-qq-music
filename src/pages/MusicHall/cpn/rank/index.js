@@ -161,7 +161,7 @@ export default memo(function Rank() {
                   <Button
                     icon={<ShareAltOutlined />}
                     onClick={() => {
-                      message.warning('没做。')
+                      message.warning('没做╮（￣▽￣）╭')
                     }}
                   >
                     {rankDetail.shareCount}
@@ -169,7 +169,7 @@ export default memo(function Rank() {
                   <Button
                     icon={<DownloadOutlined />}
                     onClick={() => {
-                      message.warning('没做。')
+                      message.warning('没做╮（￣▽￣）╭')
                     }}
                   >
                     下载
@@ -177,7 +177,7 @@ export default memo(function Rank() {
                   <Button
                     icon={<CommentOutlined />}
                     onClick={() => {
-                      message.warning('没做。')
+                      message.warning('没做╮（￣▽￣）╭')
                     }}
                   >
                     {rankDetail.commentCount}

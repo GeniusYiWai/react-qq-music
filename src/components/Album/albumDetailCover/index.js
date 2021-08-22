@@ -10,8 +10,9 @@ export default memo(function AlbumDetailCover(props) {
   //fucntions
   //处理点击播放
   const handlePlay = index => {
-    const { id, name, ar, dt, duration } = song[index]
-    playMusic(id, name, ar, dt || duration)
+    const { id, name, ar,artists, dt, duration } = song[index]
+    console.log(song[index]);
+    playMusic(id, name, ar||artists, dt || duration)
   }
   //跳转到专辑详情
   const goToAlbumDetail = index => {

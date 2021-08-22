@@ -74,7 +74,6 @@ export default memo(
           Lyric = new LyricParser(data.lrc.lyric, handleLyric)
           //获取所有歌词
           setLyric(Lyric.lines)
-          console.log(Lyric);
           Lyric.play()
         } else {
           setLyric([{ txt: '暂无歌词!' }])

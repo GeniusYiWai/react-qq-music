@@ -65,8 +65,6 @@ export default memo(function Reply(props) {
       } = await sendCommentAPI(commentType, resourceType, id, value, commentId)
       if (code === 200) {
         //将新回复的评论添加到回复的这个评论的回复列表中的第一个
-        console.log(replyComment)
-        console.log(comment.children)
         comment.children.unshift(replyComment)
         //关闭回复框
         setShowReplyComment(false)

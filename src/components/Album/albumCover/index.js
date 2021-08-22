@@ -5,10 +5,15 @@ import './index.less'
 export default memo(function AlbumDetailCover(props) {
   //props
   const { album } = props
+  console.log(album)
   //functions
   //跳转到专辑详情
   const goToAlbumDetail = id => {
     window.open(`/#/musichall/album/detail/${id}`)
+  }
+  //跳转到歌手详情
+  const goToSingerDetail = artists => {
+    window.open(`/#/profile/singer/${artists[0].id}`)
   }
   return (
     <div>
@@ -28,7 +33,14 @@ export default memo(function AlbumDetailCover(props) {
               <img src={picUrl} alt='' />
               <span>{name}</span>
             </p>
-            <p className='text-nowrap'>{handleSinger(artists)}</p>
+            <p
+              className='text-nowrap'
+              onClick={() => {
+                goToSingerDetail(artists)
+              }}
+            >
+              {handleSinger(artists)}
+            </p>
             <p className='text-nowrap'>{dateFormat(publishTime, 'Y-M-D')}</p>
           </div>
         )

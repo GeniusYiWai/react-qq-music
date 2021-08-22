@@ -131,6 +131,7 @@ export default memo(function Actions(props) {
             getText(type)
           }
         } catch (error) {
+          message.error('操作失败!')
           setLoading(false)
         }
         break
@@ -147,6 +148,8 @@ export default memo(function Actions(props) {
             getText(type)
           }
         } catch (error) {
+          message.error('操作失败!')
+
           setLoading(false)
         }
         break
@@ -163,6 +166,8 @@ export default memo(function Actions(props) {
             getText(type)
           }
         } catch (error) {
+          message.error('操作失败!')
+
           setLoading(false)
         }
         break
@@ -242,7 +247,7 @@ export default memo(function Actions(props) {
                 collectSongToPlaylist(item, id, setIsModalVisible)
               }}
             >
-              <img src={PlaylistImg} alt="" />
+              <img src={PlaylistImg} alt='' />
               {item.name}
             </p>
           )

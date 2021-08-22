@@ -49,8 +49,11 @@ export default memo(function MVRec() {
         switchTabs={switchTabs}
         currentIndex={currentIndex}
       />
-      {mvs.length === 0 ? <MvRecSkeleton limit={10} /> : null}
-      <Carousel data={mvs} pagesize={10} type={'mv'}></Carousel>
+      {mvs.length === 0 ? (
+        <MvRecSkeleton limit={10} />
+      ) : (
+        <Carousel data={mvs} pagesize={10} type={'mv'}></Carousel>
+      )}
     </div>
   )
 })

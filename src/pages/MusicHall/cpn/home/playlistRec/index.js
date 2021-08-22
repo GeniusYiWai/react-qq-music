@@ -52,12 +52,15 @@ export default memo(function PlaylistRec() {
           switchTabs={switchTabs}
           currentIndex={currentIndex}
         />
-        {playlists.length === 0 ? <PlaylistRecSkeleton limit={5} /> : null}
-        <Carousel
-          data={playlists && playlists}
-          pagesize={5}
-          type={'playlist'}
-        ></Carousel>
+        {playlists.length === 0 ? (
+          <PlaylistRecSkeleton limit={5} />
+        ) : (
+          <Carousel
+            data={playlists && playlists}
+            pagesize={5}
+            type={'playlist'}
+          ></Carousel>
+        )}
       </div>
     </div>
   )

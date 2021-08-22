@@ -221,11 +221,13 @@ export default memo(function Progress(props) {
 
   //切换播放模式
   const changePlayMode = () => {
-    // 1是默认 2是单曲循环 3是随机播放
-    //因为索引从0开始 所以需要加1
-    playModeNum + 1 === mode.length
-      ? setPlayModeNum(0)
-      : setPlayModeNum(playModeNum + 1)
+    debounce(() => {
+      // 1是默认 2是单曲循环 3是随机播放
+      //因为索引从0开始 所以需要加1
+      playModeNum + 1 === mode.length
+        ? setPlayModeNum(0)
+        : setPlayModeNum(playModeNum + 1)
+    }, 500)()
   }
 
   const showModal = () => {
