@@ -18,7 +18,7 @@ export default memo(
     useImperativeHandle(ref, () => ({
       // 就是暴露给父组件的方法
       //修改歌词滚动状态
-      changeLyricScroll: () => {
+      toggleLyricScroll: () => {
         Lyric && Lyric.togglePlay()
       },
       //手动播放歌词
@@ -45,7 +45,7 @@ export default memo(
     //  currentPlayMusicId,  当前播放的音乐id
     //  isPlaying, 音乐是否正在播放
     //  isEnded 音乐是否播放结束
-    const { currentPlayMusic, currentPlayMusicId, isPlaying } = props
+    const { currentPlayMusic, currentPlayMusicId } = props
     //获取歌词容器ref引用
     const lyricRef = useRef()
     // state
@@ -74,7 +74,8 @@ export default memo(
           Lyric = new LyricParser(data.lrc.lyric, handleLyric)
           //获取所有歌词
           setLyric(Lyric.lines)
-          isPlaying && Lyric.play()
+          console.log(Lyric);
+          Lyric.play()
         } else {
           setLyric([{ txt: '暂无歌词!' }])
         }

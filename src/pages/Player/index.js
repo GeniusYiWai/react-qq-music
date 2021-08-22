@@ -17,14 +17,14 @@ export default memo(function Player() {
   const dispatch = useDispatch()
   //获取歌词组件的引用
   const childRef = useRef()
-  // changeLyricScroll就是子组件暴露给父组件的方法
+  // toggleLyricScroll就是子组件暴露给父组件的方法
   //调用歌词组件的手动播放歌词的方法
   const playLyricScroll = () => {
     childRef.current && childRef.current.playLyricScroll()
   }
   //调用歌词组件的手动改变歌词播放状态的方法
-  const changeLyricScroll = () => {
-    childRef.current && childRef.current.changeLyricScroll()
+  const toggleLyricScroll = () => {
+    childRef.current && childRef.current.toggleLyricScroll()
   }
   //调用歌词组件的手动暂停歌词滚动的方法
   const pauseLyricScroll = () => {
@@ -84,6 +84,7 @@ export default memo(function Player() {
             setPlaylist={setPlaylist}
             pauseLyricScroll={pauseLyricScroll}
             playLyricScroll={playLyricScroll}
+            setIsPlaying={setIsPlaying}
           />
         </div>
         {playlist.length > 0 ? (
@@ -93,7 +94,7 @@ export default memo(function Player() {
               setCurrentPlayMusicId={setCurrentPlayMusicId}
               isPlaying={isPlaying}
               setIsPlaying={setIsPlaying}
-              changeLyricScroll={changeLyricScroll}
+              toggleLyricScroll={toggleLyricScroll}
               pauseLyricScroll={pauseLyricScroll}
               changeLyricProgress={changeLyricProgress}
               playLyricScroll={playLyricScroll}

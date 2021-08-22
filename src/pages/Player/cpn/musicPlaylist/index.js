@@ -28,7 +28,8 @@ export default memo(function Playlist(props) {
     isPlaying,
     playlist,
     setPlaylist,
-    playLyricScroll
+
+    setIsPlaying
   } = props
   ///redux
   const dispatch = useDispatch()
@@ -65,11 +66,12 @@ export default memo(function Playlist(props) {
         data: { success }
       } = await CheckCanPlayAPI(id)
       if (success) {
+        setIsPlaying(true)
         //可以播放 修改当前播放的音乐id
         debounce(() => {
           setCurrentPlayMusicId(id)
           setItem('currentPlayMusicId', id)
-          playLyricScroll()
+          
         }, 500)()
       }
     } catch (error) {
@@ -81,7 +83,6 @@ export default memo(function Playlist(props) {
     if (id === currentPlayMusicId) return
     CheckCanPlay(id)
   }
-
   //移除单首歌曲
   const handleDetele = useCallback(
     (e, id) => {
