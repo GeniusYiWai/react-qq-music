@@ -72,9 +72,9 @@ export const getUserListenSongs = async (id, setData) => {
 export const collectSongToPlaylist = async (
   playlist,
   id,
-  setIsModalVisible
+  setLoading = null
 ) => {
-  setIsModalVisible(false)
+  setLoading && setLoading(true)
   try {
     const {
       data: {
@@ -82,11 +82,17 @@ export const collectSongToPlaylist = async (
       }
     } = await collectSongToPlaylistAPI(playlist.id, id)
     if (code === 200) {
+      setLoading && setLoading(false)
+
       message.success('添加成功。')
     } else if (code === 502) {
+      setLoading && setLoading(false)
+
       message.warning('歌单内歌曲重复!')
     }
   } catch (error) {
+    setLoading && setLoading(false)
+
     message.error('添加失败!')
   }
 }

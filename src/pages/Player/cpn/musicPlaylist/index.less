@@ -106,25 +106,28 @@
 .loading {
   display: flex;
   justify-content: center;
-  span{
+  span {
     font-size: 30px;
   }
 }
-.user-create-playlist{
+.user-create-playlist {
   border-top: 1px solid #ccc;
   // margin: 10px 0px;
   padding: 10px 0;
   font-size: 16px;
   display: flex;
   align-items: center;
-  img{
+  .lazyload-container {
     margin-right: 10px;
+    img {
+      border-radius: 2px;
+    }
   }
 }
-.create-new{
+.create-new {
   font-size: 20px;
   cursor: pointer;
-  &:hover{
+  &:hover {
     color: @theme-color;
   }
   margin-bottom: 10px;

@@ -1,5 +1,4 @@
 import { getLoginStatus as getLoginStatusAPI } from '@/api/login'
-import { setItem } from '@/utils/storage'
 import {
   userLoginDispatch,
   setUserDispatch

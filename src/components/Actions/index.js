@@ -15,8 +15,7 @@ import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import { getUserPlaylist, collectSongToPlaylist } from '@/actions/user'
 import CreatePlaylist from 'components/Playlist/createPlaylist'
 import { Spin } from 'antd'
-
-import PlaylistImg from '@/assets/img/playlist.jpg'
+import LazyLoadImg from 'components/Common/lazyloadImg'
 import './index.less'
 //资源操作组件
 export default memo(function Actions(props) {
@@ -245,10 +244,10 @@ export default memo(function Actions(props) {
                 className='user-create-playlist'
                 key={item.id}
                 onClick={() => {
-                  collectSongToPlaylist(item, id, setIsModalVisible)
+                  collectSongToPlaylist(item, id,setGetCreatePlLoadng)
                 }}
               >
-                <img src={PlaylistImg} alt='' />
+                <LazyLoadImg url={item.coverImgUrl} width={50} height={50}/> 
                 {item.name}
               </p>
             )

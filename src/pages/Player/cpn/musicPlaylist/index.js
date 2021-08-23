@@ -12,11 +12,10 @@ import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
 import { collectSongToPlaylist, getUserPlaylist } from '@/actions/user'
 import CreatePlaylist from 'components/Playlist/createPlaylist'
+import LazyLoadImg from 'components/Common/lazyloadImg'
 import { Spin } from 'antd'
 import Wave from '@/assets/img/wave.gif'
 import './index.less'
-import PlaylistImg from '@/assets/img/playlist.jpg'
-
 export default memo(function Playlist(props) {
   //props
   // currentPlayMusicId, 当前播放的音乐id
@@ -225,21 +224,20 @@ export default memo(function Playlist(props) {
         ) : (
           userCreatePlaylists.map(item => {
             return (
-              <p
+              <div
                 className='user-create-playlist'
                 onClick={() => {
                   collectSongToPlaylist(
                     item,
                     currentSelectMusicId,
-                    setIsCollectModalVisible
+                    setGetCreatePlLoadng
                   )
                 }}
                 key={item.id}
               >
-                <img src={PlaylistImg} alt='' />
-
+                <LazyLoadImg url={item.coverImgUrl} width={50} height={50}/> 
                 {item.name}
-              </p>
+              </div>
             )
           })
         )}
