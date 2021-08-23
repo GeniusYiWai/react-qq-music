@@ -133,7 +133,7 @@ export default memo(function Rank() {
             <div className='rank-right-info'>
               <div className='rank-right-left'>
                 <LazyLoadImg
-                  url={rankDetail.coverImgUrl}
+                  url={rankDetail&&rankDetail.coverImgUrl}
                   width={150}
                   height={150}
                 />

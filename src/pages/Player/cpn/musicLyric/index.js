@@ -99,7 +99,6 @@ export default memo(
         <div
           ref={lyricRef}
           className='lyric-content'
-          // onScroll={() => handleLyricScroll()}
         >
           {lyric.length !== 0 &&
             lyric.map((item, index) => {

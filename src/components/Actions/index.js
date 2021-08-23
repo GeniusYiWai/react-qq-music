@@ -247,7 +247,7 @@ export default memo(function Actions(props) {
                   collectSongToPlaylist(item, id,setGetCreatePlLoadng)
                 }}
               >
-                <LazyLoadImg url={item.coverImgUrl} width={50} height={50}/> 
+                <LazyLoadImg url={item&&item.coverImgUrl} width={50} height={50}/> 
                 {item.name}
               </p>
             )
