@@ -48,10 +48,14 @@ export const playMusic = (id, name, artists, duration) => {
 //播放全部歌单
 export const playPlaylist = id => {
   getPlaylistDeatil(id)
-    .then(({ data }) => {
-      if (data.code === 200) {
+    .then(({ data: { code, playlist } }) => {
+      if (code === 200) {
+        if (playlist.trackIds.length === 0) {
+          message.warning('歌单内容为空!')
+          return
+        }
         //获取歌单下的所有歌曲的id
-        const trackIds = data.playlist.trackIds.map(item => item.id).join(',')
+        const trackIds = playlist.trackIds.map(item => item.id).join(',')
         //将歌曲id放在一起请求
         getMusicByIdApi(trackIds).then(({ data }) => {
           //格式化播放列表
@@ -90,7 +94,6 @@ export const playRank = tracks => {
   const playlist = tracks.reduce((init, val) => {
     let { id, name, ar: artists, dt: duration } = val
     const singerId = artists[0].id
-
     artists = handleSinger(val.ar)
     duration = formatMinuteSecond(val.dt)
     init.push({
@@ -112,10 +115,14 @@ export const playRank = tracks => {
 //播放全部专辑
 export const playAlbum = id => {
   getAlbumDeatil(id)
-    .then(({ data }) => {
-      if (data.code === 200) {
+    .then(({ data: { code, songs } }) => {
+      if (songs.length === 0) {
+        message.warning('专辑内容为空!')
+        return
+      }
+      if (code === 200) {
         //获取歌单下的所有歌曲的id
-        const trackIds = data.songs.map(item => item.id).join(',')
+        const trackIds = songs.map(item => item.id).join(',')
         //将歌曲id放在一起请求
         getMusicByIdApi(trackIds).then(({ data }) => {
           //格式化播放列表
