@@ -10,6 +10,7 @@ import ListenSongs from '@/pages/User/cpn/listenSongsCover'
 import { message } from 'antd'
 import { getUserPlaylist, getUserListenSongs } from '@/actions/user'
 import { useSelector, shallowEqual } from 'react-redux'
+import LazyLoadImg from 'components/Common/lazyloadImg'
 
 import './index.less'
 //一级菜单
@@ -31,9 +32,9 @@ const Tabs = [
   }
 ]
 export default memo(function CollectList() {
-   //redux
+  //redux
   //获取用户登录信息
-  const {  userInfo } = useSelector(state => {
+  const { userInfo } = useSelector(state => {
     return {
       userInfo: state.user.userInfo
     }
@@ -43,7 +44,7 @@ export default memo(function CollectList() {
   //avatarUrl 头像
   //nickname 昵称
   //signature 个性签名
-  const { userId, backgroundUrl, avatarUrl, nickname, signature } =userInfo
+  const { userId, backgroundUrl, avatarUrl, nickname, signature } = userInfo
   //state
   //当前展示的一级菜单的索引
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -128,7 +129,7 @@ export default memo(function CollectList() {
         className='user-info-container'
         style={{ backgroundImage: `url(${backgroundUrl})` }}
       >
-        <img src={avatarUrl} alt='' />
+        <LazyLoadImg url={avatarUrl} width={70} height={70} />
         <p>{nickname}</p>
         <span>{signature}</span>
         <button onClick={() => goToUserDetail()} className='showDetail'>

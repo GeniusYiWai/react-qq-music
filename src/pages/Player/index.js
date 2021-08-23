@@ -71,7 +71,7 @@ export default memo(function Player() {
         style={{
           backgroundImage: `url(${
             currentPlayMusic.al && currentPlayMusic.al.picUrl
-          })`
+          }?param=1920y1080)`
         }}
         className='bg-img'
       ></div>

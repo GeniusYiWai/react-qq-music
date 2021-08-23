@@ -1,4 +1,5 @@
 import React, { memo } from 'react'
+import LazyLoadImg from 'components/Common/lazyloadImg'
 import './index.less'
 export default memo(function CollectSinger(props) {
   const {
@@ -10,7 +11,7 @@ export default memo(function CollectSinger(props) {
   }
   return (
     <div className='collect-singer-item' onClick={() => goToSingerDetail(id)}>
-      <img src={picUrl} alt='' />
+      <LazyLoadImg url={picUrl} width={150} height={150} />
       <p>{name}</p>
     </div>
   )

@@ -4,6 +4,7 @@ import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { logout as logoutAPI } from '@/api/login'
 import { userLoginDispatch } from '@/pages/LoginBox/store/actionCreators'
 import { clearItem } from '@/utils/storage'
+import LazyLoadImg from 'components/Common/lazyloadImg'
 import './index.less'
 //退出登录
 export default memo(function Logout() {
@@ -60,17 +61,21 @@ export default memo(function Logout() {
         ref={avatarRef}
         onClick={e => showUserInfo(e)}
       >
-        <img
-          src={userInfo && userInfo.avatarUrl}
-          alt=''
-          className='logout-user-avatar'
+        <LazyLoadImg
+          url={userInfo && userInfo.avatarUrl}
+          width={30}
+          height={30}
         />
         <p className='text-nowrap'>{userInfo && userInfo.nickname}</p>
       </div>
       {show ? (
         <div className='logout-box' ref={loginBox}>
           <div className='logout-box-top'>
-            <img src={userInfo && userInfo.avatarUrl} alt='' />
+            <LazyLoadImg
+              url={userInfo && userInfo.avatarUrl}
+              width={50}
+              height={50}
+            />
             <span>{userInfo && userInfo.nickname}</span>
           </div>
           <p onClick={() => window.open(`/#/profile/user/${userInfo.userId}`)}>

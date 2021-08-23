@@ -20,9 +20,8 @@ import { ScrollTop } from '@/utils/tools'
 import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import { collectPlaylist } from '@/api/collect'
-import { Spin } from 'antd'
 import { Skeleton } from 'antd'
-
+import LazyLoadImg from 'components/Common/lazyloadImg'
 import './index.less'
 export default memo(function Rank() {
   //redux
@@ -133,7 +132,11 @@ export default memo(function Rank() {
           <div className='rank-right'>
             <div className='rank-right-info'>
               <div className='rank-right-left'>
-                <img src={rankDetail.coverImgUrl} alt='' />
+                <LazyLoadImg
+                  url={rankDetail.coverImgUrl}
+                  width={150}
+                  height={150}
+                />
               </div>
               <div className='rank-right-right'>
                 <p className='name'>{rankDetail.name}</p>

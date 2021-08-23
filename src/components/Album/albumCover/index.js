@@ -1,5 +1,6 @@
 import React, { memo } from 'react'
 import { handleSinger, dateFormat } from '@/utils/tools'
+import LazyLoadImg from 'components/Common/lazyloadImg'
 import './index.less'
 //专辑封面组件
 export default memo(function AlbumDetailCover(props) {
@@ -30,7 +31,7 @@ export default memo(function AlbumDetailCover(props) {
                 goToAlbumDetail(id)
               }}
             >
-              <img src={picUrl} alt='' />
+              <LazyLoadImg url={picUrl} width={50} height={50}/>
               <span>{name}</span>
             </p>
             <p

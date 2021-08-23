@@ -9,6 +9,8 @@ import React, {
 import { handleSinger } from '@/utils/tools'
 import LyricParser from '@/utils/lyric'
 import { getLyric } from '@/api/player'
+import LazyLoadImg from 'components/Common/lazyloadImg'
+
 import './index.less'
 //这里必须把歌词类放到最外面 否则每次重新渲染都会丢失
 let Lyric
@@ -90,7 +92,7 @@ export default memo(
     }, [currentPlayMusicId])
     return (
       <div className='music-lyric-container'>
-        <img src={currentPlayMusic.al && currentPlayMusic.al.picUrl} alt='' />
+        <LazyLoadImg url={currentPlayMusic.al && currentPlayMusic.al.picUrl} width={100} height={100}/>
         <p>歌曲名:{currentPlayMusic.name}</p>
         <p>歌手:{currentPlayMusic.ar && handleSinger(currentPlayMusic.ar)}</p>
         <p>专辑:{currentPlayMusic.al && currentPlayMusic.al.name}</p>
