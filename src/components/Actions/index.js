@@ -7,7 +7,6 @@ import {
   CommentOutlined,
   FormOutlined
 } from '@ant-design/icons'
-import { getItem } from '@/utils/storage'
 import { message } from 'antd'
 import { playPlaylist, playMusic, playRank } from '@/utils/player'
 import { collectPlaylist, collectAlbum, collectMv } from '@/api/collect'
@@ -15,10 +14,21 @@ import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import { getUserPlaylist, collectSongToPlaylist } from '@/actions/user'
 import CreatePlaylist from 'components/Playlist/createPlaylist'
+import { Spin } from 'antd'
+
 import PlaylistImg from '@/assets/img/playlist.jpg'
 import './index.less'
 //资源操作组件
 export default memo(function Actions(props) {
+  //redux
+  const dispatch = useDispatch()
+  //获取用户登录状态
+  const { isLogin, userInfo } = useSelector(state => {
+    return {
+      isLogin: state.user.isLogin,
+      userInfo: state.user.userInfo
+    }
+  }, shallowEqual)
   //props
   const {
     totalNum, //评论总数 每个详情页面都用
@@ -34,8 +44,6 @@ export default memo(function Actions(props) {
     playlistId //当前查看歌单id
   } = props
   //state
-  //从缓存中获取当前登录用户的uid
-  const uid = getItem('uid')
   //收藏按钮禁用状态
   const [loading, setLoading] = useState(false)
   //modal显示隐藏
@@ -44,25 +52,17 @@ export default memo(function Actions(props) {
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false)
   //用户创建歌单
   const [userCreatePlaylists, setUserCreatePlaylists] = useState([])
+  const [getCreatePlLoadng, setGetCreatePlLoadng] = useState(false)
   //获取用户创建歌单参数
-  const [createPlcombineCondition] = useState({
+  const createPlcombineCondition = {
     //id
-    uid,
+    uid: userInfo.userId,
     //偏移量
     offset: 0,
     //每页数据条数
     limit: 100
-  })
-  //redux
-  const dispatch = useDispatch()
-  //获取用户登录状态
-  const { isLogin } = useSelector(state => {
-    return {
-      isLogin: state.user.isLogin
-    }
-  }, shallowEqual)
+  }
   //functions
-
   //点击播放按钮触发事件
   const handlePlay = () => {
     //判断资源类型
@@ -100,8 +100,8 @@ export default memo(function Actions(props) {
     setIsModalVisible(true)
     getUserPlaylist(
       createPlcombineCondition,
-      uid,
-      null,
+      userInfo.userId,
+      setGetCreatePlLoadng,
       setUserCreatePlaylists,
       'create'
     )
@@ -210,8 +210,6 @@ export default memo(function Actions(props) {
       <Modal
         title='创建歌单'
         visible={isCreateModalVisible}
-        onOk={handleCreateOk}
-        onCancel={handleCreateCancel}
         footer={[]}
       >
         <CreatePlaylist
@@ -220,7 +218,6 @@ export default memo(function Actions(props) {
           getUserCreatePlaylist={handleCollectSongToPlaylist}
         />
       </Modal>
-
       <Modal
         title='收藏到歌单'
         visible={isModalVisible}
@@ -237,21 +234,26 @@ export default memo(function Actions(props) {
           <FormOutlined />
           创建新歌单
         </div>
-
-        {userCreatePlaylists.map(item => {
-          return (
-            <p
-              className='user-create-playlist'
-              key={item.id}
-              onClick={() => {
-                collectSongToPlaylist(item, id, setIsModalVisible)
-              }}
-            >
-              <img src={PlaylistImg} alt='' />
-              {item.name}
-            </p>
-          )
-        })}
+        {getCreatePlLoadng ? (
+          <div className='loading'>
+            <Spin />
+          </div>
+        ) : (
+          userCreatePlaylists.map(item => {
+            return (
+              <p
+                className='user-create-playlist'
+                key={item.id}
+                onClick={() => {
+                  collectSongToPlaylist(item, id, setIsModalVisible)
+                }}
+              >
+                <img src={PlaylistImg} alt='' />
+                {item.name}
+              </p>
+            )
+          })
+        )}
       </Modal>
       <Button icon={<PlayCircleOutlined />} onClick={() => handlePlay()}>
         {setContenByType()}
@@ -271,7 +273,7 @@ export default memo(function Actions(props) {
         </>
       ) : (
         <div>
-          {playlistId === uid ? null : (
+          {playlistId === userInfo.userId ? null : (
             <div>
               {collect ? (
                 <>

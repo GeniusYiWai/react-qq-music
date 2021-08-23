@@ -5,14 +5,18 @@ import { Modal, Tooltip, message } from 'antd'
 import {
   DeleteOutlined,
   PlusOutlined,
-  PlayCircleOutlined
+  PlayCircleOutlined,
+  FormOutlined
 } from '@ant-design/icons'
 import { CheckCanPlay as CheckCanPlayAPI } from '@/api/player'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
 import { collectSongToPlaylist, getUserPlaylist } from '@/actions/user'
+import CreatePlaylist from 'components/Playlist/createPlaylist'
+import { Spin } from 'antd'
 import Wave from '@/assets/img/wave.gif'
 import './index.less'
+import PlaylistImg from '@/assets/img/playlist.jpg'
 
 export default memo(function Playlist(props) {
   //props
@@ -33,32 +37,33 @@ export default memo(function Playlist(props) {
   } = props
   ///redux
   const dispatch = useDispatch()
-  const { isLogin } = useSelector(state => {
+  const { isLogin, userInfo } = useSelector(state => {
     return {
-      isLogin: state.user.isLogin
+      isLogin: state.user.isLogin,
+      userInfo: state.user.userInfo
     }
   }, shallowEqual)
-  //从缓存中取当前登录用户的id
-  const uid = getItem('uid')
   //state
   //控制清空播放列表弹出层显示隐藏
   const [isModalVisible, setIsModalVisible] = useState(false)
   //控制删除歌曲到歌单弹出层显示隐藏
   const [isCollectModalVisible, setIsCollectModalVisible] = useState(false)
   //用户创建歌单查询条件
-  const [createPlcombineCondition] = useState({
+  const createPlcombineCondition = {
     //id
-    uid,
+    uid: userInfo.userId,
     //偏移量
     offset: 0,
     //每页数据条数
     limit: 100
-  })
+  }
   //用户创建歌单
   const [userCreatePlaylists, setUserCreatePlaylists] = useState([])
   //用户当前选中的要收藏的歌曲的id
   const [currentSelectMusicId, setCurrentSelectMusicId] = useState(null)
-
+  //创建歌单弹出层显示隐藏
+  const [isCreateModalVisible, setIsCreateModalVisible] = useState(false)
+  const [getCreatePlLoadng, setGetCreatePlLoadng] = useState(false)
   //检查歌曲是否可以播放
   const CheckCanPlay = async id => {
     try {
@@ -71,7 +76,6 @@ export default memo(function Playlist(props) {
         debounce(() => {
           setCurrentPlayMusicId(id)
           setItem('currentPlayMusicId', id)
-          
         }, 500)()
       }
     } catch (error) {
@@ -116,8 +120,8 @@ export default memo(function Playlist(props) {
   const getUserCreatePlaylist = () => {
     getUserPlaylist(
       createPlcombineCondition,
-      uid,
-      null,
+      userInfo.userId,
+      setGetCreatePlLoadng,
       setUserCreatePlaylists,
       'create'
     )
@@ -169,9 +173,36 @@ export default memo(function Playlist(props) {
     e.stopPropagation()
     window.open(`/#/musichall/song/detail/${item.id}`)
   }
-
+  const handleCreateOk = () => {
+    setIsCreateModalVisible(false)
+  }
+  const handleCreateCancel = () => {
+    setIsCreateModalVisible(false)
+  }
+  //获取用户创建歌单
+  const handleCollectSongToPlaylist = () => {
+    if (!isLogin) {
+      dispatch(showLoginBoxDispatch(true))
+      return
+    }
+    getUserPlaylist(
+      createPlcombineCondition,
+      userInfo.userId,
+      setGetCreatePlLoadng,
+      setUserCreatePlaylists,
+      'create'
+    )
+  }
   return (
     <div className='player-playlist-container'>
+      <Modal title='创建歌单' visible={isCreateModalVisible} footer={[]}>
+        <CreatePlaylist
+          handleCreateOk={handleCreateOk}
+          handleCreateCancel={handleCreateCancel}
+          getUserCreatePlaylist={handleCollectSongToPlaylist}
+        />
+      </Modal>
+
       <Modal
         title='收藏到歌单'
         visible={isCollectModalVisible}
@@ -179,23 +210,40 @@ export default memo(function Playlist(props) {
         onCancel={handleCollectCancel}
         footer={[]}
       >
-        {userCreatePlaylists.map(item => {
-          return (
-            <p
-              className='user-create-playlist'
-              onClick={() => {
-                collectSongToPlaylist(
-                  item,
-                  currentSelectMusicId,
-                  setIsCollectModalVisible
-                )
-              }}
-              key={item.id}
-            >
-              {item.name}
-            </p>
-          )
-        })}
+        <div
+          className='create-new'
+          onClick={() => {
+            setIsCreateModalVisible(true)
+          }}
+        >
+          <FormOutlined />
+          创建新歌单
+        </div>
+        {getCreatePlLoadng ? (
+          <div className='loading'>
+            <Spin />
+          </div>
+        ) : (
+          userCreatePlaylists.map(item => {
+            return (
+              <p
+                className='user-create-playlist'
+                onClick={() => {
+                  collectSongToPlaylist(
+                    item,
+                    currentSelectMusicId,
+                    setIsCollectModalVisible
+                  )
+                }}
+                key={item.id}
+              >
+                <img src={PlaylistImg} alt='' />
+
+                {item.name}
+              </p>
+            )
+          })
+        )}
       </Modal>
 
       <Modal

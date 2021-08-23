@@ -9,6 +9,7 @@ import Empty from 'components/Common/empty'
 import ListenSongs from '@/pages/User/cpn/listenSongsCover'
 import { message } from 'antd'
 import { getUserPlaylist, getUserListenSongs } from '@/actions/user'
+import { useSelector, shallowEqual } from 'react-redux'
 
 import './index.less'
 //一级菜单
@@ -29,16 +30,20 @@ const Tabs = [
     categoryName: '听歌排行'
   }
 ]
-export default memo(function CollectList(props) {
-  //props
-
+export default memo(function CollectList() {
+   //redux
+  //获取用户登录信息
+  const {  userInfo } = useSelector(state => {
+    return {
+      userInfo: state.user.userInfo
+    }
+  }, shallowEqual)
   //userid 用户id
   //backgroundUrl 背景图
   //avatarUrl 头像
   //nickname 昵称
   //signature 个性签名
-  const { userId, backgroundUrl, avatarUrl, nickname, signature } =
-    props.userInfo
+  const { userId, backgroundUrl, avatarUrl, nickname, signature } =userInfo
   //state
   //当前展示的一级菜单的索引
   const [currentIndex, setCurrentIndex] = useState(0)

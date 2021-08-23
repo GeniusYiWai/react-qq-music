@@ -7,6 +7,8 @@
     align-items: center;
     p {
       font-size: 12px;
+      width: 100px;
+      text-align: center;
     }
     .logout-user-avatar {
       width: 30px;
@@ -22,8 +24,12 @@
     position: absolute;
     background-color: #fff;
     z-index: 99;
-
     padding: 20px;
+    &>p:first-child{
+      &:hover{
+        color: #fff;
+      }
+    }
     p {
       cursor: pointer;
       margin-top: 20px;

@@ -17,7 +17,6 @@ export const getLoginStatus = async (dispatch) => {
       dispatch(userLoginDispatch(true))
       //更改state中的用户信息
       dispatch(setUserDispatch(profile))
-      setItem('uid', profile.userId)
     }
   } catch (error) {}
 }

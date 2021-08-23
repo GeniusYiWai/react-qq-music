@@ -65,7 +65,7 @@ export default memo(function Logout() {
           alt=''
           className='logout-user-avatar'
         />
-        <p>{userInfo && userInfo.nickname}</p>
+        <p className='text-nowrap'>{userInfo && userInfo.nickname}</p>
       </div>
       {show ? (
         <div className='logout-box' ref={loginBox}>
@@ -73,6 +73,9 @@ export default memo(function Logout() {
             <img src={userInfo && userInfo.avatarUrl} alt='' />
             <span>{userInfo && userInfo.nickname}</span>
           </div>
+          <p onClick={() => window.open(`/#/profile/user/${userInfo.userId}`)}>
+            个人主页
+          </p>
           <p onClick={() => logout()}>退出登录</p>
         </div>
       ) : null}
