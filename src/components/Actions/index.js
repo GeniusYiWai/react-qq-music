@@ -257,6 +257,7 @@ export default memo(function Actions(props) {
       <Button icon={<PlayCircleOutlined />} onClick={() => handlePlay()}>
         {setContenByType()}
       </Button>
+      
       {resourceType === 0 ? (
         <>
           <Button
@@ -272,7 +273,7 @@ export default memo(function Actions(props) {
         </>
       ) : (
         <div>
-          {playlistId === userInfo.userId ? null : (
+          {playlistId === userInfo.userId&&resourceType===0 ? null : (
             <div>
               {collect ? (
                 <>
