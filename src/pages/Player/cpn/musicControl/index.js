@@ -14,8 +14,7 @@ import {
   formatMinuteSecond,
   handleSinger,
   getPlaySong,
-  getRandomIndex,
-  debounce
+  getRandomIndex
 } from '@/utils/tools'
 import { getItem, setItem } from '@/utils/storage'
 import { CheckCanPlay as CheckCanPlayAPI } from '@/api/player'
@@ -137,14 +136,14 @@ export default memo(function Progress(props) {
         data: { success }
       } = await CheckCanPlayAPI(id)
       if (success) {
-        debounce(() => {
+        setTimeout(() => {
           //播放音乐
           setIsPlaying(true)
           //修改当前播放音乐id
           setCurrentPlayMusicId(id)
           //存入缓存
           setItem('currentPlayMusicId', id)
-        }, 500)()
+        }, 500)
       }
     } catch (error) {
       setCurrentPlayMusicId(id)
@@ -221,13 +220,13 @@ export default memo(function Progress(props) {
 
   //切换播放模式
   const changePlayMode = () => {
-    debounce(() => {
+    setTimeout(() => {
       // 1是默认 2是单曲循环 3是随机播放
       //因为索引从0开始 所以需要加1
       playModeNum + 1 === mode.length
         ? setPlayModeNum(0)
         : setPlayModeNum(playModeNum + 1)
-    }, 500)()
+    }, 500)
   }
 
   const showModal = () => {

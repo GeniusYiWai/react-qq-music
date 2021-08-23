@@ -1,6 +1,5 @@
 import React, { memo, useCallback, useState } from 'react'
 import { setItem, clearItem, getItem } from '@/utils/storage'
-import { debounce } from '@/utils/tools'
 import { Modal, Tooltip, message } from 'antd'
 import {
   DeleteOutlined,
@@ -73,10 +72,10 @@ export default memo(function Playlist(props) {
       if (success) {
         setIsPlaying(true)
         //可以播放 修改当前播放的音乐id
-        debounce(() => {
+        setTimeout(() => {
           setCurrentPlayMusicId(id)
           setItem('currentPlayMusicId', id)
-        }, 500)()
+        }, 500)
       }
     } catch (error) {
       message.error('抱歉，这首歌曲暂时不能播放。')
