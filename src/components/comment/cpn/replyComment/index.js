@@ -65,7 +65,12 @@ export default memo(function Reply(props) {
       } = await sendCommentAPI(commentType, resourceType, id, value, commentId)
       if (code === 200) {
         //将新回复的评论添加到回复的这个评论的回复列表中的第一个
-        comment.children.unshift(replyComment)
+        //这里要手动添加liked和likedCount字段 因为后端返回的数据没有这2个字段 不加的话如果进行点赞会报错
+        comment.children.unshift({
+          ...replyComment,
+          liked: false,
+          likedCount: 0
+        })
         //关闭回复框
         setShowReplyComment(false)
         message.success('回复成功。')

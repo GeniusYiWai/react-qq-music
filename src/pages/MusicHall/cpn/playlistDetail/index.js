@@ -83,7 +83,8 @@ export default memo(function PlaylistDetail() {
         setPlaylistSongs(songs)
       }
     } catch (error) {
-      message.error('获取歌单详情失败!')
+      const { message:msg } = error.data
+      message.error(msg ? msg : '获取歌单详情失败!')
     }
   }
 

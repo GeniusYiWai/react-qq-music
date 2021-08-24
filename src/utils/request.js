@@ -73,10 +73,10 @@ request.interceptors.response.use(
         //   break
         // 其他错误，直接抛出错误提示
         default:
-        // message.error({
-        //   content: 'Network Error',
-        //   duration: 1
-        // })
+          // message.error({
+          //   content: 'Network Error',
+          //   duration: 1
+          // })
       }
       return Promise.reject(error.response)
     }

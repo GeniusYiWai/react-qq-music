@@ -10,6 +10,7 @@ import { handleSinger } from '@/utils/tools'
 import LyricParser from '@/utils/lyric'
 import { getLyric } from '@/api/player'
 import LazyLoadImg from 'components/Common/lazyloadImg'
+import { message } from 'antd'
 
 import './index.less'
 //这里必须把歌词类放到最外面 否则每次重新渲染都会丢失
@@ -67,39 +68,44 @@ export default memo(
     }
     //处理页面滚动
     useEffect(() => {
-      const LyricRef = lyricRef
-      getLyric(currentPlayMusicId).then(({ data }) => {
-        if (data.nolyric) {
-          setLyric([{ txt: '纯音乐,敬请欣赏!' }])
-        } else if (data.lrc) {
-          //生成Lyric实例
-          Lyric = new LyricParser(data.lrc.lyric, handleLyric)
-          //获取所有歌词
-          setLyric(Lyric.lines)
-          Lyric.play()
-        } else {
-          setLyric([{ txt: '暂无歌词!' }])
+      try {
+        const LyricRef = lyricRef
+        getLyric(currentPlayMusicId).then(({ data }) => {
+          if (data.nolyric) {
+            setLyric([{ txt: '纯音乐,敬请欣赏!' }])
+          } else if (data.lrc) {
+            //生成Lyric实例
+            Lyric = new LyricParser(data.lrc.lyric, handleLyric)
+            //获取所有歌词
+            setLyric(Lyric.lines)
+            Lyric.play()
+          } else {
+            setLyric([{ txt: '暂无歌词!' }])
+          }
+          setLineNum(0)
+          LyricRef.current && LyricRef.current.scrollTo(0, 0)
+        })
+        //这里一定要返回一个清除歌词滚动的方法 不然会生成多个Lyric同时调用
+        return () => {
+          //一旦触发重新渲染 手动把歌词滚动到第一行
+          LyricRef.current && LyricRef.current.scrollTo(0, 0)
+          Lyric && Lyric.stop()
         }
-        setLineNum(0)
-        LyricRef.current && LyricRef.current.scrollTo(0, 0)
-      })
-      //这里一定要返回一个清除歌词滚动的方法 不然会生成多个Lyric同时调用
-      return () => {
-        //一旦触发重新渲染 手动把歌词滚动到第一行
-        LyricRef.current && LyricRef.current.scrollTo(0, 0)
-        Lyric && Lyric.stop()
+      } catch (error) {
+        message.error('未知错误!')
       }
     }, [currentPlayMusicId])
     return (
       <div className='music-lyric-container'>
-        <LazyLoadImg url={currentPlayMusic.al && currentPlayMusic.al.picUrl} width={100} height={100}/>
+        <LazyLoadImg
+          url={currentPlayMusic.al && currentPlayMusic.al.picUrl}
+          width={100}
+          height={100}
+        />
         <p>歌曲名:{currentPlayMusic.name}</p>
         <p>歌手:{currentPlayMusic.ar && handleSinger(currentPlayMusic.ar)}</p>
         <p>专辑:{currentPlayMusic.al && currentPlayMusic.al.name}</p>
-        <div
-          ref={lyricRef}
-          className='lyric-content'
-        >
+        <div ref={lyricRef} className='lyric-content'>
           {lyric.length !== 0 &&
             lyric.map((item, index) => {
               return (

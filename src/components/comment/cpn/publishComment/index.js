@@ -68,7 +68,10 @@ export default memo(function PublishComment(props) {
             ...comment,
             parentCommentId: 0,
             //手动增添二级评论数组
-            children: []
+            children: [],
+            //这里要手动添加liked和likedCount字段 因为后端返回的数据没有这2个字段 不加的话如果进行点赞会报错
+            liked: false,
+            likedCount: 0
           })
           return totalComments
         })
