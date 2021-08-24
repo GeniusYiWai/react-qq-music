@@ -1,7 +1,7 @@
 import React, { memo, useState, useEffect, useCallback } from 'react'
 import NewAlbumCover from 'components/Album/newAlbumCover'
 import Category from 'components/Common/category'
-import { getRecommendNewAlbum } from '@/api/home'
+import { getAlbumByArea } from '@/api/album'
 import MVSkeleton from 'components/Skeleton/mvSkeleton'
 import { Pagination, message } from 'antd'
 
@@ -28,7 +28,7 @@ export default memo(function NewAlbumRec() {
     try {
       const {
         data: { monthData, code }
-      } = await getRecommendNewAlbum(area)
+      } = await getAlbumByArea(area)
       if (code === 200) {
         setNewAlbum(monthData)
         setTotal(monthData.length)
