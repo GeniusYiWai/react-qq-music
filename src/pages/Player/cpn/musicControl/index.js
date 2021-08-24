@@ -170,7 +170,11 @@ export default memo(function Progress(props) {
         //下一首 如果已经是最后一首 就播放第一首
         case 'next':
           if (index === length - 1) {
+            //这里必须手动修改音乐播放地址 因为currentPlayMusicId没有发生改变 不会触发useEffect重新加载数据
+
             newIndex = 0
+            audioRef.current.src = getPlaySong(currentPlayMusicId)
+            scrollToTop()
           } else {
             newIndex = index + 1
           }
@@ -190,6 +194,7 @@ export default memo(function Progress(props) {
         default:
           break
       }
+
       //这里对切换上一首或者下一首进行了防抖处理 防止用户快速切换歌曲 导致歌词组件无法及时清除上一个已经进行的歌词滚动 因为歌词滚动需要时间初始化 如果快速切换会导致清除函数无法及时生效 使得多个歌词滚动同时进行 歌词会来回跳跃
       CheckCanPlay(playlist[newIndex].id)
     },
