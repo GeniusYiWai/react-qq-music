@@ -163,5 +163,9 @@
     "presets": [
       "react-app"
     ]
+  },
+  "devDependencies": {
+    "uglifyjs-webpack-plugin": "^2.2.0",
+    "webpack-bundle-analyzer": "^4.4.2"
   }
 }

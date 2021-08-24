@@ -1,5 +1,3 @@
-
-
 const fs = require('fs')
 const path = require('path')
 const webpack = require('webpack')
@@ -26,6 +24,9 @@ const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin')
 const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin')
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const BundleAnalyzerPlugin =
+  require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 const postcssNormalize = require('postcss-normalize')
 
@@ -233,6 +234,25 @@ module.exports = function (webpackEnv) {
     optimization: {
       minimize: isEnvProduction,
       minimizer: [
+        new UglifyJsPlugin({
+          cache: true, // 开启缓存
+          parallel: true, // 开启多线程编译
+          sourceMap: true, // 是否sourceMap
+          uglifyOptions: {
+            // 丑化参数
+            comments: false,
+            warnings: false,
+            compress: {
+              unused: true,
+              dead_code: true,
+              collapse_vars: true,
+              reduce_vars: true
+            },
+            output: {
+              comments: false
+            }
+          }
+        }),
         // This is only used in production mode
         new TerserPlugin({
           terserOptions: {
@@ -337,8 +357,8 @@ module.exports = function (webpackEnv) {
         ...(modules.webpackAliases || {}),
         // 文件路径别名
         '@': path.resolve(__dirname, '../src'),
-        'components': path.resolve(__dirname, '../src/components'),
-        'api': path.resolve(__dirname, '../src/api')
+        components: path.resolve(__dirname, '../src/components'),
+        api: path.resolve(__dirname, '../src/api')
       },
       plugins: [
         // Adds support for installing with Plug'n'Play, leading to faster installs and adding
@@ -589,6 +609,9 @@ module.exports = function (webpackEnv) {
       ]
     },
     plugins: [
+      // isEnvProduction
+      //   ? new BundleAnalyzerPlugin({ analyzerPort: 3012 })
+      //   : undefined,
       // Generates an `index.html` file with the <script> injected.
       new HtmlWebpackPlugin(
         Object.assign(
