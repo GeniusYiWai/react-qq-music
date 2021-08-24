@@ -62,7 +62,7 @@ export const playPlaylist = id => {
           //获取歌单下的所有歌曲的id
           //歌曲数限制在100首 歌曲太多会报414 Request-URI Too Large 错误
           const trackIds = playlist.trackIds
-            .slice(0, 200)
+            .slice(0,100)
             .map(item => item.id)
             .join(',')
           //将歌曲id放在一起请求
@@ -139,7 +139,7 @@ export const playAlbum = id => {
           //获取歌单下的所有歌曲的id
           //歌曲数限制在100首 否则会报414 Request-URI Too Large 错误
           const trackIds = songs
-            .slice(0, 200)
+            .slice(0,100)
             .map(item => item.id)
             .join(',')
           //将歌曲id放在一起请求

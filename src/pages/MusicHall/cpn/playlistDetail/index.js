@@ -76,7 +76,7 @@ export default memo(function PlaylistDetail() {
       } = await getPlaylistDeatilAPI(id)
       if (code === 200) {
         setPlaylistDetail(playlist)
-        const trackIds = playlist.trackIds.map(item => item.id).join(',')
+        const trackIds = playlist.trackIds.slice(0,100).map(item => item.id).join(',')
         const {
           data: { songs }
         } = await getMusicById(trackIds)
@@ -188,7 +188,7 @@ export default memo(function PlaylistDetail() {
         </div>
       </div>
       <Alert
-        message='出于性能考虑，歌单只播放前200首，可自行修改。'
+        message='出于性能考虑，歌单只展示以及播放前100首，可自行修改。'
         type='info'
         closable
       />
