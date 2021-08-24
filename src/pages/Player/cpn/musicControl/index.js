@@ -188,8 +188,14 @@ export default memo(function Progress(props) {
           break
         //随机播放
         case 'random':
-          //获取随机数
-          newIndex = getRandomIndex(index, length)
+          if (index === length - 1) {
+            newIndex = 0
+            audioRef.current.src = getPlaySong(currentPlayMusicId)
+            scrollToTop()
+          } else {
+            //获取随机数
+            newIndex = getRandomIndex(index, length)
+          }
           break
         default:
           break
