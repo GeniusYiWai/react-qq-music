@@ -76,7 +76,6 @@ export default memo(function Player() {
         className='bg-img'
       ></div>
       <div className='player-content'>
-        <div className='player-container-playlist'>
           <MusicPlaylist
             setCurrentPlayMusicId={setCurrentPlayMusicId}
             currentPlayMusicId={currentPlayMusicId}
@@ -87,7 +86,6 @@ export default memo(function Player() {
             playLyricScroll={playLyricScroll}
             setIsPlaying={setIsPlaying}
           />
-        </div>
         {playlist.length > 0 ? (
           <>
             <MusicControl

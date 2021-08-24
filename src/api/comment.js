@@ -59,7 +59,7 @@ export const getVideoComment = ({ id, limit, offset }) => {
 
 //评论点赞
 /**
- * 
+ *
  * @param {*} id 资源 id, 如歌曲 id,mv id
  * @param {*} cid 评论 id
  * @param {*} t 是否点赞 ,1 为点赞 ,0 为取消点赞
@@ -67,11 +67,11 @@ export const getVideoComment = ({ id, limit, offset }) => {
  *0: 歌曲
  *1: mv
  *2: 歌单
- *3: 专辑 
+ *3: 专辑
  *4: 电台
  *5: 视频
  *6: 动态
- * @returns 
+ * @returns
  */
 export const likeComment = (id, cid, t, type) => {
   return request.get(
@@ -80,7 +80,7 @@ export const likeComment = (id, cid, t, type) => {
 }
 // 发送评论
 /**
- * 
+ *
  * @param {*} id 资源 id, 如歌曲 id,mv id
  * @param {*} content 要发送的内容
  * @param {*} t 1 发送, 2 回复
@@ -89,14 +89,36 @@ export const likeComment = (id, cid, t, type) => {
  *0: 歌曲
  *1: mv
  *2: 歌单
- *3: 专辑 
+ *3: 专辑
  *4: 电台
  *5: 视频
  *6: 动态
- * @returns 
+ * @returns
  */
 export const sendComment = (t, type, id, content, commentId) => {
   return request.get(
     `/comment?id=${id}&content=${content}&t=${t}&type=${type}&commentId=${commentId}&timestamp=${timestamp}`
+  )
+}
+// 删除评论
+/**
+ *
+ * @param {*} id 资源 id, 如歌曲 id,mv id
+ * @param {*} content 要发送的内容
+ * @param {*} t 1 发送, 2 回复
+ * @param {*} type 资源类型 , 对应歌曲 , mv, 专辑 , 歌单 , 电台, 视频对应以下类型
+ * @param {*} commentId 回复的评论id (回复评论时必填)
+ *0: 歌曲
+ *1: mv
+ *2: 歌单
+ *3: 专辑
+ *4: 电台
+ *5: 视频
+ *6: 动态
+ * @returns
+ */
+export const deleteComment = (type, id, commentId) => {
+  return request.get(
+    `/comment?id=${id}&t=0&type=${type}&commentId=${commentId}&timestamp=${timestamp}`
   )
 }

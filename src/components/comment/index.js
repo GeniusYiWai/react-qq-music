@@ -3,6 +3,8 @@ import { Comment } from 'antd'
 import { Avatar, message } from 'antd'
 import moment from 'moment'
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
+import { deleteComment as deleteCommentAPI } from '@/api/comment'
+
 import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
 import { likeComment as likeCommentAPI } from '@/api/comment'
 import { LikeOutlined, LikeFilled } from '@ant-design/icons'
@@ -19,20 +21,23 @@ export default memo(function CommentList(props) {
   // 4: 电台
   // 5: 视频
   // 6: 动态
-  const { resourceType, id } = props
+  //comment 评论数据
+  const { resourceType, id, comment } = props
   //state
   //控制回复框的展示和隐藏
   const [showReplyComment, setShowReplyComment] = useState(false)
   //点赞按钮禁用状态
   const [loading, setLoading] = useState(false)
-  //获取父组件传递过来的评论的数据
-  const [comment] = useState(props.comment)
+  //删除按钮禁用状态
+  const [deleteLoading, setDeleteLoading] = useState(false)
+  const [show, setShow] = useState(true)
   //redux
   const dispatch = useDispatch()
   //获取用户登录状态
-  const { isLogin } = useSelector(state => {
+  const { isLogin, userInfo } = useSelector(state => {
     return {
-      isLogin: state.user.isLogin
+      isLogin: state.user.isLogin,
+      userInfo: state.user.userInfo
     }
   }, shallowEqual)
 
@@ -86,6 +91,23 @@ export default memo(function CommentList(props) {
       message.error('操作失败!')
     }
   }
+  const deleteComment = async commentId => {
+    if (deleteLoading) return
+    try {
+      setDeleteLoading(true)
+      const {
+        data: { code }
+      } = await deleteCommentAPI(resourceType, id, commentId)
+      if (code === 200) {
+        setDeleteLoading(false)
+        setShow(false)
+        message.success('删除成功。')
+      }
+    } catch (error) {
+      setDeleteLoading(false)
+      message.error('操作失败!')
+    }
+  }
   //跳转到用户详情
   const goToUserDetail = id => {
     window.open(`/#/profile/user/${id}`)
@@ -95,7 +117,10 @@ export default memo(function CommentList(props) {
   //liked 是否点赞
   //likedCount 点赞总数
   //showReply 是否展示回复按钮
-  const actions = ({ commentId, liked, likedCount }, showReply = true) => {
+  const actions = (
+    { commentId, liked, likedCount, user },
+    showReply = true
+  ) => {
     return [
       <span
         onClick={() => {
@@ -112,47 +137,58 @@ export default memo(function CommentList(props) {
         onClick={() => setShowReplyComment(!showReplyComment)}
       >
         {showReply ? '回复' : null}
+      </span>,
+      <span
+        key='comment-basic-delete-to'
+        // 删除评论或者回复
+        onClick={() => deleteComment(commentId)}
+      >
+        {userInfo.userId === user.userId ? '删除' : null}
       </span>
     ]
   }
   return (
-    <div className='comment-container w-1200'>
-      <Comment
-        actions={actions(comment)}
-        author={comment.user && comment.user.nickname}
-        avatar={
-          <Avatar
-            onClick={() => goToUserDetail(comment.user.userId)}
-            src={comment.user && comment.user.avatarUrl}
-          />
-        }
-        content={comment.content}
-        datetime={moment(comment.time).format('YYYY-MM-DD HH:mm:ss')}
-      >
-        {/* 回复评论组件只有一级评论才有 */}
-        {showReplyComment ? (
-          <ReplyComment
-            setShowReplyComment={setShowReplyComment}
-            id={id}
-            commentId={comment.commentId}
-            comment={comment}
-            resourceType={resourceType}
-          />
-        ) : null}
-        {comment.children &&
-          comment.children.map(item => {
-            return (
-              <Comment
-                actions={actions(item, false)}
-                author={item.user && item.user.nickname}
-                avatar={item.user && item.user.avatarUrl}
-                content={item.content}
-                datetime={moment(item.time).format('YYYY-MM-DD HH:mm:ss')}
-                key={item.commentId}
+    <>
+      {show ? (
+        <div className='comment-container w-1200'>
+          <Comment
+            actions={actions(comment)}
+            author={comment.user && comment.user.nickname}
+            avatar={
+              <Avatar
+                onClick={() => goToUserDetail(comment.user.userId)}
+                src={comment.user && comment.user.avatarUrl}
               />
-            )
-          })}
-      </Comment>
-    </div>
+            }
+            content={comment.content}
+            datetime={moment(comment.time).format('YYYY-MM-DD HH:mm:ss')}
+          >
+            {/* 回复评论组件只有一级评论才有 */}
+            {showReplyComment ? (
+              <ReplyComment
+                setShowReplyComment={setShowReplyComment}
+                id={id}
+                commentId={comment.commentId}
+                comment={comment}
+                resourceType={resourceType}
+              />
+            ) : null}
+            {comment.children &&
+              comment.children.map(item => {
+                return (
+                  <Comment
+                    actions={actions(item, false)}
+                    author={item.user && item.user.nickname}
+                    avatar={item.user && item.user.avatarUrl}
+                    content={item.content}
+                    datetime={moment(item.time).format('YYYY-MM-DD HH:mm:ss')}
+                    key={item.commentId}
+                  />
+                )
+              })}
+          </Comment>
+        </div>
+      ) : null}
+    </>
   )
 })

@@ -14,7 +14,7 @@ import PublishComment from 'components/Comment/cpn/publishComment'
 import Actions from 'components/Actions'
 import { ScrollTop } from '@/utils/tools'
 import Empty from 'components//Common/empty'
-import { message } from 'antd'
+import { message,Alert } from 'antd'
 import InfiniteScroll from 'react-infinite-scroller'
 import './index.less'
 //资源类型 2代表歌单
@@ -187,6 +187,11 @@ export default memo(function PlaylistDetail() {
           <p>{playlistDetail && playlistDetail.description}</p>
         </div>
       </div>
+      <Alert
+        message='出于性能考虑，歌单只播放前200首，可自行修改。'
+        type='info'
+        closable
+      />
       <Actions
         totalNum={totalNum}
         collect={collect}

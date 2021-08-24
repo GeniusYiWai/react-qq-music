@@ -187,8 +187,9 @@ export default memo(function MvDetail() {
         <p>发行时间:{mvDetail.publishTime}</p>
       </div>
       <Alert
-        message='由于mv没有获取收藏状态的接口,所以所有mv默认都是未收藏'
-        type='warning'
+        message='mv没有获取收藏状态的接口，所有mv默认都是未收藏，但不影响收藏mv，即使已经收藏，刷新后也显示未收藏。'
+        type='info'
+        closable
       />
       <Actions
         totalNum={totalNum}

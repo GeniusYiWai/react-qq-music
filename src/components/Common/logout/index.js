@@ -61,11 +61,7 @@ export default memo(function Logout() {
         ref={avatarRef}
         onClick={e => showUserInfo(e)}
       >
-        <LazyLoadImg
-          url={userInfo && userInfo.avatarUrl}
-          width={30}
-          height={30}
-        />
+        <img src={userInfo && userInfo.avatarUrl + '?param=30y30'} alt=''/>
         <p className='text-nowrap'>{userInfo && userInfo.nickname}</p>
       </div>
       {show ? (
