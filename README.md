@@ -4,6 +4,11 @@
 
 如果觉得本项目还不错，请给个star吧～(￣▽￣～)(～￣▽￣)～,感谢Binaryify大佬提供的接口。
 
+# 技术栈
+React
+React Hooks
+axios
+less
 # 安装
 
 第一步：下载运行后台接口NeteaseCloudMusicApi
