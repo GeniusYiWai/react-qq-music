@@ -235,7 +235,7 @@ export default memo(function Playlist(props) {
                 }}
                 key={item.id}
               >
-                <LazyLoadImg url={item.coverImgUrl} width={50} height={50}/> 
+                <LazyLoadImg url={item.coverImgUrl} width={50} height={50} />
                 {item.name}
               </div>
             )
@@ -263,11 +263,18 @@ export default memo(function Playlist(props) {
         <p> 歌手</p>
         <p> 时长</p>
       </div>
-      <div>
+      <div className='playlist-songs'>
         {playlist &&
           playlist.map(item => {
             return (
-              <div className='player-playlist-item' key={item.id}>
+              <div
+                className={`player-playlist-item  ${
+                  //id等于当前播放的音乐id 并且音乐在播放 才会显示这个动图
+                  item.id === currentPlayMusicId && isPlaying ? 'isPlaying' : ''
+                }
+              `}
+                key={item.id}
+              >
                 <div className='song-name'>
                   <div className='name'>
                     <span
@@ -313,7 +320,7 @@ export default memo(function Playlist(props) {
                 </div>
 
                 <div
-                  className='text-nowrap'
+                  className='text-nowrap artists'
                   onClick={e => {
                     goToSingerDetail(e, item)
                   }}
@@ -321,7 +328,7 @@ export default memo(function Playlist(props) {
                   {item.artists}
                 </div>
                 <div>
-                  {item.duration}
+                  <span className='duration'>{item.duration}</span>
                   <span
                     className={`wave-container ${
                       //id等于当前播放的音乐id 并且音乐在播放 才会显示这个动图

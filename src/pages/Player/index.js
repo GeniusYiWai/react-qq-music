@@ -76,18 +76,24 @@ export default memo(function Player() {
         className='bg-img'
       ></div>
       <div className='player-content'>
-          <MusicPlaylist
-            setCurrentPlayMusicId={setCurrentPlayMusicId}
-            currentPlayMusicId={currentPlayMusicId}
-            isPlaying={isPlaying}
-            playlist={playlist}
-            setPlaylist={setPlaylist}
-            pauseLyricScroll={pauseLyricScroll}
-            playLyricScroll={playLyricScroll}
-            setIsPlaying={setIsPlaying}
-          />
+        <MusicPlaylist
+          setCurrentPlayMusicId={setCurrentPlayMusicId}
+          currentPlayMusicId={currentPlayMusicId}
+          isPlaying={isPlaying}
+          playlist={playlist}
+          setPlaylist={setPlaylist}
+          pauseLyricScroll={pauseLyricScroll}
+          playLyricScroll={playLyricScroll}
+          setIsPlaying={setIsPlaying}
+        />
         {playlist.length > 0 ? (
           <>
+            <MusicLyric
+              ref={childRef}
+              currentPlayMusic={currentPlayMusic}
+              currentPlayMusicId={currentPlayMusicId}
+              isPlaying={isPlaying}
+            />
             <MusicControl
               currentPlayMusicId={currentPlayMusicId}
               setCurrentPlayMusicId={setCurrentPlayMusicId}
@@ -99,14 +105,10 @@ export default memo(function Player() {
               playLyricScroll={playLyricScroll}
               scrollToTop={scrollToTop}
             />
-            <MusicLyric
-              ref={childRef}
-              currentPlayMusic={currentPlayMusic}
-              currentPlayMusicId={currentPlayMusicId}
-              isPlaying={isPlaying}
-            />
           </>
-        ) : <Empty/>}
+        ) : (
+          <Empty />
+        )}
       </div>
     </div>
   )
