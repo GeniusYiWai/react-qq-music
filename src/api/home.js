@@ -25,8 +25,8 @@ export const getRecommendNewSong = id => {
  * @param {*} area 地区
  * @returns
  */
-export const getRecommendNewAlbum = area => {
-  return request.get(`/top/album?area=${area}`)
+export const getRecommendNewAlbum = (area, limit) => {
+  return request.get(`/album/new?area=${area}&limit=${limit}`)
 }
 //获取首页排行榜
 /**

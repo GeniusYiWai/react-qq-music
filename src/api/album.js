@@ -20,3 +20,13 @@ export const getAlbumDeatil = id => {
 export const getAlbumStatus = id => {
   return request.get(`/album/detail/dynamic?id=${id}&timestamp=${timestamp}`)
 }
+
+//获取新碟分类
+/**
+ *
+ * @param {*} area 地区
+ * @returns
+ */
+ export const getAlbumByArea = area => {
+  return request.get(`/top/album?area=${area}`)
+}

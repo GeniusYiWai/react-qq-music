@@ -20,9 +20,9 @@ export default memo(function NewAlbumRec() {
   const getRecAlbum = async area => {
     try {
       const {
-        data: { monthData }
-      } = await getRecommendNewAlbum(area)
-      setNewAlbum(monthData.slice(0, 30))
+        data: { albums }
+      } = await getRecommendNewAlbum(area, 40)
+      setNewAlbum(albums)
     } catch (error) {
       message.error('获取推荐新碟失败!')
     }
