@@ -2,6 +2,7 @@ import React, { memo, Suspense } from 'react'
 import { renderRoutes } from 'react-router-config'
 import { NavLink, useLocation } from 'react-router-dom'
 import { Skeleton } from 'antd'
+import Footer from 'components/Common/footer'
 import './index.less'
 export default memo(function MusicHall(props) {
   //判断当前是不是在搜索页面 如果是 隐藏首页二级菜单
@@ -62,18 +63,19 @@ export default memo(function MusicHall(props) {
       <Suspense
         fallback={
           <>
-            <Skeleton active/>
-            <Skeleton active/>
-            <Skeleton active/>
-            <Skeleton active/>
-            <Skeleton active/>
-            <Skeleton active/>
-            <Skeleton active/>
+            <Skeleton active />
+            <Skeleton active />
+            <Skeleton active />
+            <Skeleton active />
+            <Skeleton active />
+            <Skeleton active />
+            <Skeleton active />
           </>
         }
       >
         {/* 渲染路由 */}
         {renderRoutes(route.routes)}
+        <Footer />
       </Suspense>
     </div>
   )
