@@ -19,7 +19,7 @@ export default memo(function App() {
     )
     console.log('关注嘉然，顿顿解馋。')
     console.log('b站搜索嘉然今天吃什么。')
-    console.log('create by 意外')
+    console.log('create by 意外 觉得不错请给个star~')
   }, [])
   return (
     <Provider store={store}>

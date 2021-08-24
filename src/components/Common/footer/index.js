@@ -27,6 +27,9 @@ export default memo(function Footer() {
           Binaryify/NeteaseCloudMusicApi
         </a>
       </p>
+      <p>
+          觉得不错请给个star~
+      </p>
     </div>
   )
 })
