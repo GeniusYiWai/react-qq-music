@@ -5,7 +5,7 @@ import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
 import { sendComment } from '@/api/comment'
 import './index.less'
 const { TextArea } = Input
-//1代表发表评论 写死
+//1代表发表评论 
 const commentType = 1
 //发表评论组件
 export default memo(function PublishComment(props) {
@@ -21,7 +21,7 @@ export default memo(function PublishComment(props) {
   //用户输入的评论
   const [value, setValue] = useState('')
   //发布评论按钮loading状态
-  const [loading, setLaoding] = useState(false)
+  const [loading, setLoading] = useState(false)
   //redux
   const dispatch = useDispatch()
   const { isLogin } = useSelector(state => {
@@ -55,13 +55,13 @@ export default memo(function PublishComment(props) {
     //resourceType 资源类型
     //id 资源id
     ///value 评论内容
-    setLaoding(true)
+    setLoading(true)
     try {
       const {
         data: { comment, code }
       } = await sendComment(commentType, resourceType, id, value)
       if (code === 200) {
-        //找了半天才发现为什么发表的评论不能添加到评论列表中 原来是因为这里返回的结果里没有parentCommentId 需要自己带上
+        //这里返回的结果里没有parentCommentId 需要自己带上
         //将新评论添加到所有评论的最顶部
         setTotalComments(totalComments => {
           totalComments.unshift({
@@ -80,10 +80,10 @@ export default memo(function PublishComment(props) {
         //修改评论总数
         setTotalNum(totalNum + 1)
         message.success('发表成功。')
-        setLaoding(false)
+        setLoading(false)
       }
     } catch (error) {
-      setLaoding(false)
+      setLoading(false)
       message.error('发表失败!')
     }
   }

@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect, useRef } from 'react'
+import React, { memo, useState, useEffect, useRef,useCallback } from 'react'
 import { Carousel } from 'antd'
 import { LeftOutlined, RightOutlined } from '@ant-design/icons'
 import PlaylistCover from 'components/Playlist/playlistCover'
@@ -10,21 +10,22 @@ import './index.less'
 export default memo(function MyCarousel(props) {
   //获取轮播图引用
   const carouselRef = useRef()
-  //props
+  //props data 数据 pagesize 每页大小 type 走马灯类型
   const { data, pagesize, type } = props
   //state
   const [newArr, setNewArr] = useState([])
-  const spliceData = data => {
+  //重新生成数组 将原数组变为5个一组的二维数组
+  const spliceData = useCallback(data => {
     const arr = []
     const totalPage = Math.ceil(data.length / pagesize)
     for (let i = 0; i < totalPage; i++) {
       arr[i] = data.slice(i * pagesize, i * pagesize + pagesize)
     }
     return arr
-  }
+  },[pagesize])
   useEffect(() => {
     setNewArr(spliceData(data))
-  }, [data])
+  }, [data, spliceData])
   return (
     <div className='carousel-container w-1200'>
       <>

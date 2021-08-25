@@ -4,7 +4,6 @@ import { Avatar, message } from 'antd'
 import moment from 'moment'
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { deleteComment as deleteCommentAPI } from '@/api/comment'
-
 import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
 import { likeComment as likeCommentAPI } from '@/api/comment'
 import { LikeOutlined, LikeFilled } from '@ant-design/icons'
@@ -91,6 +90,7 @@ export default memo(function CommentList(props) {
       message.error('操作失败!')
     }
   }
+  //删除评论
   const deleteComment = async commentId => {
     if (deleteLoading) return
     try {
@@ -140,7 +140,7 @@ export default memo(function CommentList(props) {
       </span>,
       <span
         key='comment-basic-delete-to'
-        // 删除评论或者回复
+        // 删除评论 判断这个评论的uid和登录用户的uid是否相同 如果相同 显示删除按钮
         onClick={() => deleteComment(commentId)}
       >
         {userInfo.userId === user.userId ? '删除' : null}

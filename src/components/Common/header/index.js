@@ -100,14 +100,14 @@ export default memo(function Header() {
 
           <div
             className='select-container'
-            onClick={() => message.warning('请选择正规平台,谨防人财两空。（￣ω￣）')}
+            onClick={() => message.warning('没做╮（￣▽￣）╭')}
           >
             <input type='button' value='开通VIP' className='vip' />
             <span className='icon white'></span>
           </div>
           <div
             className='select-container'
-            onClick={() => message.warning('请选择正规平台,谨防人财两空。（￣ω￣）')}
+            onClick={() => message.warning('没做╮（￣▽￣）╭')}
           >
             <input type='button' value='充值' className='recharge' />
             <span className='icon black'></span>

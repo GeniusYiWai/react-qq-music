@@ -5,7 +5,7 @@ import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
 import './index.less'
 const { TextArea } = Input
-//2代表回复评论 写死
+//2代表回复评论
 const commentType = 2
 //回复评论组件
 export default memo(function Reply(props) {

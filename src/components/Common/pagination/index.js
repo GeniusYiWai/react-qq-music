@@ -26,7 +26,7 @@ export default memo(function PaginationCpn(props) {
       setLimit(size)
       //如果没有改变每页大小 则进行页码跳转
     } else {
-      //这里有一个bug 不知道为什么会多一条数据 只能先清空父组件的数据
+      //这里不知道为什么会多一条数据 只能先清空父组件的数据
       setData([])
       setCombineCondition(combineCondition => ({
         ...combineCondition,

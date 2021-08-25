@@ -7,14 +7,13 @@ import {
   CommentOutlined,
   FormOutlined
 } from '@ant-design/icons'
-import { message } from 'antd'
+import { message, Spin } from 'antd'
 import { playPlaylist, playMusic, playRank } from '@/utils/player'
 import { collectPlaylist, collectAlbum, collectMv } from '@/api/collect'
 import { showLoginBoxDispatch } from '@/pages/LoginBox/store/actionCreators'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import { getUserPlaylist, collectSongToPlaylist } from '@/actions/user'
 import CreatePlaylist from 'components/Playlist/createPlaylist'
-import { Spin } from 'antd'
 import LazyLoadImg from 'components/Common/lazyloadImg'
 import './index.less'
 //资源操作组件
@@ -51,6 +50,7 @@ export default memo(function Actions(props) {
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false)
   //用户创建歌单
   const [userCreatePlaylists, setUserCreatePlaylists] = useState([])
+  //获取用户创建歌单loading
   const [getCreatePlLoadng, setGetCreatePlLoadng] = useState(false)
   //获取用户创建歌单参数
   const createPlcombineCondition = {
@@ -105,7 +105,6 @@ export default memo(function Actions(props) {
       'create'
     )
   }
-
   //点击收藏按钮触发事件
   const collectResource = async () => {
     //先判断用户有没有登录
@@ -148,7 +147,6 @@ export default memo(function Actions(props) {
           }
         } catch (error) {
           message.error('操作失败!')
-
           setLoading(false)
         }
         break
@@ -166,7 +164,6 @@ export default memo(function Actions(props) {
           }
         } catch (error) {
           message.error('操作失败!')
-
           setLoading(false)
         }
         break
@@ -206,11 +203,7 @@ export default memo(function Actions(props) {
   }
   return (
     <div className='actions-container'>
-      <Modal
-        title='创建歌单'
-        visible={isCreateModalVisible}
-        footer={[]}
-      >
+      <Modal title='创建歌单' visible={isCreateModalVisible} footer={[]}>
         <CreatePlaylist
           handleCreateOk={handleCreateOk}
           handleCreateCancel={handleCreateCancel}
@@ -244,10 +237,14 @@ export default memo(function Actions(props) {
                 className='user-create-playlist'
                 key={item.id}
                 onClick={() => {
-                  collectSongToPlaylist(item, id,setGetCreatePlLoadng)
+                  collectSongToPlaylist(item, id, setGetCreatePlLoadng)
                 }}
               >
-                <LazyLoadImg url={item&&item.coverImgUrl} width={50} height={50}/> 
+                <LazyLoadImg
+                  url={item && item.coverImgUrl}
+                  width={50}
+                  height={50}
+                />
                 {item.name}
               </p>
             )
@@ -257,7 +254,7 @@ export default memo(function Actions(props) {
       <Button icon={<PlayCircleOutlined />} onClick={() => handlePlay()}>
         {setContenByType()}
       </Button>
-      
+
       {resourceType === 0 ? (
         <>
           <Button
@@ -273,7 +270,7 @@ export default memo(function Actions(props) {
         </>
       ) : (
         <div>
-          {playlistId === userInfo.userId&&resourceType===0 ? null : (
+          {playlistId === userInfo.userId && resourceType === 0 ? null : (
             <div>
               {collect ? (
                 <>

@@ -151,6 +151,13 @@ export default memo(function Progress(props) {
     }
   }, [])
 
+  //处理特殊情况 当播放列表只有一首歌的时候 对单曲循环和顺序播放和随机播放进行处理
+  const handleOnlyOneSong = index => {
+    //这里必须手动修改音乐播放地址 因为currentPlayMusicId没有发生改变 不会触发useEffect重新加载数据
+    audioRef.current.src = getPlaySong(currentPlayMusicId)
+    scrollToTop()
+    return index
+  }
   //处理播放上一首或者下一首
   const switchSong = useCallback(
     type => {
@@ -170,28 +177,19 @@ export default memo(function Progress(props) {
         //下一首 如果已经是最后一首 就播放第一首
         case 'next':
           if (index === length - 1) {
-            //这里必须手动修改音乐播放地址 因为currentPlayMusicId没有发生改变 不会触发useEffect重新加载数据
-
-            newIndex = 0
-            audioRef.current.src = getPlaySong(currentPlayMusicId)
-            scrollToTop()
+            newIndex = handleOnlyOneSong(0)
           } else {
             newIndex = index + 1
           }
           break
         //单曲循环 继续播放当前这一首
         case 'circle':
-          newIndex = index
-          //这里必须手动修改音乐播放地址 因为currentPlayMusicId没有发生改变 不会触发useEffect重新加载数据
-          audioRef.current.src = getPlaySong(currentPlayMusicId)
-          scrollToTop()
+          newIndex = handleOnlyOneSong(index)
           break
         //随机播放
         case 'random':
           if (index === length - 1) {
-            newIndex = 0
-            audioRef.current.src = getPlaySong(currentPlayMusicId)
-            scrollToTop()
+            newIndex = handleOnlyOneSong(0)
           } else {
             //获取随机数
             newIndex = getRandomIndex(index, length)
@@ -200,7 +198,6 @@ export default memo(function Progress(props) {
         default:
           break
       }
-
       //这里对切换上一首或者下一首进行了防抖处理 防止用户快速切换歌曲 导致歌词组件无法及时清除上一个已经进行的歌词滚动 因为歌词滚动需要时间初始化 如果快速切换会导致清除函数无法及时生效 使得多个歌词滚动同时进行 歌词会来回跳跃
       CheckCanPlay(playlist[newIndex].id)
     },

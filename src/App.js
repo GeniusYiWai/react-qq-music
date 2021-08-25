@@ -10,15 +10,6 @@ import LoginBox from './pages/LoginBox'
 import '@/assets/css/common.less'
 export default memo(function App() {
   useEffect(() => {
-    console.log(
-      `%c `,
-      `padding:100px; 
-      background-image: url('http://81.68.126.252/images/jiaran.jpg');
-      background-size: cover; 
-      background-position: center center;`
-    )
-    console.log('关注嘉然，顿顿解馋。')
-    console.log('b站搜索嘉然今天吃什么。')
     console.log('create by 意外 觉得不错请给个star~')
   }, [])
   return (
